@@ -10,11 +10,11 @@ OBJ              = $(subst $(SRCDIR),$(OBJDIR),$(SRC))
 OBJ             := $(OBJ:.cpp=.cpp.o)
 OBJ             := $(OBJ:.c=.c.o)
 
-INCLUDE          = -I/usr/X11/include -I/usr/pkg/include -I$(SRCDIR)
+LDPATH           = -L$(LIBDIR)/bin
+INCLUDE          = -I$(LIBDIR)/include -I$(SRCDIR)
 CFLAGS           = -g -O2 -Wall -Wextra -pedantic -std=c99
 CXXFLAGS         = -g -O2 -Wall -Wextra -pedantic -std=c++11
-LDFLAGS          = -lm -lGL -lGLU -lglut -lstdc++
-LDPATH           = -L$(LIBDIR)
+LDFLAGS          = -lm -lGL -lGLU -lglut -lstdc++ # -lAntTweakBar -lfftw3f
 
 default: $(TARGET)
 
@@ -24,11 +24,11 @@ $(OBJDIR):
 $(TARGET): $(OBJ)
 	$(CXX) $(LDPATH) $^ -o $@ $(LDFLAGS)
 
-$(OBJDIR)/%.c.o: $(SRCDIR)/%.c $(HEADERS) | $(OBJDIR)
-	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
-
 $(OBJDIR)/%.cpp.o: $(SRCDIR)/%.cpp $(HEADERS) | $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@ $(INCLUDE)
+
+$(OBJDIR)/%.c.o: $(SRCDIR)/%.c $(HEADERS) | $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
 
 clean:
 	rm -rf $(OBJDIR) $(TARGET)
