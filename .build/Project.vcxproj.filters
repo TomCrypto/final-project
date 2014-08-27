@@ -15,32 +15,34 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\G308_Skeleton.cpp">
+    <ClCompile Include="../src/G308_Skeleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\main.cpp">
+    <ClCompile Include="../src/main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\define.h">
+    <ClInclude Include="../src/define.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\G308_Skeleton.h">
+    <ClInclude Include="../src/G308_Skeleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\priman.amc">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\priman.asf">
+    <None Include="../res/priman.asf">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\proposal.txt">
+    <Text Include="../doc/proposal.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="../res/priman.amc">
+      <Filter>Resource Files</Filter>
+    </Object>
   </ItemGroup>
 </Project>
