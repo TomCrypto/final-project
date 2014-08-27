@@ -8,7 +8,6 @@ all: Ass2
 
 Ass2: .build/obj/G308_Skeleton.o .build/obj/main.o
 	$(CC) -o bin/$@ $^ -lm -lGL -lGLU -lglut $(LPATH)
-	cp -ar res/. bin
 
 .build/obj/%.o: src/%.cpp
 	mkdir -p .build/obj
