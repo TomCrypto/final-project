@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Documentation">
+      <UniqueIdentifier>{417971fe-34d5-4d6e-a2c8-079cce3ac597}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="../src/G308_Skeleton.cpp">
@@ -34,15 +37,13 @@
     <None Include="../res/priman.asf">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="../res/priman.amc">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="../doc/proposal.txt">
-      <Filter>Resource Files</Filter>
+      <Filter>Documentation</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="../res/priman.amc">
-      <Filter>Resource Files</Filter>
-    </Object>
   </ItemGroup>
 </Project>
