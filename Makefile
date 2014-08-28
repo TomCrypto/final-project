@@ -6,11 +6,11 @@ OBJDIR           = .build/obj
 TARGET           = $(BINDIR)/$(OUTPUT)
 
 HEADERS          = $(shell find $(SRCDIR) -name '*.h' -or -name '*.hpp')
-OBJDIRS          = $(shell find $(SRCDIR) -mindepth 1 -type d)
+SRCDIRS          = $(shell find $(SRCDIR) -mindepth 1 -type d)
 CXX_SRC          = $(shell find $(SRCDIR) -name '*.cpp')
 C_SRC            = $(shell find $(SRCDIR) -name '*.c')
 
-OBJDIRS         := $(patsubst $(SRCDIR)/%,$(OBJDIR)/%,$(OBJDIRS)) $(OBJDIR)
+OBJDIRS          = $(patsubst $(SRCDIR)/%,$(OBJDIR)/%,$(SRCDIRS)) $(OBJDIR)
 CXX_OBJ          = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(CXX_SRC))
 C_OBJ            = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(C_SRC))
 
@@ -23,6 +23,9 @@ LDFLAGS          = -lm -lGL -lGLU -lglut -lstdc++
 
 all: $(TARGET)
 
+$(OBJDIRS):
+	mkdir -p $@
+
 $(TARGET): $(CXX_OBJ) $(C_OBJ)
 	$(CXX) $(LDPATH) $^ -o $@ $(LDFLAGS)
 
@@ -31,9 +34,6 @@ $(C_OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS) | $(OBJDIRS)
 
 $(CXX_OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS) | $(OBJDIRS)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-
-$(OBJDIRS):
-	mkdir -p $@
 
 clean:
 	rm -rf $(OBJDIR) $(TARGET)
