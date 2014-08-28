@@ -27,7 +27,7 @@ Folder Contents
     The different folders and their respective purpose are enumerated below:
 
         - `bin`: output folder for the final executable
-        - `doc`: supporting documentation (paperwork, SIGGRAPH papers, etc.)
+        - `doc`: supporting documentation (paperwork, SIGGRAPH papers)
         - `lib`: third-party libraries, excluding OpenGL, GLU and GLUT
         - `res`: assets used in our project (textures, models, etc.)
         - `src`: C and C++ source code and headers

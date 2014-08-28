@@ -15,8 +15,8 @@ LDPATH           = -L$(LIBDIR)/bin
 INCLUDE          = -I$(LIBDIR)/include -I$(SRCDIR)
 CFLAGS           = -O2 -Wall -Wextra -pedantic -std=c99
 CXXFLAGS         = -O2 -Wall -Wextra -pedantic -std=c++11
-LDFLAGS          = -lm -lGL -lGLU -lglut -lstdc++                      \
-                 # -lAntTweakBar -lfftw3f
+LDFLAGS          = -lm -lGL -lGLU -lglut -lstdc++
+               #+= -lAntTweakBar -lfftw3f
 
 default: $(TARGET)
 
