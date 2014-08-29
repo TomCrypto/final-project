@@ -14,20 +14,20 @@ OBJDIRS          = $(patsubst $(SRCDIR)/%,$(OBJDIR)/%,$(SRCDIRS)) $(OBJDIR)
 CXX_OBJ          = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(CXX_SRC))
 C_OBJ            = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(C_SRC))
 
-LDPATH           = -L$(LIBDIR)/bin
+LDPATH           = -L$(LIBDIR)/bin/linux
 INCLUDE          = -I$(LIBDIR)/include -I$(SRCDIR)
 CFLAGS           = -O2 -Wall -Wextra -pedantic -std=c99
 CXXFLAGS         = -O2 -Wall -Wextra -pedantic -std=c++11
 LDFLAGS          = -lm -lGL -lGLU -lglut -lstdc++
-#LDFLAGS         += -lfreeimage
-#LDFLAGS         += -lAntTweakBar -lfftw3f
+LDFLAGS         += -lfreeimage -lfftw3f
+#LDFLAGS         += -lAntTweakBar
 
 all: $(TARGET)
 
 $(OBJDIRS):
 	mkdir -p $@
 
-$(TARGET): $(CXX_OBJ) $(C_OBJ)
+$(TARGET): $(CXX_OBJ) $(C_OBJ) | dependencies
 	$(CXX) $(LDPATH) $^ -o $@ $(LDFLAGS)
 
 $(C_OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS) | $(OBJDIRS)
@@ -36,7 +36,13 @@ $(C_OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS) | $(OBJDIRS)
 $(CXX_OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS) | $(OBJDIRS)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
+dependencies:
+	cd $(LIBDIR) && make
+
 clean:
 	rm -rf $(OBJDIR) $(TARGET)
 
-.PHONY: all clean
+cleandeps:
+	cd $(LIBDIR) && make clean
+
+.PHONY: all dependencies clean cleandeps
