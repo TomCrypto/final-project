@@ -20,16 +20,22 @@ $(BUILDDIR)/FreeImage/Makefile: $(BUILDDIR)/freeimage.zip
 $(BUILDDIR)/freeimage.zip:
 	wget http://softlayer-dal.dl.sourceforge.net/project/freeimage/Source%20Distribution/3.16.0/FreeImage3160.zip -O $@
 
-fftw: $(OUTDIR)/libfftw3f.a
+fftw: $(OUTDIR)/libfftw3f.a $(OUTDIR)/libfftw3f_omp.a
 
 $(OUTDIR)/libfftw3f.a: $(BUILDDIR)/fftw-3.3.4/.libs/libfftw3f.a
+	cp $^ $@
+
+$(OUTDIR)/libfftw3f_omp.a: $(BUILDDIR)/fftw-3.3.4/threads/.libs/libfftw3f_omp.a
 	cp $^ $@
 
 $(BUILDDIR)/fftw-3.3.4/.libs/libfftw3f.a: $(BUILDDIR)/fftw-3.3.4/Makefile
 	cd $(BUILDDIR)/fftw-3.3.4 && make -j 2
 
+$(BUILDDIR)/fftw-3.3.4/threads/.libs/libfftw3f_omp.a: $(BUILDDIR)/fftw-3.3.4/Makefile
+	cd $(BUILDDIR)/fftw-3.3.4 && make -j 2
+
 $(BUILDDIR)/fftw-3.3.4/Makefile: $(BUILDDIR)/fftw-3.3.4/configure
-	cd $(BUILDDIR)/fftw-3.3.4 && ./configure --enable-threads --enable-float
+	cd $(BUILDDIR)/fftw-3.3.4 && ./configure --enable-openmp --enable-float
 
 $(BUILDDIR)/fftw-3.3.4/configure: $(BUILDDIR)/fftw3.tar.gz
 	tar -zxvf $< -C $(BUILDDIR)
@@ -55,6 +61,6 @@ $(BUILDDIR)/anttweakbar.zip:
 	wget http://hivelocity.dl.sourceforge.net/project/anttweakbar/AntTweakBar_116.zip -O $@
 
 clean:
-	rm -rf $(BUILDDIR)/*
+	rm -rf $(BUILDDIR)/* $(OUTDIR)/libfreeimage.a $(OUTDIR)/libfftw3f.a $(OUTDIR)/libfftw3f_omp.a $(OUTDIR)/libAntTweakBar.a
 
 .PHONY: all $(DEPS) clean
