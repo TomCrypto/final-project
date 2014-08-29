@@ -27,7 +27,7 @@ all: $(TARGET)
 $(OBJDIRS):
 	mkdir -p $@
 
-$(TARGET): $(CXX_OBJ) $(C_OBJ) | dependencies
+$(TARGET): $(CXX_OBJ) $(C_OBJ)
 	$(CXX) $(LDPATH) $^ -o $@ $(LDFLAGS)
 
 $(C_OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS) | $(OBJDIRS)
@@ -36,7 +36,7 @@ $(C_OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS) | $(OBJDIRS)
 $(CXX_OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS) | $(OBJDIRS)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
-dependencies:
+deps:
 	cd $(LIBDIR) && make
 
 clean:
@@ -45,4 +45,4 @@ clean:
 cleandeps:
 	cd $(LIBDIR) && make clean
 
-.PHONY: all dependencies clean cleandeps
+.PHONY: all deps clean cleandeps
