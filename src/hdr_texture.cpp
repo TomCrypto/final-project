@@ -146,11 +146,11 @@ void hdr_texture::add(const hdr_texture& other, const channels& which)
         
         for (size_t x = 0; x < w; ++x)
         {
-            if ((channels::R & which) != 0)
+            if (channels::R & which != 0)
                 dstPtr->x += srcPtr->x;
-            if ((channels::G & which) != 0)
+            if (channels::G & which != 0)
                 dstPtr->y += srcPtr->y;
-            if ((channels::B & which) != 0)
+            if (channels::B & which != 0)
                 dstPtr->z += srcPtr->z;
 
             ++srcPtr;
@@ -173,11 +173,11 @@ void hdr_texture::sub(const hdr_texture& other, const channels& which)
         
         for (size_t x = 0; x < w; ++x)
         {
-            if ((channels::R & which) != 0)
+            if (channels::R & which != 0)
                 dstPtr->x -= srcPtr->x;
-            if ((channels::G & which) != 0)
+            if (channels::G & which != 0)
                 dstPtr->y -= srcPtr->y;
-            if ((channels::B & which) != 0)
+            if (channels::B & which != 0)
                 dstPtr->z -= srcPtr->z;
 
             ++srcPtr;
@@ -201,11 +201,11 @@ void hdr_texture::normalize(const channels& which)
             total += *(ptr++);
     }
 
-    if ((channels::R & which) != 0)
+    if (channels::R & which != 0)
         total.x = 1.0f / total.x;
-    if ((channels::G & which) != 0)
+    if (channels::G & which != 0)
         total.y = 1.0f / total.y;
-    if ((channels::B & which) != 0)
+    if (channels::B & which != 0)
         total.z = 1.0f / total.z;
 
     for (size_t y = 0; y < h; ++y)
@@ -214,11 +214,11 @@ void hdr_texture::normalize(const channels& which)
 
         for (size_t x = 0; x < w; ++x)
         {
-            if ((channels::R & which) != 0)
+            if (channels::R & which != 0)
                 ptr->x *= total.x;
-            if ((channels::G & which) != 0)
+            if (channels::G & which != 0)
                 ptr->y *= total.y;
-            if ((channels::B & which) != 0)
+            if (channels::B & which != 0)
                 ptr->z *= total.z;
 
             ++ptr;
