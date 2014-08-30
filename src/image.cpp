@@ -211,6 +211,8 @@ void image::load(const std::string& path)
         if (!success)
             throw std::runtime_error("image::load -> bad image type");
     }
+
+    assert(FreeImage_GetLine(dib) == FreeImage_GetPitch(dib));
 }
 
 void image::save(const std::string& path) const
@@ -267,6 +269,80 @@ void image::fill(const glm::vec4& bkgd, const channels& which)
     });
 }
 
+void image::grayscale()
+{
+    rop1n(*this, [](const glm::vec4& a){
+        float avg = (a.x + a.y + a.z) / 3.0f;
+        return glm::vec4(avg, avg, avg, 0.0f);
+    });
+}
+
+void image::colorize(const glm::vec4& color)
+{
+    rop1n(*this, [color](const glm::vec4& a){
+        return a * color;
+    });
+}
+
+void image::reproduce(const channels& which)
+{
+    assert((which == channels::R)
+        || (which == channels::G)
+        || (which == channels::B));
+
+    if (which == channels::R)
+    {
+        rop1n(*this, [](const glm::vec4& a){
+            return glm::vec4(a.x, a.x, a.x, 0.0f);
+        });
+    }
+    else if (which == channels::G)
+    {
+        rop1n(*this, [](const glm::vec4& a){
+            return glm::vec4(a.y, a.y, a.y, 0.0f);
+        });
+    }
+    else if (which == channels::B)
+    {
+        rop1n(*this, [](const glm::vec4& a){
+            return glm::vec4(a.z, a.z, a.z, 0.0f);
+        });
+    }
+}
+
+image image::compose(const image& r, const image& g, const image& b)
+{
+    assert((r.width() == g.width()) && (r.height() == g.height()));
+    assert((g.width() == b.width()) && (g.height() == b.height()));
+    assert((b.width() == r.width()) && (b.height() == r.height()));
+
+    image out(r.width(), r.height());
+    size_t w = r.width(), h = r.height();
+
+    for (size_t y = 0; y < h; ++y)
+    {
+        glm::vec4* dstPtr = out[y];
+        const glm::vec4* r_ptr = r[y];
+        const glm::vec4* g_ptr = g[y];
+        const glm::vec4* b_ptr = b[y];
+
+        for (size_t x = 0; x < w; ++x)
+        {
+            dstPtr->r = r_ptr->x;
+            dstPtr->g = g_ptr->x;
+            dstPtr->b = b_ptr->x;
+            dstPtr->w = 0;
+
+            ++dstPtr;
+            ++r_ptr;
+            ++g_ptr;
+            ++b_ptr;
+        }
+    }
+
+    return out;
+}
+
 void image::normalize(bool local, const channels& which)
 {
     glm::vec4 measure, inv_norm;
@@ -306,8 +382,8 @@ image image::resize(size_t newWidth, size_t newHeight, FREE_IMAGE_FILTER filter)
 image image::subregion(size_t rectX, size_t rectY, size_t rectW, size_t rectH) const
 {
     assert(rectW + rectH > 0);
-    assert(rectX + rectW < width());
-    assert(rectY + rectH < height());
+    assert(rectX + rectW <= width());
+    assert(rectY + rectH <= height());
 
     FIBITMAP *region = FreeImage_Copy(this->dib, rectX, rectY, rectX + rectW, rectY + rectH);
     if (!region) throw std::runtime_error("image::subregion");
@@ -355,6 +431,16 @@ const glm::vec4& image::operator()(size_t x, size_t y) const
     return *((*this)[y] + x);
 }
 
+glm::vec4* image::data()
+{
+    return (*this)[0];
+}
+
+const glm::vec4* image::data() const
+{
+    return (*this)[0];
+}
+
 size_t image::width() const
 {
     return FreeImage_GetWidth(this->dib);
@@ -363,4 +449,29 @@ size_t image::width() const
 size_t image::height() const
 {
     return FreeImage_GetHeight(this->dib);
+}
+
+image utils::draw_circle(size_t radius, bool anti_alias, const glm::vec4& color)
+{
+    if (anti_alias) radius *= 2;
+    image circle(2 * radius, 2 * radius);
+    for (size_t y = 0; y < 2 * radius; ++y)
+    {
+        glm::vec4* ptr = circle[y];
+
+        for (size_t x = 0; x < 2 * radius; ++x)
+        {
+            float px = ((float)x - radius) / (radius);
+            float py = ((float)y - radius) / (radius);
+
+            if (px * px + py * py <= 1.0f)
+                *ptr = color;
+
+            ++ptr;
+        }
+    }
+
+    if (anti_alias) circle = circle.resize(radius, radius);
+
+    return circle;
 }

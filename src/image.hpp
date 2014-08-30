@@ -44,8 +44,20 @@ public:
     void sub(const image& other, const channels& which = channels::RGB);
     void mul(const image& other, const channels& which = channels::RGB);
 
-    //<< Fills channels of the image with a given background color
+    //<< Fills channels of this image with a given background color
     void fill(const glm::vec4& bkgd, const channels& which = channels::RGB);
+
+    //<< Sets each channel of this image to the average of all channels
+    void grayscale();
+
+    //<< Multiplies every pixel of this image with a given color
+    void colorize(const glm::vec4& color);
+
+    //<< Copies one channel (which must be R, G, or B) to all others
+    void reproduce(const channels& which);
+
+    //<< Composes an image out the the R channel of r, g, b images
+    static image compose(const image& r, const image& g, const image& b);
 
     //<< Normalizes channels of this image such that:
     //<<  - the channel sums up to 1, if local is false
@@ -69,11 +81,22 @@ public:
     glm::vec4& operator()(size_t x, size_t y);
 	const glm::vec4& operator()(size_t x, size_t y) const;
 
+    //<<Returns a raw pointer to the bitmap data
+    glm::vec4* data();
+    const glm::vec4* data() const;
+
     //<< Accesses the width and height of the image
     size_t width() const;
     size_t height() const;
 private:
     FIBITMAP *dib;
 };
+
+namespace utils
+{
+    //<< Draws a circle of a given radius and color
+    //<< The returned image has side 2 * radius
+    image draw_circle(size_t radius, bool anti_alias, const glm::vec4& color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
+}
 
 #endif
