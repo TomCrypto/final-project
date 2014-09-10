@@ -52,6 +52,11 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(g_nWinWidth, g_nWinHeight);
 	g_mainWnd = glutCreateWindow("COMP308 Assignment2");
+	if (GLEW_OK != glewInit())
+	{
+	    printf("GLEW init failed!\n");
+	    return EXIT_FAILURE;
+	}
 
     bar = new gui_bar("Hello World");
     bar->keyboard_cb(G308_keyboardListener); // example: tweakbar
