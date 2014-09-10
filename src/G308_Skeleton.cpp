@@ -24,7 +24,9 @@
 #include "define.h"
 #include <math.h> //only added this for asin and sqrt
 
+#ifndef M_PI
 #define M_PI 3.14159265f
+#endif
 
 Skeleton::Skeleton(char* filename) {
 	numBones = 1;
@@ -220,7 +222,7 @@ void Skeleton::readHeading(char* buff, FILE* file) {
 		//version string - must be 1.10
 		char* version = rest;
 		if (num != 2) {
-			char *p = { '\0' };
+			char *p = "\0";
 			while (strlen(p) == 0) {
 				char* p = fgets(buff, buffSize, file);
 				decomment(p);

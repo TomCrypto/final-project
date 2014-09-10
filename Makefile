@@ -18,9 +18,9 @@ LDPATH           = -L$(LIBDIR)/bin/linux
 INCLUDE          = -I$(LIBDIR)/include -I$(SRCDIR)
 CFLAGS           = -O2 -Wall -Wextra -pedantic -std=c99
 CXXFLAGS         = -O2 -Wall -Wextra -pedantic -std=c++11
-LDFLAGS          = -lm -lGL -lGLU -lglut -lstdc++
+LDFLAGS          = -lm -lGLEW -lGLU -lGL -lglut -lstdc++
+LDFLAGS         += -lfreeimage -lAntTweakBar -lX11
 LDFLAGS         += -lfftw3f -lfftw3f_omp -fopenmp
-LDFLAGS         += -lfreeimage -lAntTweakBar
 
 all: $(TARGET)
 

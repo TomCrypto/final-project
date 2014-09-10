@@ -17,13 +17,20 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <GL/glew.h>
 #include <GL/glut.h>
 #include "define.h"
 #include "G308_Skeleton.h"
 
+#include "gui_bar.h"
+
+#include <iostream>
+
 GLuint g_mainWnd;
 GLuint g_nWinWidth = G308_WIN_WIDTH;
 GLuint g_nWinHeight = G308_WIN_HEIGHT;
+
+gui_bar* bar; // example: tweakbar
 
 void G308_keyboardListener(unsigned char, int, int);
 void G308_Reshape(int w, int h);
@@ -46,7 +53,9 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(g_nWinWidth, g_nWinHeight);
 	g_mainWnd = glutCreateWindow("COMP308 Assignment2");
 
-	glutKeyboardFunc(G308_keyboardListener);
+    bar = new gui_bar("Hello World");
+    bar->keyboard_cb(G308_keyboardListener); // example: tweakbar
+	//glutKeyboardFunc(G308_keyboardListener);
 	glutDisplayFunc(G308_display);
 	glutReshapeFunc(G308_Reshape);
 
@@ -84,15 +93,21 @@ void G308_display() {
 
 	// [Assignmet2] : render skeleton
 	if (skeleton != NULL) {
-		skeleton->angle = rotate_angle; //pass angle to skeleton
+		//skeleton->angle = rotate_angle; //pass angle to skeleton
+		
+		// tweakbar example - read rotation from the GUI bar
+		skeleton->angle = bar->rotation;
+		
 		skeleton->display();
 	}
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_COLOR_MATERIAL);
 
+    bar->draw();
+
 	glutSwapBuffers();
-	//glutPostRedisplay(); //Had to add this as it wouldn't display straight away on uni machines, worked fine through ssh though.
+	glutPostRedisplay(); //Had to add this as it wouldn't display straight away on uni machines, worked fine through ssh though.
 }
 
 void G308_keyboardListener(unsigned char key, int x, int y) {
@@ -112,6 +127,8 @@ void G308_Reshape(int w, int h) {
 	g_nWinHeight = h;
 
 	glViewport(0, 0, g_nWinWidth, g_nWinHeight);
+	
+	bar->resize(g_nWinWidth, g_nWinHeight);
 }
 
 // Set Camera Position

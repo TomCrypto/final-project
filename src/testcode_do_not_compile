@@ -1,0 +1,195 @@
+#include <FreeImage.h>
+#include "fft/fft.hpp"
+#include "fft/aperture.hpp"
+
+#include "image.hpp"
+
+static void initialize(void)
+{
+    const int num_fftw_threads = 1;
+
+    printf("=== Initializing...\n");
+    FreeImage_Initialise();
+    printf("=== -> FreeImage OK\n");
+    fftwf_init_threads();
+    printf("=== -> FFTW OK");
+    fftwf_plan_with_nthreads(num_fftw_threads);
+    printf(" (%d threads)\n", num_fftw_threads);
+    printf("=== Ready.\n");
+}
+
+static void finalize(void)
+{
+    printf("=== Finalizing...\n");
+    FreeImage_DeInitialise();
+    fftwf_cleanup();
+}
+
+static glm::vec3 curve[81] = {
+glm::vec3(0.0014,0.0000,0.0065), glm::vec3(0.0022,0.0001,0.0105), glm::vec3(0.0042,0.0001,0.0201),
+glm::vec3(0.0076,0.0002,0.0362), glm::vec3(0.0143,0.0004,0.0679), glm::vec3(0.0232,0.0006,0.1102),
+glm::vec3(0.0435,0.0012,0.2074), glm::vec3(0.0776,0.0022,0.3713), glm::vec3(0.1344,0.0040,0.6456),
+glm::vec3(0.2148,0.0073,1.0391), glm::vec3(0.2839,0.0116,1.3856), glm::vec3(0.3285,0.0168,1.6230),
+glm::vec3(0.3483,0.0230,1.7471), glm::vec3(0.3481,0.0298,1.7826), glm::vec3(0.3362,0.0380,1.7721),
+glm::vec3(0.3187,0.0480,1.7441), glm::vec3(0.2908,0.0600,1.6692), glm::vec3(0.2511,0.0739,1.5281),
+glm::vec3(0.1954,0.0910,1.2876), glm::vec3(0.1421,0.1126,1.0419), glm::vec3(0.0956,0.1390,0.8130),
+glm::vec3(0.0580,0.1693,0.6162), glm::vec3(0.0320,0.2080,0.4652), glm::vec3(0.0147,0.2586,0.3533),
+glm::vec3(0.0049,0.3230,0.2720), glm::vec3(0.0024,0.4073,0.2123), glm::vec3(0.0093,0.5030,0.1582),
+glm::vec3(0.0291,0.6082,0.1117), glm::vec3(0.0633,0.7100,0.0782), glm::vec3(0.1096,0.7932,0.0573),
+glm::vec3(0.1655,0.8620,0.0422), glm::vec3(0.2257,0.9149,0.0298), glm::vec3(0.2904,0.9540,0.0203),
+glm::vec3(0.3597,0.9803,0.0134), glm::vec3(0.4334,0.9950,0.0087), glm::vec3(0.5121,1.0000,0.0057),
+glm::vec3(0.5945,0.9950,0.0039), glm::vec3(0.6784,0.9786,0.0027), glm::vec3(0.7621,0.9520,0.0021),
+glm::vec3(0.8425,0.9154,0.0018), glm::vec3(0.9163,0.8700,0.0017), glm::vec3(0.9786,0.8163,0.0014),
+glm::vec3(1.0263,0.7570,0.0011), glm::vec3(1.0567,0.6949,0.0010), glm::vec3(1.0622,0.6310,0.0008),
+glm::vec3(1.0456,0.5668,0.0006), glm::vec3(1.0026,0.5030,0.0003), glm::vec3(0.9384,0.4412,0.0002),
+glm::vec3(0.8544,0.3810,0.0002), glm::vec3(0.7514,0.3210,0.0001), glm::vec3(0.6424,0.2650,0.0000),
+glm::vec3(0.5419,0.2170,0.0000), glm::vec3(0.4479,0.1750,0.0000), glm::vec3(0.3608,0.1382,0.0000),
+glm::vec3(0.2835,0.1070,0.0000), glm::vec3(0.2187,0.0816,0.0000), glm::vec3(0.1649,0.0610,0.0000),
+glm::vec3(0.1212,0.0446,0.0000), glm::vec3(0.0874,0.0320,0.0000), glm::vec3(0.0636,0.0232,0.0000),
+glm::vec3(0.0468,0.0170,0.0000), glm::vec3(0.0329,0.0119,0.0000), glm::vec3(0.0227,0.0082,0.0000),
+glm::vec3(0.0158,0.0057,0.0000), glm::vec3(0.0114,0.0041,0.0000), glm::vec3(0.0081,0.0029,0.0000),
+glm::vec3(0.0058,0.0021,0.0000), glm::vec3(0.0041,0.0015,0.0000), glm::vec3(0.0029,0.0010,0.0000),
+glm::vec3(0.0020,0.0007,0.0000), glm::vec3(0.0014,0.0005,0.0000), glm::vec3(0.0010,0.0004,0.0000),
+glm::vec3(0.0007,0.0002,0.0000), glm::vec3(0.0005,0.0002,0.0000), glm::vec3(0.0003,0.0001,0.0000),
+glm::vec3(0.0002,0.0001,0.0000), glm::vec3(0.0002,0.0001,0.0000), glm::vec3(0.0001,0.0000,0.0000),
+glm::vec3(0.0001,0.0000,0.0000), glm::vec3(0.0001,0.0000,0.0000), glm::vec3(0.0000,0.0000,0.0000)};
+
+glm::vec4 lambda_to_rgb(float w)
+{
+    glm::mat3 mat(2.3706743, -0.9000405, -0.4706338,
+                  -0.5138850,  1.4253036,  0.0885814,
+                  0.0052982, -0.0146949,  1.0093968);
+
+    int index = ((int)w - 380) / 5;
+    if (index < 0) index = 0;
+    if (index > 80) index = 80;
+    
+    glm::vec3 xyz = curve[index];
+    glm::vec3 rgb = mat * xyz;
+    
+    if (rgb.x < 0) rgb.x = 0;
+    if (rgb.x > 1) rgb.x = 1;
+    if (rgb.y < 0) rgb.y = 0;
+    if (rgb.y > 1) rgb.y = 1;
+    if (rgb.z < 0) rgb.z = 0;
+    if (rgb.z > 1) rgb.z = 1;
+    
+    return glm::vec4(rgb.x, rgb.y, rgb.z, 1.0f);
+}
+
+int main(int argc, char** argv) {
+    initialize();
+    
+    glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitWindowSize(g_nWinWidth, g_nWinHeight);
+	g_mainWnd = glutCreateWindow("COMP308 Assignment2");
+	if (GLEW_OK != glewInit())
+	{
+	    printf("GLEW init failed!\n");
+	    return EXIT_FAILURE;
+	}
+	
+	fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+	
+	if( !GLEW_VERSION_2_1 ) { printf( "OpenGL 2.1 not supported!\n" ); return false; }
+
+    try
+    {
+        //image ap = aperture::generate(512, 512, 7);
+        //ap.save("generated.exr");
+        //return EXIT_SUCCESS;    
+    
+        fft_planner planner(1024, 1024, 256, 256);
+        
+        image foo(argv[1]);
+        //foo = foo.resize(1024, 1024);
+        //foo = foo.zero_pad(256, 256, 256, 256);
+        
+        // large flare test
+        foo = foo.resize(400, 400);
+        foo = foo.enlarge(1024, 1024);
+        
+        printf("dimensions = (%d, %d)\n", foo.width(), foo.height());
+        foo.grayscale();
+        //foo.normalize(true);
+        auto ps = planner.power_spectrum(foo, channels::R);
+        ps.reproduce(channels::R);
+        ps.normalize(false);
+        ps.save("ps2.exr");
+        
+        for (int z = 0; z < 1; ++z)
+        {
+        
+        const float dist = 0.65f;//0.05f * z;
+        
+        image flare(foo.width(), foo.height());
+        
+        for (int t = 0; t < 80; ++t)
+        {
+            float lambda = 780 - t * 5;
+            //float scale = 1 - 0.25 * lambda / 780; // observation distance
+            //float scale = 1 - dist * (750 - lambda) / 750; // observation distance
+            float scale = 0.75f * lambda / 780;
+            
+            int newX = (int)(foo.width() * scale);
+            int newY = (int)(foo.height() * scale);
+            int dx = foo.width() - newX;
+            int dy = foo.height() - newY;
+            int left = dx / 2;
+            int top = dy / 2;
+            int right = dx - left;
+            int bottom = dy - top;
+            
+            auto ps_resized = ps.resize(newX, newY, FILTER_BILINEAR);
+            ps_resized.normalize(false);
+            auto color = lambda_to_rgb(lambda);
+            printf("lambda = %f, color = (%.2f, %.2f, %.2f)\n", lambda, color.x, color.y, color.z);
+            ps_resized.colorize(color); // need scale here?
+            ps_resized = ps_resized.zero_pad(left, top, right, bottom);
+            
+            flare.add(ps_resized);
+        }
+        
+        flare = flare.resize(1024, 1024);
+        flare.normalize(false);
+        flare.save("flare.exr");
+        //return 0;
+        
+        for (int size = 1; size <= 128; size *= 2)
+        {
+            auto circle = utils::draw_circle(size, false);
+            circle.colorize(glm::vec4(10, 10, 10, 0));
+            
+            auto convolved = planner.convolve(flare, circle, channels::RGB);
+            convolved = convolved.resize(768, 768);
+            convolved.save("convolved_" + std::to_string(size) + ".exr");
+        }
+        }
+        
+        /*foo.resize(512, 512);
+        printf("w = %d, h = %d\n", foo.width(), foo.height());
+        auto ps = planner.power_spectrum(foo);
+        ps.normalize(channels::R);
+        ps.save("ps.exr");
+        hdr_texture scene("scene.exr");
+        printf("w = %d, h = %d\n", scene.width(), scene.height());
+        auto output = planner.convolve(ps, scene, channels::R);
+        printf("w = %d, h = %d\n", output.width(), output.height());
+        output.resize(768, 768);
+        output.save("output.exr");*/
+    }
+    catch (const std::exception& e)
+    {
+        printf("====\nError: %s\n", e.what());
+        return EXIT_FAILURE;
+    }
+    catch (...)
+    {
+        printf("Fatal error encountered - exiting.\n");
+        return EXIT_FAILURE;
+    }
+    
+    finalize(); // Done!
+    //return EXIT_SUCCESS;
+}

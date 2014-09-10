@@ -67,6 +67,9 @@ public:
     //<< Resizes this image to new dimensions with a given filter, and returns the result
     image resize(size_t newWidth, size_t newHeight, FREE_IMAGE_FILTER filter = FILTER_CATMULLROM) const;
 
+    //<< Enlarges this image, centering the contents and padding with black on the sides
+    image enlarge(size_t newWidth, size_t newHeight) const;
+
     //<< Returns the subregion of this image specified by a given rectangle
     image subregion(size_t rectX, size_t rectY, size_t rectW, size_t rectH) const;
 

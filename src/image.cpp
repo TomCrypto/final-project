@@ -80,8 +80,10 @@ static bool bitmap_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, size_t w, size_t h)
     assert(w + h > 0);
 
     int bpp = FreeImage_GetBPP(src);
-    if ((bpp != 24) && (bpp != 32))
+    if ((bpp != 8) && (bpp != 24) && (bpp != 32))
         return false;
+
+    RGBQUAD* palette = FreeImage_GetPalette(src);
 
     for (size_t y = 0; y < h; ++y)
     {
@@ -90,9 +92,19 @@ static bool bitmap_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, size_t w, size_t h)
 
         for (size_t x = 0; x < w; ++x)
         {
-            dstPtr->red   = (float)srcPtr[FI_RGBA_RED] / 255.0f;
-            dstPtr->green = (float)srcPtr[FI_RGBA_GREEN] / 255.0f;
-            dstPtr->blue  = (float)srcPtr[FI_RGBA_BLUE] / 255.0f;
+            if ((bpp == 24) || (bpp == 32))
+            {
+                dstPtr->red   = (float)srcPtr[FI_RGBA_RED] / 255.0f;
+                dstPtr->green = (float)srcPtr[FI_RGBA_GREEN] / 255.0f;
+                dstPtr->blue  = (float)srcPtr[FI_RGBA_BLUE] / 255.0f;
+            }
+            else
+            {
+                dstPtr->red   = (float)palette[*srcPtr].rgbRed / 255.0f;
+                dstPtr->green = (float)palette[*srcPtr].rgbGreen / 255.0f;
+                dstPtr->blue  = (float)palette[*srcPtr].rgbBlue / 255.0f;
+            }
+
             dstPtr->alpha = 0;
 
             srcPtr += (bpp / 8);
@@ -377,6 +389,19 @@ image image::resize(size_t newWidth, size_t newHeight, FREE_IMAGE_FILTER filter)
     if (!resized) throw std::runtime_error("image::resize");
 
     return image(resized);
+}
+
+image image::enlarge(size_t newWidth, size_t newHeight) const
+{
+    assert((newWidth >= width()) && (newHeight >= height()));
+    assert(newWidth + newHeight > 0);
+
+    size_t padL = (newWidth - width()) / 2;
+    size_t padR = newWidth - width() - padL;
+    size_t padT = (newHeight - height()) / 2;
+    size_t padB = newHeight - height() - padT;
+
+    return zero_pad(padL, padT, padR, padB);
 }
 
 image image::subregion(size_t rectX, size_t rectY, size_t rectW, size_t rectH) const
