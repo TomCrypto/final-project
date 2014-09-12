@@ -76,6 +76,8 @@ int main(int argc, char** argv) {
 
 	glutMainLoop();
 
+    gui::free(); // don't forget
+
 	return EXIT_SUCCESS;
 }
 
