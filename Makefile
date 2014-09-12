@@ -2,6 +2,7 @@ OUTPUT           = Project
 BINDIR           = bin
 LIBDIR           = lib
 SRCDIR           = src
+RESDIR           = res
 OBJDIR           = .build/obj
 TARGET           = $(BINDIR)/$(OUTPUT)
 
@@ -9,10 +10,12 @@ HEADERS          = $(shell find $(SRCDIR) -name '*.h' -or -name '*.hpp')
 SRCDIRS          = $(shell find $(SRCDIR) -mindepth 1 -type d)
 CXX_SRC          = $(shell find $(SRCDIR) -name '*.cpp')
 C_SRC            = $(shell find $(SRCDIR) -name '*.c')
+RESOURCES        = $(shell find $(RESDIR) -type f)
 
 OBJDIRS          = $(patsubst $(SRCDIR)/%,$(OBJDIR)/%,$(SRCDIRS)) $(OBJDIR)
 CXX_OBJ          = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(CXX_SRC))
 C_OBJ            = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(C_SRC))
+RES              = $(patsubst $(RESDIR)/%,$(BINDIR)/%,$(RESOURCES))
 
 LDPATH           = -L$(LIBDIR)/bin/linux
 INCLUDE          = -I$(LIBDIR)/include -I$(SRCDIR)
@@ -27,7 +30,10 @@ all: $(TARGET)
 $(OBJDIRS):
 	mkdir -p $@
 
-$(TARGET): $(CXX_OBJ) $(C_OBJ)
+$(BINDIR)/%: $(RESDIR)/%
+	cp $< $@
+
+$(TARGET): $(CXX_OBJ) $(C_OBJ) | $(RES)
 	$(CXX) $(LDPATH) $^ -o $@ $(LDFLAGS)
 
 $(C_OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS) | $(OBJDIRS)

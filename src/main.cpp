@@ -22,7 +22,7 @@
 #include "define.h"
 #include "G308_Skeleton.h"
 
-#include "gui_bar.h"
+#include "gui.hpp"
 
 #include <iostream>
 
@@ -30,7 +30,7 @@ GLuint g_mainWnd;
 GLuint g_nWinWidth = G308_WIN_WIDTH;
 GLuint g_nWinHeight = G308_WIN_HEIGHT;
 
-gui_bar* bar; // example: tweakbar
+gui::main_bar* bar; // example: tweakbar
 
 void G308_keyboardListener(unsigned char, int, int);
 void G308_Reshape(int w, int h);
@@ -58,8 +58,13 @@ int main(int argc, char** argv) {
 	    return EXIT_FAILURE;
 	}
 
-    bar = new gui_bar("Hello World");
-    bar->keyboard_cb(G308_keyboardListener); // example: tweakbar
+	if (!gui::init())
+        printf("ATB FAIL!\n");
+
+    bar = new gui::main_bar("mainbar");
+    bar->set_title("Hello world!");
+
+    gui::keyboard_cb(G308_keyboardListener); // example: tweakbar
 	//glutKeyboardFunc(G308_keyboardListener);
 	glutDisplayFunc(G308_display);
 	glutReshapeFunc(G308_Reshape);
@@ -70,6 +75,8 @@ int main(int argc, char** argv) {
 	skeleton = new Skeleton(argv[1]);
 
 	glutMainLoop();
+
+    gui::free(); // don't forget
 
 	return EXIT_SUCCESS;
 }
@@ -99,23 +106,25 @@ void G308_display() {
 	// [Assignmet2] : render skeleton
 	if (skeleton != NULL) {
 		//skeleton->angle = rotate_angle; //pass angle to skeleton
-		
+
 		// tweakbar example - read rotation from the GUI bar
 		skeleton->angle = bar->rotation;
-		
+
 		skeleton->display();
 	}
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_COLOR_MATERIAL);
 
-    bar->draw();
+    gui::draw();
 
 	glutSwapBuffers();
 	glutPostRedisplay(); //Had to add this as it wouldn't display straight away on uni machines, worked fine through ssh though.
 }
 
 void G308_keyboardListener(unsigned char key, int x, int y) {
+    (void)x;
+    (void)y;
 	//Code to respond to key events
   if(key=='r') { //when the r key is pressed
     rotate_angle += 5; //increment rotation
@@ -132,8 +141,8 @@ void G308_Reshape(int w, int h) {
 	g_nWinHeight = h;
 
 	glViewport(0, 0, g_nWinWidth, g_nWinHeight);
-	
-	bar->resize(g_nWinWidth, g_nWinHeight);
+
+	gui::resize(g_nWinWidth, g_nWinHeight);
 }
 
 // Set Camera Position
