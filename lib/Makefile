@@ -1,4 +1,4 @@
-DEPS             = freeimage fftw anttweakbar
+DEPS             = freeimage fftw anttweakbar glew
 OUTDIR           = bin/linux
 BUILDDIR         = .build
 
@@ -60,7 +60,23 @@ $(BUILDDIR)/AntTweakBar/src/Makefile: $(BUILDDIR)/anttweakbar.zip
 $(BUILDDIR)/anttweakbar.zip:
 	wget http://hivelocity.dl.sourceforge.net/project/anttweakbar/AntTweakBar_116.zip -O $@
 
+glew: $(OUTDIR)/libGLEW.a
+
+$(OUTDIR)/libGLEW.a: $(BUILDDIR)/glew-master/lib/libGLEW.a
+	cp $^ $@
+
+$(BUILDDIR)/glew-master/lib/libGLEW.a: $(BUILDDIR)/glew-master/Makefile
+	cd $(BUILDDIR)/glew-master/auto && make -j 2 && cd .. && make -j 2
+
+$(BUILDDIR)/glew-master/Makefile: $(BUILDDIR)/glew.zip
+	rm -rf $(BUILDDIR)/glew-master
+	unzip $< -d $(BUILDDIR)
+	touch $@
+
+$(BUILDDIR)/glew.zip:
+	wget https://github.com/nigels-com/glew/archive/master.zip -O $@
+
 clean:
-	rm -rf $(BUILDDIR)/* $(OUTDIR)/libfreeimage.a $(OUTDIR)/libfftw3f.a $(OUTDIR)/libfftw3f_omp.a $(OUTDIR)/libAntTweakBar.a
+	rm -rf $(BUILDDIR)/* $(OUTDIR)/libfreeimage.a $(OUTDIR)/libfftw3f.a $(OUTDIR)/libfftw3f_omp.a $(OUTDIR)/libAntTweakBar.a $(OUTDIR)/libGLEW.a
 
 .PHONY: all $(DEPS) clean
