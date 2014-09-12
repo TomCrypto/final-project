@@ -54,7 +54,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glu32.lib;glut32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glu32.lib;glut32.lib;opengl32.lib;AntTweakBar.lib;FreeImage.lib;libfftw3f-3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,10 +75,14 @@
   <ItemGroup>
     <ClCompile Include="../src/G308_Skeleton.cpp" />
     <ClCompile Include="../src/main.cpp" />
+    <ClCompile Include="..\src\gui.cpp" />
+    <ClCompile Include="..\src\image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="../src/define.h" />
     <ClInclude Include="../src/G308_Skeleton.h" />
+    <ClInclude Include="..\src\gui.hpp" />
+    <ClInclude Include="..\src\image.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../res/priman.amc" />

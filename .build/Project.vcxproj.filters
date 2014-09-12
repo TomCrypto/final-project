@@ -24,12 +24,24 @@
     <ClCompile Include="../src/main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\gui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="../src/define.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="../src/G308_Skeleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\image.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
