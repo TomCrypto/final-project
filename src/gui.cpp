@@ -37,7 +37,7 @@ namespace gui
     bool init()
     {
 
-        bool success = (bool)TwInit(TW_OPENGL_CORE, NULL);
+        bool success = (TwInit(TW_OPENGL_CORE, NULL) == 1);
         if (success)
         {
             TwGLUTModifiersFunc(glutGetModifiers);
@@ -112,6 +112,8 @@ namespace gui
 
     main_bar::main_bar(const std::string& name) : basic_bar(name)
     {
+        this->rotation = 0;
+
         TwAddVarRW(m_bar,
             "Rotation", TW_TYPE_FLOAT, &this->rotation,
             "min=0 max=360 step=1.0 help='Rotate the skeleton'");

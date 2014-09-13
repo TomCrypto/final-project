@@ -36,8 +36,8 @@ namespace gui
         TwBar *m_bar;
         std::string m_name;
 
-        basic_bar& operator=(const basic_bar& other) = delete;
-        basic_bar(const basic_bar& other) = delete;
+        basic_bar& operator=(const basic_bar& other);
+        basic_bar(const basic_bar& other);
     };
 
     //<< the main bar which controls the main parameters
@@ -47,7 +47,7 @@ namespace gui
         main_bar(const std::string& name);
 
         //<< rotation of the skeleton (TEMPORARY)
-        float rotation = 0;
+        float rotation;
     };
 }
 
