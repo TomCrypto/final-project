@@ -16,6 +16,9 @@
     <Filter Include="Documentation">
       <UniqueIdentifier>{417971fe-34d5-4d6e-a2c8-079cce3ac597}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dependencies">
+      <UniqueIdentifier>{ce72ae25-9790-4c8e-9785-ed08f248d86e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="../src/G308_Skeleton.cpp">
@@ -51,6 +54,18 @@
     </None>
     <None Include="../res/priman.amc">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\lib\bin\win32\FreeImage.dll">
+      <Filter>Dependencies</Filter>
+    </None>
+    <None Include="..\lib\bin\win32\glew32.dll">
+      <Filter>Dependencies</Filter>
+    </None>
+    <None Include="..\lib\bin\win32\libfftw3f-3.dll">
+      <Filter>Dependencies</Filter>
+    </None>
+    <None Include="..\lib\bin\win32\AntTweakBar.dll">
+      <Filter>Dependencies</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
