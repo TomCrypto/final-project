@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -103,7 +103,7 @@ copy "$(SolutionDir)lib\bin\win32\libfftw3f-3.dll" "$(OutDir)"</Command>
   <ItemGroup>
     <None Include="../res/priman.amc" />
     <None Include="../res/priman.asf" />
-    <None Include="..\lib\bin\win32\AntTweakBar.dll">
+    <None Include="..\lib\bin\win32\AntTweakBar.dll" />
     <None Include="..\lib\bin\win32\FreeImage.dll" />
     <None Include="..\lib\bin\win32\glew32.dll" />
     <None Include="..\lib\bin\win32\libfftw3f-3.dll" />
