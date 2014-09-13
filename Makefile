@@ -31,7 +31,7 @@ $(OBJDIRS):
 	mkdir -p $@
 
 $(BINDIR)/%: $(RESDIR)/%
-	cp $< $@
+	mkdir -p $(dir $@) && cp $< $@
 
 $(TARGET): $(CXX_OBJ) $(C_OBJ) | $(RES)
 	$(CXX) $(LDPATH) $^ -o $@ $(LDFLAGS)
