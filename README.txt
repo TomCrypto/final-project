@@ -5,7 +5,14 @@
 Joseph Zachariah Sim (300263896)                           simjose@myvuw.ac.nz
 Thomas Beneteau (300250968)                             benetethom@myvuw.ac.nz
 
-<TODO: write brief notes about project and/or implementation here>
+This is our final project for COMP308, which consists of rendering a realistic
+sky and convincing lens flares using physically-based techniques, efficiently.
+
+We used C++ with OpenGL, and used a few libraries to help us implement various
+parts of the project - notably, FreeImage, for fast and flexible image loading
+and simple image processing, FFTW for calculating two-dimensional fast Fourier
+transforms (an important part of the lens flare pipeline) and AntTweakBar, for
+the simple GUI widget used to interact with our program.
 
 Instructions
 ------------
@@ -21,10 +28,6 @@ Instructions
 
         make && cd bin && ./Project; cd ..
 
-    The following dependencies are not provided and need to be installed:
-
-       OpenGL, GLU, GLUT
-
 Folder Contents
 ---------------
 
@@ -35,3 +38,17 @@ Folder Contents
         - `lib`: third-party libraries, excluding OpenGL-related libs
         - `res`: assets used in our project (textures, models, etc.)
         - `src`: C/C++ source code and headers
+
+External Links
+--------------
+
+http://freeimage.sourceforge.net/
+http://www.fftw.org/
+http://anttweakbar.sourceforge.net/
+http://glew.sourceforge.net/
+
+http://resources.mpi-inf.mpg.de/lensflareRendering/
+https://graphics.tudelft.nl/Publications-new/2013/LE13/PracticalReal-TimeLens.pdf
+http://www.graphics.stanford.edu/papers/nightsky/
+http://www.cs.utah.edu/~shirley/papers/sunsky/
+http://escholarship.org/uc/item/5n07m4p6
