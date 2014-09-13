@@ -46,6 +46,7 @@ http://freeimage.sourceforge.net/
 http://www.fftw.org/
 http://anttweakbar.sourceforge.net/
 http://glew.sourceforge.net/
+http://glm.g-truc.net/0.9.5/index.html
 
 http://resources.mpi-inf.mpg.de/lensflareRendering/
 https://graphics.tudelft.nl/Publications-new/2013/LE13/PracticalReal-TimeLens.pdf
