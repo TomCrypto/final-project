@@ -18,13 +18,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -39,16 +39,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)bin/</OutDir>
-    <IntDir>$(SolutionDir).build/obj/$(Configuration)/</IntDir>
-    <IncludePath>$(SolutionDir)/lib/include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)/lib/bin/win32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <OutDir>$(SolutionDir)bin\</OutDir>
+    <IntDir>$(SolutionDir).build\obj\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)lib\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\bin\win32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)bin/</OutDir>
-    <IntDir>$(SolutionDir).build/obj/$(Configuration)/</IntDir>
-    <IncludePath>$(SolutionDir)/lib/include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)/lib/bin/win32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <OutDir>$(SolutionDir)bin\</OutDir>
+    <IntDir>$(SolutionDir).build\obj\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)lib\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\bin\win32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -58,13 +58,10 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glu32.lib;glut32.lib;opengl32.lib;glew32.lib;AntTweakBar.lib;FreeImage.lib;libfftw3f-3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glu32.lib;glut32.lib;opengl32.lib;glew32.lib;AntTweakBar.lib;FreeImage.lib;libfftw3f-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)lib\bin\win32\AntTweakBar.dll" "$(OutDir)"
-copy "$(SolutionDir)lib\bin\win32\FreeImage.dll" "$(OutDir)"
-copy "$(SolutionDir)lib\bin\win32\glew32.dll" "$(OutDir)"
-copy "$(SolutionDir)lib\bin\win32\libfftw3f-3.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y /D /S $(SolutionDir)res\* $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -79,36 +76,35 @@ copy "$(SolutionDir)lib\bin\win32\libfftw3f-3.dll" "$(OutDir)"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glu32.lib;glut32.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glu32.lib;glut32.lib;opengl32.lib;glew32.lib;AntTweakBar.lib;FreeImage.lib;libfftw3f-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y /D /S $(SolutionDir)res\* $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="../src/G308_Skeleton.cpp" />
-    <ClCompile Include="../src/main.cpp" />
+    <ClCompile Include="..\src\G308_Skeleton.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\fbuffer.cpp" />
     <ClCompile Include="..\src\gui.cpp" />
     <ClCompile Include="..\src\image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="../src/define.h" />
-    <ClInclude Include="../src/G308_Skeleton.h" />
+    <ClInclude Include="..\src\define.h" />
+    <ClInclude Include="..\src\G308_Skeleton.h" />
+    <ClInclude Include="..\src\fbuffer.h" />
     <ClInclude Include="..\src\gui.hpp" />
     <ClInclude Include="..\src\image.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="../res/priman.amc" />
-    <None Include="../res/priman.asf" />
+    <None Include="..\res\priman.amc" />
+    <None Include="..\res\priman.asf" />
     <None Include="..\lib\bin\win32\AntTweakBar.dll" />
     <None Include="..\lib\bin\win32\FreeImage.dll" />
     <None Include="..\lib\bin\win32\glew32.dll" />
     <None Include="..\lib\bin\win32\libfftw3f-3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="../res/priman.amc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="../res/priman.asf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\lib\bin\win32\AntTweakBar.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -123,7 +119,18 @@ copy "$(SolutionDir)lib\bin\win32\libfftw3f-3.dll" "$(OutDir)"</Command>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="../doc/proposal.txt" />
+    <Image Include="..\res\apertures\circular.png" />
+    <Image Include="..\res\apertures\heptagonal.png" />
+    <Image Include="..\res\apertures\noise1.png" />
+    <Image Include="..\res\apertures\noise2.png" />
+    <Image Include="..\res\apertures\noise3.png" />
+    <Image Include="..\res\apertures\noise4.png" />
+    <Image Include="..\res\apertures\noise5.png" />
+    <Image Include="..\res\apertures\noise6.png" />
+    <Image Include="..\res\apertures\pentagonal.png" />
+    <Image Include="..\res\apertures\pupil_closing.png" />
+    <Image Include="..\res\apertures\pupil_glare.png" />
+    <Image Include="..\res\apertures\pupil_open.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

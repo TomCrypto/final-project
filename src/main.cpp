@@ -25,6 +25,7 @@
 #include "gui.hpp"
 
 #include <iostream>
+#include "fftw3.h"
 
 GLuint g_mainWnd;
 GLuint g_nWinWidth = G308_WIN_WIDTH;
@@ -42,12 +43,6 @@ void G308_SetLight();
 Skeleton* skeleton;
 float rotate_angle = 0; //to keep track of the angle that gets passed to the skeleton based on how many times the r key is pressed.
 int main(int argc, char** argv) {
-	if (argc < 2 || argc > 3) {
-		//Usage instructions for core and challenge
-		printf("Usage\n");
-		printf("./Ass2 priman.asf [priman.amc]\n");
-		exit(EXIT_FAILURE);
-	}
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(g_nWinWidth, g_nWinHeight);
@@ -72,7 +67,7 @@ int main(int argc, char** argv) {
 	G308_init();
 
 	// [Assignment2] : Read ASF file
-	skeleton = new Skeleton(argv[1]);
+	skeleton = new Skeleton("priman.asf");
 
 	glutMainLoop();
 

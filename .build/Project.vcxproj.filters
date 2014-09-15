@@ -13,48 +13,48 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Documentation">
-      <UniqueIdentifier>{417971fe-34d5-4d6e-a2c8-079cce3ac597}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Dependencies">
       <UniqueIdentifier>{ce72ae25-9790-4c8e-9785-ed08f248d86e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Apertures">
+      <UniqueIdentifier>{a371ce97-fcc1-4fed-8597-1705841f47d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="../src/G308_Skeleton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="../src/main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\fbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\G308_Skeleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="../src/define.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="../src/G308_Skeleton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\image.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\gui.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\fbuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\define.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\G308_Skeleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="../res/priman.asf">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="../res/priman.amc">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="..\lib\bin\win32\FreeImage.dll">
       <Filter>Dependencies</Filter>
     </None>
@@ -67,10 +67,49 @@
     <None Include="..\lib\bin\win32\AntTweakBar.dll">
       <Filter>Dependencies</Filter>
     </None>
+    <None Include="..\res\priman.amc">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\priman.asf">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="../doc/proposal.txt">
-      <Filter>Documentation</Filter>
-    </Text>
+    <Image Include="..\res\apertures\circular.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\heptagonal.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\noise1.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\noise2.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\noise3.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\noise4.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\noise5.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\noise6.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\pentagonal.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\pupil_closing.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\pupil_glare.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\pupil_open.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

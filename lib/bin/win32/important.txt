@@ -1,1 +1,0 @@
-The libfftw3f-3.dll library (and its .lib file) comes from the FFTW homepage, but is not threaded. The libfftw3f-3-alternate.dll library was built by myself and hopefully comes with threading support, but the .def file may not necessarily work for it, so it needs to be tested (if needed, anyway).
