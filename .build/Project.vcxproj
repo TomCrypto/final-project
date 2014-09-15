@@ -81,12 +81,6 @@ copy "$(SolutionDir)lib\bin\win32\libfftw3f-3.dll" "$(OutDir)"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>glu32.lib;glut32.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>copy "$(SolutionDir)lib\bin\win32\AntTweakBar.dll" "$(OutDir)"
-copy "$(SolutionDir)lib\bin\win32\FreeImage.dll" "$(OutDir)"
-copy "$(SolutionDir)lib\bin\win32\glew32.dll" "$(OutDir)"
-copy "$(SolutionDir)lib\bin\win32\libfftw3f-3.dll" "$(OutDir)"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="../src/G308_Skeleton.cpp" />
@@ -107,6 +101,26 @@ copy "$(SolutionDir)lib\bin\win32\libfftw3f-3.dll" "$(OutDir)"</Command>
     <None Include="..\lib\bin\win32\FreeImage.dll" />
     <None Include="..\lib\bin\win32\glew32.dll" />
     <None Include="..\lib\bin\win32\libfftw3f-3.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="../res/priman.amc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="../res/priman.asf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\lib\bin\win32\AntTweakBar.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\lib\bin\win32\FreeImage.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\lib\bin\win32\glew32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\lib\bin\win32\libfftw3f-3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Text Include="../doc/proposal.txt" />
