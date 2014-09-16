@@ -168,4 +168,9 @@
       <Filter>Resource Files\Shaders\Tonemapping</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\res\Bunny.obj">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

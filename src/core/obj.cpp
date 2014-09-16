@@ -1,3 +1,4 @@
+
 #include "obj.h"
 
 void obj::ReadOBJ(const char *filename) {
