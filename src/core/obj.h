@@ -30,8 +30,8 @@ struct G308_Triangle {
 
 class obj {
 public:
-	void obj::ReadOBJ(const char *filename);
-	void obj::draw();
+	void ReadOBJ(const char *filename);
+	void draw();
 private:
 	void CreateGLPolyGeometry();
 	void CreateGLWireGeometry();
