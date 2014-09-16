@@ -12,7 +12,7 @@
 #include <cstdio>
 
 #include <FreeImage.h>
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include <fftw3.h>
 
 #include "utils/image.hpp"

@@ -40,12 +40,13 @@ namespace gui
         void on_mouse_move(int x, int y);
         void on_resize(int w, int h);
         void on_display();
+        void on_update();
         void on_init();
         void on_free();
     private:
         program& operator=(const program& other);
         program(const program& other);
-        
+
         // GLUT Window stuff
         int width();
         int height();

@@ -3,6 +3,7 @@
 
 #include <FreeImage.h>
 #include <glm/glm.hpp>
+#include <GL/glew.h>
 
 #include <string>
 
@@ -28,6 +29,7 @@ inline channels operator|(const channels& x, const channels& y)
 class image
 {
 public:
+    image(int width, int height, GLuint tex);
     image& operator=(const image &other);
     image(size_t width, size_t height);
     image(const std::string& path);

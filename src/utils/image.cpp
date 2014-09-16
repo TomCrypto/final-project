@@ -3,6 +3,8 @@
 #include <functional>
 #include <stdexcept>
 #include <cassert>
+#include <cstring>
+#include <vector>
 #include <cmath>
 
 static void rop1n(image &src, const std::function<glm::vec4(const glm::vec4&)>& rop)
@@ -138,6 +140,28 @@ static bool rgbf_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, size_t w, size_t h)
     }
 
     return true;
+}
+
+image::image(int width, int height, GLuint tex)
+{
+    std::vector<glm::vec4> bits;
+    bits.resize(width * height);
+    glm::vec4* ptr = &bits[0];
+
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, ptr);
+
+    this->dib = FreeImage_AllocateT(FIT_RGBAF, width, height, 128);
+    if (!this->dib) throw std::runtime_error("image::image()");
+
+    for (int y = 0; y < height; ++y)
+    {
+        glm::vec4* dst = (*this)[y];
+
+        memcpy(dst, ptr, sizeof(glm::vec4) * width);
+
+        ptr += width;
+    }
 }
 
 image& image::operator=(const image &other)

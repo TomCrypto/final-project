@@ -56,6 +56,12 @@ namespace gui
         prog->on_display();
     }
 
+    static void __update_cb(int value)
+    {
+        glutTimerFunc(16, __update_cb, 0);
+        prog->on_update();
+    }
+
     /* ==================================================================== */
 
     void program::initialize(int argc, char* argv[])
@@ -101,6 +107,7 @@ namespace gui
         {
             TwGLUTModifiersFunc(glutGetModifiers);
             glutPassiveMotionFunc(__motion_cb);
+            glutTimerFunc(16, __update_cb, 0);
             glutKeyboardFunc(__keyboard_cb);
             glutSpecialFunc(__special_cb);
             glutDisplayFunc(__display_cb);
@@ -212,6 +219,8 @@ namespace gui
         glMatrixMode(GL_PROJECTION);
 	    glLoadIdentity();
 	    gluPerspective(G308_FOVY, (double) width() / (double) height(), G308_ZNEAR_3D, G308_ZFAR_3D);
+
+        glViewport(0, 0, width(), height());
     }
 
     void program::on_display()
@@ -224,8 +233,6 @@ namespace gui
         // - tonemap framebuffer into backbuffer
         // - draw the bar
         // - glutSwapBuffers()
-
-        glViewport(0, 0, width(), height());
 
         buf->bind();
 
@@ -241,8 +248,6 @@ namespace gui
 		    printf("%s\n", gluErrorString(err));
 	    }
 
-		//skeleton->angle = rotate_angle; //pass angle to skeleton
-
 		// tweakbar example - read rotation from the GUI bar
 		skeleton->angle = m_bar->rotation;
 
@@ -257,6 +262,10 @@ namespace gui
         TwDraw();
 
         glutSwapBuffers();
-	    glutPostRedisplay();
+    }
+
+    void program::on_update()
+    {
+        glutPostRedisplay();
     }
 }
