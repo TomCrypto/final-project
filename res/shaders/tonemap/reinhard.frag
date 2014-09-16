@@ -9,7 +9,7 @@ varying vec2 uv;
 
 float luminance(vec3 color)
 {
-    return dot(color, vec3(0.2126f, 0.7152f, 0.0722f));
+    return dot(color, vec3(0.2126, 0.7152, 0.0722));
 }
 
 void main()
@@ -20,5 +20,5 @@ void main()
     float avg_lum = exp(avg_log_lum / pixel_count);
     float key = exposure / avg_lum;
 
-    gl_FragColor = vec4(color.rgb * (key / (1.0f + luminance(color.rgb) * key)), 1);
+    gl_FragColor = vec4(color.rgb * (key / (1.0 + luminance(color.rgb) * key)), 1);
 }

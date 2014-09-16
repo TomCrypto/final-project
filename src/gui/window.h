@@ -9,7 +9,7 @@
 #include <fftw3.h>
 
 #include "gui/framebuffer.h"
-#include "gui/bar.h"
+#include "gui/tweakbar.h"
 
 #include "G308_Skeleton.h"
 #include "define.h"

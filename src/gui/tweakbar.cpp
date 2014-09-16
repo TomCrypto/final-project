@@ -1,4 +1,4 @@
-#include "gui/bar.h"
+#include "gui/tweakbar.h"
 
 #include <stdexcept>
 
@@ -33,7 +33,7 @@ namespace gui
         TwAddVarRW(m_bar,
             "Rotation", TW_TYPE_FLOAT, &rotation,
             "min=0 max=360 step=1.0 help='Rotate the skeleton'");
-        
+
         TwAddVarRW(m_bar,
             "Exposure", TW_TYPE_FLOAT, &exposure,
             "min=0.01 max=3 step=0.01 help='Tonemapping exposure'");

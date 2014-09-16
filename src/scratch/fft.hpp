@@ -21,7 +21,7 @@ class fft_planner
 {
 public:
     /* Instantiates an FFT planner of dimensions width x height. */
-    fft_planner(size_t srcW, size_t srcH, size_t cnvW, size_t cnvH);
+    fft_planner(int srcW, int srcH, int cnvW, int cnvH);
     ~fft_planner();
 
     /* Returns the power spectrum of a texture. */
@@ -33,7 +33,7 @@ private:
     fftwf_complex* convolve_lt_buf;
     fftwf_complex* convolve_rt_buf;
     fftwf_complex* convolve_bk_buf;
-    size_t srcW, srcH, cnvW, cnvH;
+    int srcW, srcH, cnvW, cnvH;
     fftwf_plan powspectrum_plan;
     fftwf_plan convolve_lt_plan;
     fftwf_plan convolve_rt_plan;

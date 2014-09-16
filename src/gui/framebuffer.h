@@ -10,7 +10,7 @@ class fbuffer
 {
 public:
     //<< Initialize and free the framebuffer
-    fbuffer(size_t width, size_t height);
+    fbuffer(int width, int height);
     ~fbuffer();
 
     //<< Setup the framebuffer for rendering
@@ -20,7 +20,7 @@ public:
     void clear(bool depth);
 
     //<< Resize the framebuffer
-    void resize(size_t width, size_t height);
+    void resize(int width, int height);
 
     //<< Render framebuffer into the backbuffer
     void render(float exposure);
@@ -28,15 +28,15 @@ public:
 private:
     GLuint m_tex;   //<< main render texture
     GLuint m_tmp;   //<< temporary texture for readback
-    GLuint m_depth; //<< depth texture from rendering
+    GLuint m_depth; //<< depth texture for rendering
 
     GLuint m_fbo;   //<< FBO for rendering
 
     gl::shader m_shader;
     gl::shader m_log_shader;
 
-    size_t m_width;
-    size_t m_height;
+    int m_width;
+    int m_height;
 };
 
 #endif

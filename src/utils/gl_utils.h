@@ -46,6 +46,9 @@ namespace gl
         void set(const std::string& var, const glm::mat3& value);
         void set(const std::string& var, const glm::mat4& value);
 
+        //<< Run this shader on a fullscreen quad (bind first)
+        void fullscreen_quad();
+
     private:
         GLuint m_vert;
         GLuint m_frag;

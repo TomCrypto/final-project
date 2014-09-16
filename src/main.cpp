@@ -1,6 +1,6 @@
-#include <cstdio>
-#include <cstdlib>
 #include <stdexcept>
+#include <cstdlib>
+#include <cstdio>
 
 #include "gui/window.h"
 

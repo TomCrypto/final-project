@@ -147,6 +147,16 @@ namespace gl
         glUniformMatrix4fv((*this)[var], 1, GL_TRUE, glm::value_ptr(value));
     }
 
+    void shader::fullscreen_quad()
+    {
+        glBegin(GL_QUADS);
+        glVertex2f(-1, -1);
+        glVertex2f(+1, -1);
+        glVertex2f(+1, +1);
+        glVertex2f(-1, +1);
+        glEnd();
+    }
+
     bool shader::has_compiled(GLuint shader) const
     {
         GLint status;

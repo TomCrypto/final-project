@@ -5,9 +5,9 @@
 
 /* Returns whether n is b-powersmooth. Used to select efficient discrete Fourier
  * transform dimensions for the convolution. */
-static bool is_smooth(size_t n, size_t b)
+static bool is_smooth(int n, int b)
 {
-    for (size_t f = 2; f <= b; ++f)
+    for (int f = 2; f <= b; ++f)
     {
         while (n % f == 0) n /= f;
         if (n == 1) return true;
@@ -16,7 +16,7 @@ static bool is_smooth(size_t n, size_t b)
     return false;
 }
 
-fft_planner::fft_planner(size_t srcW, size_t srcH, size_t cnvW, size_t cnvH)
+fft_planner::fft_planner(int srcW, int srcH, int cnvW, int cnvH)
 {
     assert((srcW > 0) && (srcH > 0) && (cnvW > 0) && (cnvH > 0));
 
@@ -25,7 +25,7 @@ fft_planner::fft_planner(size_t srcW, size_t srcH, size_t cnvW, size_t cnvH)
 
     while (!is_smooth(srcW + cnvW, 5)) ++cnvW;
     while (!is_smooth(srcH + cnvH, 5)) ++cnvH;
-    
+
     printf("Selecting fft_planner for power spectrum %d x %d, convolve %d x %d\n",
            srcW, srcH, srcW + cnvW, srcH + cnvH);
 
@@ -36,26 +36,26 @@ fft_planner::fft_planner(size_t srcW, size_t srcH, size_t cnvW, size_t cnvH)
 
     if (!this->powspectrum_buf || !this->convolve_lt_buf)
         throw std::runtime_error("Failed to allocate memory");
-    
+
     this->powspectrum_plan = fftwf_plan_dft_2d(srcW, srcH,
         this->powspectrum_buf, this->powspectrum_buf, FFTW_FORWARD,
         FFTW_MEASURE);
-    
+
     this->convolve_lt_plan = fftwf_plan_dft_2d(srcW + cnvW, srcH + cnvH,
         this->convolve_lt_buf, this->convolve_lt_buf, FFTW_FORWARD,
         FFTW_MEASURE);
-   
+
     this->convolve_rt_plan = fftwf_plan_dft_2d(srcW + cnvW, srcH + cnvH,
         this->convolve_rt_buf, this->convolve_rt_buf, FFTW_FORWARD,
         FFTW_MEASURE);
-        
+
     this->convolve_bk_plan = fftwf_plan_dft_2d(srcW + cnvW, srcH + cnvH,
         this->convolve_bk_buf, this->convolve_bk_buf, FFTW_BACKWARD,
         FFTW_MEASURE);
-        
+
     if (!this->powspectrum_plan)
         throw std::runtime_error("Failed to compile FFTWlambda = 460.000000, color = (0.67, 0.00, 1.00 plan");
-        
+
     if (!this->convolve_lt_plan)
         throw std::runtime_error("Failed to compile FFTW plan");
 
@@ -81,14 +81,14 @@ void fft_planner::power_spectrum_channel(const image& src, image& dst,
                                          const std::function<float(const glm::vec4&)>& src_op,
                                          const std::function<void(glm::vec4&, float, float)>& dst_op)
 {
-    size_t w = src.width();
-    size_t h = src.height();
+    int w = src.width();
+    int h = src.height();
 
-    for (size_t y = 0; y < h; ++y)
+    for (int y = 0; y < h; ++y)
     {
         const glm::vec4* ptr = src[y];
-        
-        for (size_t x = 0; x < w; ++x)
+
+        for (int x = 0; x < w; ++x)
         {
             this->powspectrum_buf[y * srcW + x][0] = src_op(*ptr) * pow(-1, x + y);
             this->powspectrum_buf[y * srcW + x][1] = 0;
@@ -99,11 +99,11 @@ void fft_planner::power_spectrum_channel(const image& src, image& dst,
 
     fftwf_execute(this->powspectrum_plan);
 
-    for (size_t y = 0; y < h; ++y)
+    for (int y = 0; y < h; ++y)
     {
         glm::vec4* ptr = dst[y];
 
-        for (size_t x = 0; x < w; ++x)
+        for (int x = 0; x < w; ++x)
         {
             float re = this->powspectrum_buf[y * srcW + x][0];
             float im = this->powspectrum_buf[y * srcW + x][1];
@@ -117,7 +117,7 @@ void fft_planner::power_spectrum_channel(const image& src, image& dst,
 image fft_planner::power_spectrum(const image& src, const channels& which)
 {
     image output(src.width(), src.height());
-    size_t w = src.width(), h = src.height();
+    int w = src.width(), h = src.height();
 
     if ((channels::R & which) != 0)
         power_spectrum_channel(src, output,
@@ -141,13 +141,13 @@ image fft_planner::convolve(const image& src, const image& cnv, const channels& 
 {
     // assert size here...
 
-    //size_t w = src.width();
-    //size_t h = src.width();
- 
+    //int w = src.width();
+    //int h = src.width();
+
     image out(srcW + cnvW, srcH + cnvH);
-    
-    for (size_t y = 0; y < srcH + cnvH; ++y)
-        for (size_t x = 0; x < srcW + cnvW; ++x)
+
+    for (int y = 0; y < srcH + cnvH; ++y)
+        for (int x = 0; x < srcW + cnvW; ++x)
         {
             this->convolve_lt_buf[y * (srcW + cnvW) + x][0] = 0;
             this->convolve_lt_buf[y * (srcW + cnvW) + x][1] = 0;
@@ -157,75 +157,75 @@ image fft_planner::convolve(const image& src, const image& cnv, const channels& 
 
     if ((channels::R & which) != 0)
     {
-        for (size_t y = 0; y < srcH; ++y)
+        for (int y = 0; y < srcH; ++y)
         {
             const glm::vec4* srcPtr = src[y];
-            
-            for (size_t x = 0; x < srcW; ++x)
+
+            for (int x = 0; x < srcW; ++x)
             {
                 this->convolve_lt_buf[y * (srcW + cnvW) + x][0] = srcPtr->x - epsilon;
                 if (this->convolve_lt_buf[y * (srcW + cnvW) + x][0] < 0)
                     this->convolve_lt_buf[y * (srcW + cnvW) + x][0] = 0;
-                
+
                 ++srcPtr;
             }
         }
-        
-        size_t cnv_w = cnv.width(), cnv_h = cnv.height();
-        
-        for (size_t y = 0; y < cnv_h; ++y)
+
+        int cnv_w = cnv.width(), cnv_h = cnv.height();
+
+        for (int y = 0; y < cnv_h; ++y)
         {
             const glm::vec4* cnvPtr = cnv[y];
-            
-            for (size_t x = 0; x < cnv_h; ++x)
+
+            for (int x = 0; x < cnv_h; ++x)
             {
                 this->convolve_rt_buf[y * (srcW + cnvW) + x][0] = cnvPtr->x;
-                
+
                 ++cnvPtr;
             }
         }
     }
-    
+
     fftwf_execute(this->convolve_lt_plan);
     fftwf_execute(this->convolve_rt_plan);
 
-    for (size_t y = 0; y < srcH + cnvH; ++y)
-        for (size_t x = 0; x < srcW + cnvW; ++x)
+    for (int y = 0; y < srcH + cnvH; ++y)
+        for (int x = 0; x < srcW + cnvW; ++x)
         {
             float r1 = this->convolve_lt_buf[y * (srcW + cnvW) + x][0];
             float c1 = this->convolve_lt_buf[y * (srcW + cnvW) + x][1];
             float r2 = this->convolve_rt_buf[y * (srcW + cnvW) + x][0];
             float c2 = this->convolve_rt_buf[y * (srcW + cnvW) + x][1];
-            
+
             float r = r1 * r2 - c1 * c2;
             float c = r1 * c2 + c1 * r2;
-            
+
             this->convolve_bk_buf[y * (srcW + cnvW) + x][0] = r;
             this->convolve_bk_buf[y * (srcW + cnvW) + x][1] = c;
         }
 
     fftwf_execute(this->convolve_bk_plan);
 
-    for (size_t y = 0; y < srcH + cnvH; ++y)
+    for (int y = 0; y < srcH + cnvH; ++y)
     {
         glm::vec4* ptr = out[y];
-    
-        for (size_t x = 0; x < srcW + cnvW; ++x)
+
+        for (int x = 0; x < srcW + cnvW; ++x)
         {
             float re = this->convolve_bk_buf[y * (srcW + cnvW) + x][0] / ((srcW + cnvW) * (srcH + cnvH));
             float im = this->convolve_bk_buf[y * (srcW + cnvW) + x][1] / ((srcW + cnvW) * (srcH + cnvH)); // ??
-            
+
             //ptr->x = re;
             ptr->x = sqrt(re * re + im * im);
-            
+
             ++ptr;
         }
     }
-    
+
     // TODO: REMOVE DUPLICATION AFTERWARDS
-    
-    for (size_t y = 0; y < srcH + cnvH; ++y)
-        for (size_t x = 0; x < srcW + cnvW; ++x)
+
+    for (int y = 0; y < srcH + cnvH; ++y)
+        for (int x = 0; x < srcW + cnvW; ++x)
         {
             this->convolve_lt_buf[y * (srcW + cnvW) + x][0] = 0;
             this->convolve_lt_buf[y * (srcW + cnvW) + x][1] = 0;
@@ -235,73 +235,73 @@ image fft_planner::convolve(const image& src, const image& cnv, const channels& 
 
     if ((channels::G & which) != 0)
     {
-        for (size_t y = 0; y < srcH; ++y)
+        for (int y = 0; y < srcH; ++y)
         {
             const glm::vec4* srcPtr = src[y];
-            
-            for (size_t x = 0; x < srcW; ++x)
+
+            for (int x = 0; x < srcW; ++x)
             {
                 this->convolve_lt_buf[y * (srcW + cnvW) + x][0] = srcPtr->y - epsilon;
                 if (this->convolve_lt_buf[y * (srcW + cnvW) + x][0] < 0)
                     this->convolve_lt_buf[y * (srcW + cnvW) + x][0] = 0;
-                
+
                 ++srcPtr;
             }
         }
-        
-        size_t cnv_w = cnv.width(), cnv_h = cnv.height();
-        
-        for (size_t y = 0; y < cnv_h; ++y)
+
+        int cnv_w = cnv.width(), cnv_h = cnv.height();
+
+        for (int y = 0; y < cnv_h; ++y)
         {
             const glm::vec4* cnvPtr = cnv[y];
-            
-            for (size_t x = 0; x < cnv_h; ++x)
+
+            for (int x = 0; x < cnv_h; ++x)
             {
                 this->convolve_rt_buf[y * (srcW + cnvW) + x][0] = cnvPtr->y;
-                
+
                 ++cnvPtr;
             }
         }
     }
-    
+
     fftwf_execute(this->convolve_lt_plan);
     fftwf_execute(this->convolve_rt_plan);
 
-    for (size_t y = 0; y < srcH + cnvH; ++y)
-        for (size_t x = 0; x < srcW + cnvW; ++x)
+    for (int y = 0; y < srcH + cnvH; ++y)
+        for (int x = 0; x < srcW + cnvW; ++x)
         {
             float r1 = this->convolve_lt_buf[y * (srcW + cnvW) + x][0];
             float c1 = this->convolve_lt_buf[y * (srcW + cnvW) + x][1];
             float r2 = this->convolve_rt_buf[y * (srcW + cnvW) + x][0];
             float c2 = this->convolve_rt_buf[y * (srcW + cnvW) + x][1];
-            
+
             float r = r1 * r2 - c1 * c2;
             float c = r1 * c2 + c1 * r2;
-            
+
             this->convolve_bk_buf[y * (srcW + cnvW) + x][0] = r;
             this->convolve_bk_buf[y * (srcW + cnvW) + x][1] = c;
         }
 
     fftwf_execute(this->convolve_bk_plan);
 
-    for (size_t y = 0; y < srcH + cnvH; ++y)
+    for (int y = 0; y < srcH + cnvH; ++y)
     {
         glm::vec4* ptr = out[y];
-    
-        for (size_t x = 0; x < srcW + cnvW; ++x)
+
+        for (int x = 0; x < srcW + cnvW; ++x)
         {
             float re = this->convolve_bk_buf[y * (srcW + cnvW) + x][0] / ((srcW + cnvW) * (srcH + cnvH)); // ??
             float im = this->convolve_bk_buf[y * (srcW + cnvW) + x][1] / ((srcW + cnvW) * (srcH + cnvH)); // ??
-            
+
             //ptr->y = re;
             ptr->y = sqrt(re * re + im * im);
-            
+
             ++ptr;
         }
     }
-    
-    for (size_t y = 0; y < srcH + cnvH; ++y)
-        for (size_t x = 0; x < srcW + cnvW; ++x)
+
+    for (int y = 0; y < srcH + cnvH; ++y)
+        for (int x = 0; x < srcW + cnvW; ++x)
         {
             this->convolve_lt_buf[y * (srcW + cnvW) + x][0] = 0;
             this->convolve_lt_buf[y * (srcW + cnvW) + x][1] = 0;
@@ -311,71 +311,71 @@ image fft_planner::convolve(const image& src, const image& cnv, const channels& 
 
     if ((channels::B & which) != 0)
     {
-        for (size_t y = 0; y < srcH; ++y)
+        for (int y = 0; y < srcH; ++y)
         {
             const glm::vec4* srcPtr = src[y];
-            
-            for (size_t x = 0; x < srcW; ++x)
+
+            for (int x = 0; x < srcW; ++x)
             {
                 this->convolve_lt_buf[y * (srcW + cnvW) + x][0] = srcPtr->z - epsilon;
                 if (this->convolve_lt_buf[y * (srcW + cnvW) + x][0] < 0)
                     this->convolve_lt_buf[y * (srcW + cnvW) + x][0] = 0;
-                
+
                 ++srcPtr;
             }
         }
-        
-        size_t cnv_w = cnv.width(), cnv_h = cnv.height();
-        
-        for (size_t y = 0; y < cnv_h; ++y)
+
+        int cnv_w = cnv.width(), cnv_h = cnv.height();
+
+        for (int y = 0; y < cnv_h; ++y)
         {
             const glm::vec4* cnvPtr = cnv[y];
-            
-            for (size_t x = 0; x < cnv_h; ++x)
+
+            for (int x = 0; x < cnv_h; ++x)
             {
                 this->convolve_rt_buf[y * (srcW + cnvW) + x][0] = cnvPtr->z;
-                
+
                 ++cnvPtr;
             }
         }
     }
-    
+
     fftwf_execute(this->convolve_lt_plan);
     fftwf_execute(this->convolve_rt_plan);
 
-    for (size_t y = 0; y < srcH + cnvH; ++y)
-        for (size_t x = 0; x < srcW + cnvW; ++x)
+    for (int y = 0; y < srcH + cnvH; ++y)
+        for (int x = 0; x < srcW + cnvW; ++x)
         {
             float r1 = this->convolve_lt_buf[y * (srcW + cnvW) + x][0];
             float c1 = this->convolve_lt_buf[y * (srcW + cnvW) + x][1];
             float r2 = this->convolve_rt_buf[y * (srcW + cnvW) + x][0];
             float c2 = this->convolve_rt_buf[y * (srcW + cnvW) + x][1];
-            
+
             float r = r1 * r2 - c1 * c2;
             float c = r1 * c2 + c1 * r2;
-            
+
             this->convolve_bk_buf[y * (srcW + cnvW) + x][0] = r;
             this->convolve_bk_buf[y * (srcW + cnvW) + x][1] = c;
         }
 
     fftwf_execute(this->convolve_bk_plan);
 
-    for (size_t y = 0; y < srcH + cnvH; ++y)
+    for (int y = 0; y < srcH + cnvH; ++y)
     {
         glm::vec4* ptr = out[y];
-    
-        for (size_t x = 0; x < srcW + cnvW; ++x)
+
+        for (int x = 0; x < srcW + cnvW; ++x)
         {
             float re = this->convolve_bk_buf[y * (srcW + cnvW) + x][0] / ((srcW + cnvW) * (srcH + cnvH));
             float im = this->convolve_bk_buf[y * (srcW + cnvW) + x][1] / ((srcW + cnvW) * (srcH + cnvH)); // ??
-            
+
             //ptr->z = re;
             ptr->z = sqrt(re * re + im * im);
-            
+
             ++ptr;
         }
     }
-    
+
     // END DUPLICATION
 
     return out;

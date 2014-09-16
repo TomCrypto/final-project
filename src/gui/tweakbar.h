@@ -1,5 +1,5 @@
-#ifndef GUI_BAR_H
-#define GUI_BAR_H
+#ifndef GUI_TWEAKBAR_H
+#define GUI_TWEAKBAR_H
 
 #include <AntTweakBar.h>
 #include <string>

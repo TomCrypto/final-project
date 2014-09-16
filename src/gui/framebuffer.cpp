@@ -7,10 +7,10 @@
 
 #include "utils/image.hpp"
 
-fbuffer::fbuffer(size_t width, size_t height)
+fbuffer::fbuffer(int width, int height)
     : m_width(width), m_height(height),
-      m_shader("default.vert", "default.frag"),
-      m_log_shader("tonemap/log_lum.vert", "tonemap/log_lum.frag")
+      m_shader("generic/fs_quad.vert", "tonemap/reinhard.frag"),
+      m_log_shader("generic/fs_quad.vert", "tonemap/log_lum.frag")
 {
     glGenTextures(1, &m_tex);
     glBindTexture(GL_TEXTURE_2D, m_tex);
@@ -58,7 +58,7 @@ fbuffer::fbuffer(size_t width, size_t height)
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
 
-void fbuffer::resize(size_t width, size_t height)
+void fbuffer::resize(int width, int height)
 {
     m_width = width;
     m_height = height;
@@ -94,18 +94,18 @@ static int get_mip_level(int w, int h)
 
 void fbuffer::render(float exposure)
 {
+    // Get the 1x1 mip level for the current framebuffer resolutions, this
+    // will be equal to the log2 of the largest dimension (width or height)
+
     int mip_level = get_mip_level(m_width, m_height);
 
     glDisable(GL_DEPTH_TEST);
 
-    // HERE, tmp contains garbage, tex contains the rendered image
-    // We want to have tmp contain the color + log luminance info
-    // thus, attach tmp to our framebuffer, and attach tex as texture
+    // First convert the rendered image (in m_tex) to a log-luminance texture
+    // in m_tmp, so bind m_tmp to the framebuffer and run a fullscreen shader
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_tmp, 0);
-
-    //glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, m_width, m_height);
 
     m_log_shader.bind();
 
@@ -113,18 +113,11 @@ void fbuffer::render(float exposure)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
-    glBegin(GL_QUADS);
+    m_log_shader.fullscreen_quad();
 
-    glVertex3f(-1, -1, 0);
-    glVertex3f(1, -1, 0);
-    glVertex3f(1, 1, 0);
-    glVertex3f(-1, 1, 0);
-
-    glEnd();
-
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0);
-
-    // And mipmap m_tmp which now contains the log-average luminance information
+    // Now that m_tmp contains the log-luminance texture, tonemap it into the
+    // backbuffer, by unbinding the framebuffer and binding m_tmp as texture
+    // (remember to mipmap m_tmp, to access the 1x1 average log-luminance)
 
     glBindTexture(GL_TEXTURE_2D, m_tmp);
     glGenerateMipmapEXT(GL_TEXTURE_2D);
@@ -133,27 +126,15 @@ void fbuffer::render(float exposure)
 
     m_shader.bind();
 
-    //glBindTexture(GL_TEXTURE_2D, m_tmp);
-
-    // At this point, tmp contains what we wanted, so unbind it from the framebuffer
-    // and attach tex to the BACKBUFFER, attach tmp as a texture, and run the main shader
-
-    //glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, m_width, m_height);
-
-    //glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_tex, 0);
+    glBindTexture(GL_TEXTURE_2D, m_tmp);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
     m_shader.set("mip_level", (float)mip_level);
     m_shader.set("exposure", exposure);
     m_shader.set("pixel_count", (float)(m_width * m_height));
 
-    glBegin(GL_QUADS);
-
-    glVertex3f(-1, -1, 0);
-    glVertex3f(1, -1, 0);
-    glVertex3f(1, 1, 0);
-    glVertex3f(-1, 1, 0);
-
-    glEnd();
+    m_shader.fullscreen_quad();
 
     m_shader.unbind();
 
