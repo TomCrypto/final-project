@@ -1,6 +1,6 @@
 #version 120
 
-uniform sampler2D tex;
+uniform sampler2D render;
 
 varying vec2 uv;
 
@@ -11,7 +11,7 @@ float luminance(vec3 color)
 
 void main()
 {
-    vec3 color = texture2D(tex, uv).rgb;
+    vec3 color = texture2D(render, uv).rgb;
 
     gl_FragColor = vec4(color, log(luminance(color) + 1e-5));
 }
