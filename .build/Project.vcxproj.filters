@@ -43,6 +43,9 @@
     <Filter Include="Resource Files\Shaders\Tonemapping">
       <UniqueIdentifier>{d0b1af37-4c3c-4547-a400-928782cceefb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Generic">
+      <UniqueIdentifier>{d4b9ca4d-7020-4f9b-a293-f4156523028f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\G308_Skeleton.cpp">
@@ -65,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="..\src\utils\image.cpp">
       <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\obj.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +95,9 @@
     <ClInclude Include="..\src\utils\image.hpp">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\core\obj.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\lib\bin\win32\FreeImage.dll">
@@ -108,15 +117,6 @@
     </None>
     <None Include="..\res\priman.asf">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\res\shaders\generic\fs_quad.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="..\res\shaders\tonemap\reinhard.frag">
-      <Filter>Resource Files\Shaders\Tonemapping</Filter>
-    </None>
-    <None Include="..\res\shaders\tonemap\log_lum.frag">
-      <Filter>Resource Files\Shaders\Tonemapping</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -156,5 +156,16 @@
     <Image Include="..\res\apertures\pupil_open.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\res\shaders\generic\fs_quad.vert">
+      <Filter>Resource Files\Shaders\Generic</Filter>
+    </Text>
+    <Text Include="..\res\shaders\tonemap\reinhard.frag">
+      <Filter>Resource Files\Shaders\Tonemapping</Filter>
+    </Text>
+    <Text Include="..\res\shaders\tonemap\log_lum.frag">
+      <Filter>Resource Files\Shaders\Tonemapping</Filter>
+    </Text>
   </ItemGroup>
 </Project>
