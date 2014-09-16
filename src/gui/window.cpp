@@ -1,4 +1,4 @@
-#include "gui/program.h"
+#include "gui/window.h"
 
 #include <stdexcept>
 
@@ -7,7 +7,7 @@ namespace gui
     /* ==================================================================== */
 
     const int target_fps = 60;
-    static program* prog;
+    static window* prog;
     static char** _argv;
     static int _argc;
 
@@ -65,7 +65,7 @@ namespace gui
 
     /* ==================================================================== */
 
-    void program::initialize(int argc, char* argv[])
+    void window::initialize(int argc, char* argv[])
     {
         fftwf_init_threads();
         fftwf_plan_with_nthreads(4);
@@ -75,7 +75,7 @@ namespace gui
         _argc = argc;
     }
 
-    void program::finalize()
+    void window::finalize()
     {
         FreeImage_DeInitialise();
         fftwf_cleanup_threads();
@@ -84,8 +84,8 @@ namespace gui
 
     /* ==================================================================== */
 
-    program::program(const std::string& window_title,
-                     const std::pair<int, int>& dims)
+    window::window(const std::string& window_title,
+                   const std::pair<int, int>& dims)
     {
         if (prog != nullptr)
             throw std::logic_error("program already running");
@@ -125,7 +125,7 @@ namespace gui
         glutTimerFunc(1, __update_cb, 0);
     }
 
-    program::~program()
+    window::~window()
     {
         on_free();
 
@@ -133,24 +133,24 @@ namespace gui
         glutDestroyWindow(m_window);
     }
 
-    void program::run()
+    void window::run()
     {
         glutMainLoop();
     }
 
-    int program::width()
+    int window::width()
     {
         return glutGet(GLUT_WINDOW_WIDTH);
     }
 
-    int program::height()
+    int window::height()
     {
         return glutGet(GLUT_WINDOW_HEIGHT);
     }
 
     /* ==================================================================== */
 
-    void program::on_init()
+    void window::on_init()
     {
         m_bar = new main_bar("main");
         m_bar->set_title("Configuration");
@@ -178,29 +178,29 @@ namespace gui
         buf = new fbuffer(width(), height());
     }
 
-    void program::on_free()
+    void window::on_free()
     {
         delete skeleton;
         delete buf;
         delete m_bar;
     }
 
-    void program::on_mouse_up(int button, int x, int y)
+    void window::on_mouse_up(int button, int x, int y)
     {
         // TODO: do something here?
     }
 
-    void program::on_mouse_down(int button, int x, int y)
+    void window::on_mouse_down(int button, int x, int y)
     {
         // TODO: do something here?
     }
 
-    void program::on_mouse_move(int x, int y)
+    void window::on_mouse_move(int x, int y)
     {
         // TODO: do something here?
     }
 
-    void program::on_key_press(unsigned char key, int x, int y)
+    void window::on_key_press(unsigned char key, int x, int y)
     {
         if(key=='r') //when the r key is pressed
         {
@@ -209,13 +209,13 @@ namespace gui
         }
     }
 
-    void program::on_special(int key, int x, int y)
+    void window::on_special(int key, int x, int y)
     {
         // TODO: do something here?
         // actually I have no idea if this will be useful
     }
 
-    void program::on_resize(int w, int h)
+    void window::on_resize(int w, int h)
     {
         TwWindowSize(w, h);
         buf->resize(w, h);
@@ -227,7 +227,7 @@ namespace gui
         glViewport(0, 0, width(), height());
     }
 
-    void program::on_display()
+    void window::on_display()
     {
         // later on this might look like this:
         // - bind framebuffer
@@ -268,7 +268,7 @@ namespace gui
         glutSwapBuffers();
     }
 
-    void program::on_update()
+    void window::on_update()
     {
         glutPostRedisplay();
     }

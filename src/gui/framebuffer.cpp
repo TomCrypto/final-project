@@ -97,7 +97,6 @@ void fbuffer::render(float exposure)
     int mip_level = get_mip_level(m_width, m_height);
 
     glDisable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
 
     // HERE, tmp contains garbage, tex contains the rendered image
     // We want to have tmp contain the color + log luminance info
@@ -158,42 +157,7 @@ void fbuffer::render(float exposure)
 
     m_shader.unbind();
 
-    glDisable(GL_TEXTURE_2D);
-
     return;
-
-    #if 0
-    return;
-
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-    glBindTexture(GL_TEXTURE_2D, m_tex);
-    glGenerateMipmapEXT(GL_TEXTURE_2D);
-
-    m_shader.bind();
-
-    GLuint pp = m_shader.locate("mip_level");
-    glUniform1f(pp, (float)mip_level);
-
-    glActiveTexture(GL_TEXTURE0 + 0);
-    glBindTexture(GL_TEXTURE_2D, m_tex);
-
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glBegin(GL_QUADS);
-
-    glVertex3f(-1, -1, 0);
-    glVertex3f(1, -1, 0);
-    glVertex3f(1, 1, 0);
-    glVertex3f(-1, 1, 0);
-
-    glEnd();
-
-    m_shader.unbind();
-
-    return;
-    #endif
 
     //=====
 

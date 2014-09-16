@@ -1,5 +1,5 @@
-#ifndef GUI_PROGRAM_H
-#define GUI_PROGRAM_H
+#ifndef GUI_WINDOW_H
+#define GUI_WINDOW_H
 
 #include <string>
 
@@ -17,13 +17,13 @@
 namespace gui
 {
     // This controls the main window and the program logic. There should only
-    // be one program instance, and initialize() should be called first
-    class program
+    // be one instance of this class, and initialize() should be called first
+    class window
     {
     public:
-        program(const std::string& window_title,
+        window(const std::string& window_title,
                 const std::pair<int, int>& dims);
-        ~program();
+        ~window();
 
         // Runs the window's main loop, returns on window close (or crash)
         void run();
@@ -44,10 +44,10 @@ namespace gui
         void on_init();
         void on_free();
     private:
-        program& operator=(const program& other);
-        program(const program& other);
+        window& operator=(const window& other);
+        window(const window& other);
 
-        // GLUT Window stuff
+        // GLUT window stuff
         int width();
         int height();
         int m_window;

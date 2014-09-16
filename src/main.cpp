@@ -2,15 +2,15 @@
 #include <cstdlib>
 #include <stdexcept>
 
-#include "gui/program.h"
+#include "gui/window.h"
 
 int main(int argc, char *argv[])
 {
     try
     {
-        gui::program::initialize(argc, argv);
-        gui::program prog("COMP 308 - Final Project",
-                          std::make_pair(1024, 768));
+        gui::window::initialize(argc, argv);
+        gui::window prog("COMP 308 - Final Project",
+                         std::make_pair(1024, 768));
 
         prog.run();
     }
@@ -29,6 +29,6 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    gui::program::finalize();
+    gui::window::finalize();
     return EXIT_SUCCESS;
 }
