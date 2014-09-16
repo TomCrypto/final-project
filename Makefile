@@ -23,6 +23,7 @@ CFLAGS           = -O2 -Wall -Wextra -pedantic -std=c99
 CFLAGS          += -Wno-unused-parameter -Wno-unused-variable
 CXXFLAGS         = -O2 -Wall -Wextra -pedantic -std=c++11
 CXXFLAGS        += -Wno-unused-parameter -Wno-unused-variable
+CXXFLAGS        += -Wno-reorder
 LDFLAGS          = -lm -lGLEW -lGLU -lGL -lglut -lstdc++
 LDFLAGS         += -lfreeimage -lAntTweakBar -lX11
 LDFLAGS         += -lfftw3f -lfftw3f_omp -fopenmp

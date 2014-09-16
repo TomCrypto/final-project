@@ -3,7 +3,7 @@
 #ifndef APERTURE_H
 #define APERTURE_H
 
-#include "image.hpp"
+#include "utils/image.hpp"
 
 class aperture
 {

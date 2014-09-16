@@ -1,5 +1,7 @@
 #include "gui/bar.h"
 
+#include <stdexcept>
+
 namespace gui
 {
     basic_bar::basic_bar(const std::string& name)

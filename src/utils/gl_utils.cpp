@@ -1,5 +1,6 @@
 #include "utils/gl_utils.h"
 
+#include <stdexcept>
 #include <fstream>
 #include <sstream>
 
@@ -7,7 +8,7 @@ namespace gl
 {
     static std::string load_file(const std::string& path)
     {
-        auto stream = std::ifstream(path);
+        std::ifstream stream(path, std::ios::in);
         std::stringstream buffer;
         buffer << stream.rdbuf();
         return buffer.str();
@@ -108,7 +109,7 @@ namespace gl
     bool shader::has_linked(GLuint program) const
     {
         GLint status;
-        glGetShaderiv(program, GL_LINK_STATUS, &status);
+        glGetProgramiv(program, GL_LINK_STATUS, &status);
         return status == GL_TRUE;
     }
 
@@ -199,7 +200,7 @@ namespace gl
         else throw std::logic_error("Bad texture format");
     }
 
-    texture::texture(size_t width, size_t height, GLenum format)
+    texture::texture(int width, int height, GLenum format)
         : w(width), h(height), m_fmt(format)
     {
         if ((m_fmt != GL_UNSIGNED_BYTE) && (m_fmt != GL_FLOAT))

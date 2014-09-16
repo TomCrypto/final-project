@@ -45,8 +45,8 @@ namespace gl
     class texture
     {
     public:
-        texture(size_t width, size_t height, GLenum format);
         texture(const std::string& path, GLenum format);
+        texture(int width, int height, GLenum format);
         texture& operator=(const texture& other);
         texture(const texture& other);
         ~texture();
@@ -56,7 +56,8 @@ namespace gl
     private:
         GLuint m_tex;
         GLenum m_fmt;
-        size_t w, h;
+        int w;
+        int h;
 
         void init_texture();
     };

@@ -15,7 +15,7 @@
 #include <GL/gl.h>
 #include <fftw3.h>
 
-#include "image.hpp"
+#include "utils/image.hpp"
 
 class fft_planner
 {
