@@ -1,5 +1,7 @@
 #include "utils/gl_utils.h"
 
+#define GLM_FORCE_RADIANS
+#include <glm/gtc/type_ptr.hpp>
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
@@ -48,7 +50,7 @@ namespace gl
 
         if (!has_compiled(m_frag))
             throw std::runtime_error("Failed to compile fragment shader '"
-                                   + vert_name + "':\n\n" + frag_log());
+                                   + frag_name + "':\n\n" + frag_log());
 
         m_prog = glCreateProgram();
         glAttachShader(m_prog, m_vert);
@@ -99,9 +101,50 @@ namespace gl
         glUseProgram(0);
     }
 
-    GLuint shader::locate(const std::string& name) const
+    GLint shader::operator[](const std::string& variable)
     {
-        return glGetUniformLocation(m_prog, name.c_str());
+        auto it = std::lower_bound(m_vars.begin(), m_vars.end(),
+                                   std::make_pair(variable, 0));
+
+        if ((it == m_vars.end()) || (it->first != variable))
+        {
+            GLint loc = glGetUniformLocation(m_prog, variable.c_str());
+            m_vars.insert(it, std::make_pair(variable, loc));
+            return loc;
+        }
+        else return it->second;
+    }
+
+    void shader::set(const std::string& var, const float& value) {
+        glUniform1f((*this)[var], value);
+    }
+
+    void shader::set(const std::string& var, const glm::vec2& value) {
+        glUniform2f((*this)[var], value.x, value.y);
+    }
+
+    void shader::set(const std::string& var, const glm::vec3& value) {
+        glUniform3f((*this)[var], value.x, value.y, value.z);
+    }
+
+    void shader::set(const std::string& var, const glm::vec4& value) {
+        glUniform4f((*this)[var], value.x, value.y, value.z, value.w);
+    }
+
+    void shader::set(const std::string& var, const int& value) {
+        glUniform1i((*this)[var], value);
+    }
+
+    void shader::set(const std::string& var, const int& x, const int& y) {
+        glUniform2i((*this)[var], x, y);
+    }
+
+    void shader::set(const std::string& var, const glm::mat3& value) {
+        glUniformMatrix3fv((*this)[var], 1, GL_TRUE, glm::value_ptr(value));
+    }
+
+    void shader::set(const std::string& var, const glm::mat4& value) {
+        glUniformMatrix4fv((*this)[var], 1, GL_TRUE, glm::value_ptr(value));
     }
 
     bool shader::has_compiled(GLuint shader) const
@@ -122,9 +165,9 @@ namespace gl
     {
         int infologLength = 0;
         std::string lg = "";
- 
+
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infologLength);
- 
+
         if (infologLength > 0)
         {
             char *line = (char *)malloc(infologLength);
@@ -143,9 +186,9 @@ namespace gl
     {
         int infologLength = 0;
         std::string lg = "";
- 
+
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infologLength);
- 
+
         if (infologLength > 0)
         {
             char *line = (char *)malloc(infologLength);
@@ -179,11 +222,11 @@ namespace gl
         {
             unsigned char* buf = (unsigned char *)malloc(w * h * 4);
 
-            for (size_t y = 0; y < h; ++y)
+            for (int y = 0; y < h; ++y)
             {
                 glm::vec4* ptr = img[y];
 
-                for (size_t x = 0; x < w; ++x)
+                for (int x = 0; x < w; ++x)
                 {
                     buf[y * (4 * w) + 4 * x + 0] = clamp(ptr->x);
                     buf[y * (4 * w) + 4 * x + 1] = clamp(ptr->y);
@@ -222,7 +265,7 @@ namespace gl
         m_fmt = other.m_fmt;
         w = other.w;
         h = other.h;
-        
+
         return *this;
     }
 

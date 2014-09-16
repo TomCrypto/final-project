@@ -143,9 +143,9 @@ void fbuffer::render(float exposure)
 
     //glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_tex, 0);
 
-    glUniform1f(m_shader.locate("mip_level"), (float)mip_level);
-    glUniform1f(m_shader.locate("exposure"), exposure);
-    glUniform1f(m_shader.locate("pixel_count"), (float)(m_width * m_height));
+    m_shader.set("mip_level", (float)mip_level);
+    m_shader.set("exposure", exposure);
+    m_shader.set("pixel_count", (float)(m_width * m_height));
 
     glBegin(GL_QUADS);
 

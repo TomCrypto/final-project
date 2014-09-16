@@ -1,6 +1,6 @@
 #version 120
 
-in vec3 vertexPosition;
+attribute vec3 vertexPosition;
 varying vec2 uv;
 
 void main(void)

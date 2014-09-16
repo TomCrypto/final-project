@@ -1,6 +1,6 @@
 #version 120
 
-in vec3 pos;
+attribute vec3 pos;
 varying vec2 uv;
 
 void main(void)

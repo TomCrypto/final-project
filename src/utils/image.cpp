@@ -9,14 +9,14 @@
 
 static void rop1n(image &src, const std::function<glm::vec4(const glm::vec4&)>& rop)
 {
-    size_t w = src.width();
-    size_t h = src.height();
+    int w = src.width();
+    int h = src.height();
 
-    for (size_t y = 0; y < h; ++y)
+    for (int y = 0; y < h; ++y)
     {
         glm::vec4* ptr = src[y];
 
-        for (size_t x = 0; x < w; ++x)
+        for (int x = 0; x < w; ++x)
         {
             *ptr = rop(*ptr);
             ++ptr;
@@ -28,15 +28,15 @@ static void rop2n(image &src, const image &img, const std::function<glm::vec4(co
 {
     assert((src.width() == img.width()) && (src.height() == img.height()));
 
-    size_t w = src.width();
-    size_t h = src.height();
+    int w = src.width();
+    int h = src.height();
 
-    for (size_t y = 0; y < h; ++y)
+    for (int y = 0; y < h; ++y)
     {
         glm::vec4* srcPtr = src[y];
         const glm::vec4* imgPtr = img[y];
 
-        for (size_t x = 0; x < w; ++x)
+        for (int x = 0; x < w; ++x)
         {
             *srcPtr = rop(*srcPtr, *imgPtr);
             ++srcPtr;
@@ -47,14 +47,14 @@ static void rop2n(image &src, const image &img, const std::function<glm::vec4(co
 
 static void rop1c(const image &src, const std::function<void(const glm::vec4&)>& rop)
 {
-    size_t w = src.width();
-    size_t h = src.height();
+    int w = src.width();
+    int h = src.height();
 
-    for (size_t y = 0; y < h; ++y)
+    for (int y = 0; y < h; ++y)
     {
         const glm::vec4* ptr = src[y];
 
-        for (size_t x = 0; x < w; ++x)
+        for (int x = 0; x < w; ++x)
             rop(*(ptr++));
     }
 }
@@ -63,20 +63,20 @@ static void rop2c(const image &src, const image &img, const std::function<void(c
 {
     assert((src.width() == img.width()) && (src.height() == img.height()));
 
-    size_t w = src.width();
-    size_t h = src.height();
+    int w = src.width();
+    int h = src.height();
 
-    for (size_t y = 0; y < h; ++y)
+    for (int y = 0; y < h; ++y)
     {
         const glm::vec4* srcPtr = src[y];
         const glm::vec4* imgPtr = img[y];
 
-        for (size_t x = 0; x < w; ++x)
+        for (int x = 0; x < w; ++x)
             rop(*(srcPtr++), *(imgPtr++));
     }
 }
 
-static bool bitmap_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, size_t w, size_t h)
+static bool bitmap_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, int w, int h)
 {
     assert(src && dst);
     assert(w + h > 0);
@@ -87,12 +87,12 @@ static bool bitmap_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, size_t w, size_t h)
 
     RGBQUAD* palette = FreeImage_GetPalette(src);
 
-    for (size_t y = 0; y < h; ++y)
+    for (int y = 0; y < h; ++y)
     {
         uint8_t* srcPtr = (uint8_t*)FreeImage_GetScanLine(src, y);
         FIRGBAF* dstPtr = (FIRGBAF*)FreeImage_GetScanLine(dst, y);
 
-        for (size_t x = 0; x < w; ++x)
+        for (int x = 0; x < w; ++x)
         {
             if ((bpp == 24) || (bpp == 32))
             {
@@ -117,17 +117,17 @@ static bool bitmap_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, size_t w, size_t h)
     return true;
 }
 
-static bool rgbf_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, size_t w, size_t h)
+static bool rgbf_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, int w, int h)
 {
     assert(src && dst);
     assert(w + h > 0);
 
-    for (size_t y = 0; y < h; ++y)
+    for (int y = 0; y < h; ++y)
     {
         FIRGBF*  srcPtr = (FIRGBF* )FreeImage_GetScanLine(src, y);
         FIRGBAF* dstPtr = (FIRGBAF*)FreeImage_GetScanLine(dst, y);
 
-        for (size_t x = 0; x < w; ++x)
+        for (int x = 0; x < w; ++x)
         {
             dstPtr->red   = srcPtr->red;
             dstPtr->green = srcPtr->green;
@@ -173,7 +173,7 @@ image& image::operator=(const image &other)
     return *this;
 }
 
-image::image(size_t width, size_t height)
+image::image(int width, int height)
 {
     assert(width + height > 0);
 
@@ -221,8 +221,8 @@ void image::load(const std::string& path)
         throw std::runtime_error("image::load -> file has no pixels");
     }
 
-    size_t w = FreeImage_GetWidth(loaded);
-    size_t h = FreeImage_GetHeight(loaded);
+    int w = FreeImage_GetWidth(loaded);
+    int h = FreeImage_GetHeight(loaded);
 
     FREE_IMAGE_TYPE fit = FreeImage_GetImageType(loaded);
     if (fit == FIT_RGBAF) this->dib = loaded;
@@ -353,16 +353,16 @@ image image::compose(const image& r, const image& g, const image& b)
     assert((b.width() == r.width()) && (b.height() == r.height()));
 
     image out(r.width(), r.height());
-    size_t w = r.width(), h = r.height();
+    int w = r.width(), h = r.height();
 
-    for (size_t y = 0; y < h; ++y)
+    for (int y = 0; y < h; ++y)
     {
         glm::vec4* dstPtr = out[y];
         const glm::vec4* r_ptr = r[y];
         const glm::vec4* g_ptr = g[y];
         const glm::vec4* b_ptr = b[y];
 
-        for (size_t x = 0; x < w; ++x)
+        for (int x = 0; x < w; ++x)
         {
             dstPtr->r = r_ptr->x;
             dstPtr->g = g_ptr->x;
@@ -405,7 +405,7 @@ void image::normalize(bool local, const channels& which)
     });
 }
 
-image image::resize(size_t newWidth, size_t newHeight, FREE_IMAGE_FILTER filter) const
+image image::resize(int newWidth, int newHeight, FREE_IMAGE_FILTER filter) const
 {
     assert(newWidth + newHeight > 0);
 
@@ -415,20 +415,20 @@ image image::resize(size_t newWidth, size_t newHeight, FREE_IMAGE_FILTER filter)
     return image(resized);
 }
 
-image image::enlarge(size_t newWidth, size_t newHeight) const
+image image::enlarge(int newWidth, int newHeight) const
 {
     assert((newWidth >= width()) && (newHeight >= height()));
     assert(newWidth + newHeight > 0);
 
-    size_t padL = (newWidth - width()) / 2;
-    size_t padR = newWidth - width() - padL;
-    size_t padT = (newHeight - height()) / 2;
-    size_t padB = newHeight - height() - padT;
+    int padL = (newWidth - width()) / 2;
+    int padR = newWidth - width() - padL;
+    int padT = (newHeight - height()) / 2;
+    int padB = newHeight - height() - padT;
 
     return zero_pad(padL, padT, padR, padB);
 }
 
-image image::subregion(size_t rectX, size_t rectY, size_t rectW, size_t rectH) const
+image image::subregion(int rectX, int rectY, int rectW, int rectH) const
 {
     assert(rectW + rectH > 0);
     assert(rectX + rectW <= width());
@@ -440,7 +440,7 @@ image image::subregion(size_t rectX, size_t rectY, size_t rectW, size_t rectH) c
     return image(region);
 }
 
-image image::zero_pad(size_t left, size_t top, size_t right, size_t bottom) const
+image image::zero_pad(int left, int top, int right, int bottom) const
 {
     glm::vec4 black;
 
@@ -450,7 +450,7 @@ image image::zero_pad(size_t left, size_t top, size_t right, size_t bottom) cons
     return image(padded);
 }
 
-glm::vec4* image::operator[](size_t y)
+glm::vec4* image::operator[](int y)
 {
     assert(y < height());
 
@@ -459,7 +459,7 @@ glm::vec4* image::operator[](size_t y)
     return ptr;
 }
 
-const glm::vec4* image::operator[](size_t y) const
+const glm::vec4* image::operator[](int y) const
 {
     assert(y < height());
 
@@ -468,13 +468,13 @@ const glm::vec4* image::operator[](size_t y) const
     return ptr;
 }
 
-glm::vec4& image::operator()(size_t x, size_t y)
+glm::vec4& image::operator()(int x, int y)
 {
     assert((x < width()) && (y < height()));
     return *((*this)[y] + x);
 }
 
-const glm::vec4& image::operator()(size_t x, size_t y) const
+const glm::vec4& image::operator()(int x, int y) const
 {
     assert((x < width()) && (y < height()));
     return *((*this)[y] + x);
@@ -490,25 +490,25 @@ const glm::vec4* image::data() const
     return (*this)[0];
 }
 
-size_t image::width() const
+int image::width() const
 {
     return FreeImage_GetWidth(this->dib);
 }
 
-size_t image::height() const
+int image::height() const
 {
     return FreeImage_GetHeight(this->dib);
 }
 
-image utils::draw_circle(size_t radius, bool anti_alias, const glm::vec4& color)
+image utils::draw_circle(int radius, bool anti_alias, const glm::vec4& color)
 {
     if (anti_alias) radius *= 2;
     image circle(2 * radius, 2 * radius);
-    for (size_t y = 0; y < 2 * radius; ++y)
+    for (int y = 0; y < 2 * radius; ++y)
     {
         glm::vec4* ptr = circle[y];
 
-        for (size_t x = 0; x < 2 * radius; ++x)
+        for (int x = 0; x < 2 * radius; ++x)
         {
             float px = ((float)x - radius) / (radius);
             float py = ((float)y - radius) / (radius);

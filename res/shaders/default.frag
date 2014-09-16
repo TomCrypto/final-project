@@ -5,7 +5,7 @@ uniform float mip_level;
 uniform float pixel_count;
 uniform float exposure;
 
-in vec2 uv;
+varying vec2 uv;
 
 float luminance(vec3 color)
 {
@@ -14,7 +14,7 @@ float luminance(vec3 color)
 
 void main()
 {
-    float avg_log_lum = texture2DLod(tex, uv, mip_level).a;
+    float avg_log_lum = texture2D(tex, uv, mip_level).a;
     vec3 color = texture2D(tex, uv).rgb;
 
     float avg_lum = exp(avg_log_lum / pixel_count);

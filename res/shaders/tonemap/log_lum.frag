@@ -2,7 +2,7 @@
 
 uniform sampler2D tex;
 
-in vec2 uv;
+varying vec2 uv;
 
 float luminance(vec3 color)
 {

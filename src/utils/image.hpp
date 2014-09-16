@@ -31,7 +31,7 @@ class image
 public:
     image(int width, int height, GLuint tex);
     image& operator=(const image &other);
-    image(size_t width, size_t height);
+    image(int width, int height);
     image(const std::string& path);
     image(const image &other);
     image(FIBITMAP *dib);
@@ -67,32 +67,32 @@ public:
     void normalize(bool local, const channels& which = channels::RGB);
 
     //<< Resizes this image to new dimensions with a given filter, and returns the result
-    image resize(size_t newWidth, size_t newHeight, FREE_IMAGE_FILTER filter = FILTER_CATMULLROM) const;
+    image resize(int newWidth, int newHeight, FREE_IMAGE_FILTER filter = FILTER_CATMULLROM) const;
 
     //<< Enlarges this image, centering the contents and padding with black on the sides
-    image enlarge(size_t newWidth, size_t newHeight) const;
+    image enlarge(int newWidth, int newHeight) const;
 
     //<< Returns the subregion of this image specified by a given rectangle
-    image subregion(size_t rectX, size_t rectY, size_t rectW, size_t rectH) const;
+    image subregion(int rectX, int rectY, int rectW, int rectH) const;
 
     //<< Returns this image, padded on the sides with a black background
-    image zero_pad(size_t left, size_t top, size_t right, size_t bottom) const;
+    image zero_pad(int left, int top, int right, int bottom) const;
 
     //<< Accesses the scanline pointer for a given row
-    glm::vec4* operator[](size_t y);
-	const glm::vec4* operator[](size_t y) const;
+    glm::vec4* operator[](int y);
+	const glm::vec4* operator[](int y) const;
 
     //<< Accesses the pixel at a given point
-    glm::vec4& operator()(size_t x, size_t y);
-	const glm::vec4& operator()(size_t x, size_t y) const;
+    glm::vec4& operator()(int x, int y);
+	const glm::vec4& operator()(int x, int y) const;
 
     //<<Returns a raw pointer to the bitmap data
     glm::vec4* data();
     const glm::vec4* data() const;
 
     //<< Accesses the width and height of the image
-    size_t width() const;
-    size_t height() const;
+    int width() const;
+    int height() const;
 private:
     FIBITMAP *dib;
 };
@@ -101,7 +101,7 @@ namespace utils
 {
     //<< Draws a circle of a given radius and color
     //<< The returned image has side 2 * radius
-    image draw_circle(size_t radius, bool anti_alias, const glm::vec4& color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
+    image draw_circle(int radius, bool anti_alias, const glm::vec4& color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
 }
 
 #endif

@@ -104,7 +104,10 @@ namespace gui
                                    + std::string((char *)glewGetErrorString(err))
                                    + ".");
 
-        if (TwInit(TW_OPENGL_CORE, NULL) != 1)
+        if (!GLEW_VERSION_2_1)
+            throw std::runtime_error("Sorry, OpenGL 2.1 needed!\n");
+
+        if (TwInit(TW_OPENGL, NULL) != 1)
             throw std::runtime_error("Failed to initialize AntTweakBar.");
 
         TwGLUTModifiersFunc(glutGetModifiers);

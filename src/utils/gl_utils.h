@@ -4,7 +4,10 @@
 #ifndef GL_UTILS_H
 #define GL_UTILS_H
 
+#include <glm/glm.hpp>
 #include <GL/glew.h>
+#include <utility>
+#include <vector>
 #include <string>
 
 #include "utils/image.hpp"
@@ -26,17 +29,29 @@ namespace gl
         void bind() const;
         void unbind() const;
 
-        //<< Locates a uniform in the shader
-        GLuint locate(const std::string& name) const;
-
         //<< Gets the different build logs
         std::string vert_log() const;
         std::string frag_log() const;
         std::string link_log() const;
+
+        //<< Access and modify shader variables
+        GLint operator[](const std::string& variable);
+
+        void set(const std::string& var, const float& value);
+        void set(const std::string& var, const glm::vec2& value);
+        void set(const std::string& var, const glm::vec3& value);
+        void set(const std::string& var, const glm::vec4& value);
+        void set(const std::string& var, const int& value);
+        void set(const std::string& var, const int& x, const int& y);
+        void set(const std::string& var, const glm::mat3& value);
+        void set(const std::string& var, const glm::mat4& value);
+
     private:
         GLuint m_vert;
         GLuint m_frag;
         GLuint m_prog;
+
+        std::vector<std::pair<std::string, GLint>> m_vars;
 
         bool has_compiled(GLuint shader) const;
         bool has_linked(GLuint program) const;
