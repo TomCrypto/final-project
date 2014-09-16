@@ -51,10 +51,10 @@
     <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gui\program.cpp">
+    <ClCompile Include="..\src\gui\window.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gui\bar.cpp">
+    <ClCompile Include="..\src\gui\tweakbar.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gui\framebuffer.cpp">
@@ -74,10 +74,10 @@
     <ClInclude Include="..\src\G308_Skeleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gui\bar.h">
+    <ClInclude Include="..\src\gui\tweakbar.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gui\program.h">
+    <ClInclude Include="..\src\gui\window.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="..\src\gui\framebuffer.h">
@@ -109,16 +109,13 @@
     <None Include="..\res\priman.asf">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\res\shaders\default.frag">
+    <None Include="..\res\shaders\generic\fs_quad.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="..\res\shaders\default.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="..\res\shaders\tonemap\log_lum.frag">
+    <None Include="..\res\shaders\tonemap\reinhard.frag">
       <Filter>Resource Files\Shaders\Tonemapping</Filter>
     </None>
-    <None Include="..\res\shaders\tonemap\log_lum.vert">
+    <None Include="..\res\shaders\tonemap\log_lum.frag">
       <Filter>Resource Files\Shaders\Tonemapping</Filter>
     </None>
   </ItemGroup>

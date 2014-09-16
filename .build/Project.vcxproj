@@ -85,9 +85,9 @@
   <ItemGroup>
     <ClCompile Include="..\src\G308_Skeleton.cpp" />
     <ClCompile Include="..\src\utils\gl_utils.cpp" />
-    <ClCompile Include="..\src\gui\bar.cpp" />
+    <ClCompile Include="..\src\gui\tweakbar.cpp" />
     <ClCompile Include="..\src\gui\framebuffer.cpp" />
-    <ClCompile Include="..\src\gui\program.cpp" />
+    <ClCompile Include="..\src\gui\window.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\utils\image.cpp" />
   </ItemGroup>
@@ -95,9 +95,9 @@
     <ClInclude Include="..\src\define.h" />
     <ClInclude Include="..\src\G308_Skeleton.h" />
     <ClInclude Include="..\src\utils\gl_utils.h" />
-    <ClInclude Include="..\src\gui\bar.h" />
+    <ClInclude Include="..\src\gui\tweakbar.h" />
     <ClInclude Include="..\src\gui\framebuffer.h" />
-    <ClInclude Include="..\src\gui\program.h" />
+    <ClInclude Include="..\src\gui\window.h" />
     <ClInclude Include="..\src\utils\image.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -107,14 +107,14 @@
     <None Include="..\lib\bin\win32\FreeImage.dll" />
     <None Include="..\lib\bin\win32\glew32.dll" />
     <None Include="..\lib\bin\win32\libfftw3f-3.dll" />
-    <Text Include="..\res\shaders\default.frag">
+    <Text Include="..\res\shaders\generic\fs_quad.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </Text>
-    <Text Include="..\res\shaders\default.vert">
+    <Text Include="..\res\shaders\tonemap\reinhard.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
@@ -122,13 +122,6 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </Text>
     <Text Include="..\res\shaders\tonemap\log_lum.frag">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-    </Text>
-    <Text Include="..\res\shaders\tonemap\log_lum.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
