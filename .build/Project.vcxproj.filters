@@ -40,6 +40,9 @@
     <Filter Include="Source Files\GUI">
       <UniqueIdentifier>{18a1e681-55a1-4d88-8f53-a0ab71340ded}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Tonemapping">
+      <UniqueIdentifier>{d0b1af37-4c3c-4547-a400-928782cceefb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\G308_Skeleton.cpp">
@@ -111,6 +114,12 @@
     </None>
     <None Include="..\res\shaders\default.vert">
       <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\res\shaders\tonemap\log_lum.frag">
+      <Filter>Resource Files\Shaders\Tonemapping</Filter>
+    </None>
+    <None Include="..\res\shaders\tonemap\log_lum.vert">
+      <Filter>Resource Files\Shaders\Tonemapping</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

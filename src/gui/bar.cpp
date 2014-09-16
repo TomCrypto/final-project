@@ -28,7 +28,7 @@ namespace gui
     main_bar::main_bar(const std::string& name) : basic_bar(name)
     {
         rotation = 0;
-        exposure = 0.18;
+        exposure = 0.18f;
 
         TwAddVarRW(m_bar,
             "Rotation", TW_TYPE_FLOAT, &rotation,

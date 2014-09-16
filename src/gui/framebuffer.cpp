@@ -1,6 +1,7 @@
 #include "gui/framebuffer.h"
 
 #include <cstdio>
+#include <cmath>
 
 #include <glm/glm.hpp>
 
@@ -79,9 +80,16 @@ void fbuffer::clear(bool depth)
     glClear(GL_COLOR_BUFFER_BIT | (depth ? GL_DEPTH_BUFFER_BIT : 0));
 }
 
+static int get_mip_level(int w, int h)
+{
+    int m = (w < h) ? h : w;
+
+    return (int)ceil(log(m) / log(2));
+}
+
 void fbuffer::render(float exposure)
 {
-    int mip_level = (int)ceil(log2(fmax(m_width, m_height)));
+    int mip_level = get_mip_level(m_width, m_height);
 
     glDisable(GL_DEPTH_TEST);
      

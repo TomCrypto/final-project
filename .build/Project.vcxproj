@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -109,6 +109,8 @@
     <None Include="..\lib\bin\win32\libfftw3f-3.dll" />
     <None Include="..\res\shaders\default.frag" />
     <None Include="..\res\shaders\default.vert" />
+    <None Include="..\res\shaders\tonemap\log_lum.frag" />
+    <None Include="..\res\shaders\tonemap\log_lum.vert" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\lib\bin\win32\AntTweakBar.dll">
