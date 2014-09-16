@@ -6,6 +6,7 @@ namespace gui
 {
     /* ==================================================================== */
 
+    const int target_fps = 60;
     static program* prog;
     static char** _argv;
     static int _argc;
@@ -58,7 +59,7 @@ namespace gui
 
     static void __update_cb(int value)
     {
-        glutTimerFunc(16, __update_cb, 0);
+        glutTimerFunc((int)(1000.0f / target_fps), __update_cb, 0);
         prog->on_update();
     }
 
@@ -103,22 +104,22 @@ namespace gui
                                    + std::string((char *)glewGetErrorString(err))
                                    + ".");
 
-        if (TwInit(TW_OPENGL_CORE, NULL) == 1)
-        {
-            TwGLUTModifiersFunc(glutGetModifiers);
-            glutPassiveMotionFunc(__motion_cb);
-            glutTimerFunc(16, __update_cb, 0);
-            glutKeyboardFunc(__keyboard_cb);
-            glutSpecialFunc(__special_cb);
-            glutDisplayFunc(__display_cb);
-            glutReshapeFunc(__resize_cb);
-            glutMotionFunc(__motion_cb);
-            glutMouseFunc(__button_cb);
-        }
-        else throw std::runtime_error("Failed to initialize AntTweakBar.");
+        if (TwInit(TW_OPENGL_CORE, NULL) != 1)
+            throw std::runtime_error("Failed to initialize AntTweakBar.");
+
+        TwGLUTModifiersFunc(glutGetModifiers);
+        glutPassiveMotionFunc(__motion_cb);
+        glutKeyboardFunc(__keyboard_cb);
+        glutSpecialFunc(__special_cb);
+        glutDisplayFunc(__display_cb);
+        glutReshapeFunc(__resize_cb);
+        glutMotionFunc(__motion_cb);
+        glutMouseFunc(__button_cb);
 
         on_init();
         prog = this;
+
+        glutTimerFunc(1, __update_cb, 0);
     }
 
     program::~program()
