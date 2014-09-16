@@ -23,7 +23,7 @@ public:
     void resize(size_t width, size_t height);
 
     //<< Render framebuffer into the backbuffer
-    void render();
+    void render(float exposure);
 
 private:
     GLuint m_tex;   //<< main render texture
@@ -33,6 +33,7 @@ private:
     GLuint m_fbo;   //<< FBO for rendering
 
     gl::shader m_shader;
+    gl::shader m_log_shader;
 
     size_t m_width;
     size_t m_height;

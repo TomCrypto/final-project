@@ -34,6 +34,7 @@ namespace gui
         main_bar(const std::string& name);
 
         float rotation;
+        float exposure;
     };
 }
 

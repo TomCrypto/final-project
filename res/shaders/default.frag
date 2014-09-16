@@ -1,9 +1,24 @@
-#version 130
+#version 120
+
+uniform sampler2D tex;
+uniform float mip_level;
+uniform float pixel_count;
+uniform float exposure;
 
 in vec2 uv;
-uniform sampler2D tex;
+
+float luminance(vec3 color)
+{
+    return dot(color, vec3(0.2126f, 0.7152f, 0.0722f));
+}
 
 void main()
 {
-    gl_FragColor = texture2D(tex, uv) * vec4(0.75, 0.25, 0.25, 1);
+    float avg_log_lum = texture2DLod(tex, uv, mip_level).a;
+    vec3 color = texture2D(tex, uv).rgb;
+
+    float avg_lum = exp(avg_log_lum / pixel_count);
+    float key = exposure / avg_lum;
+
+    gl_FragColor = vec4(color.rgb * (key / (1.0f + luminance(color.rgb) * key)), 1);
 }

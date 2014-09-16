@@ -27,11 +27,16 @@ namespace gui
 
     main_bar::main_bar(const std::string& name) : basic_bar(name)
     {
-        this->rotation = 0;
+        rotation = 0;
+        exposure = 0.18;
 
         TwAddVarRW(m_bar,
-            "Rotation", TW_TYPE_FLOAT, &this->rotation,
+            "Rotation", TW_TYPE_FLOAT, &rotation,
             "min=0 max=360 step=1.0 help='Rotate the skeleton'");
+        
+        TwAddVarRW(m_bar,
+            "Exposure", TW_TYPE_FLOAT, &exposure,
+            "min=0.01 max=3 step=0.01 help='Tonemapping exposure'");
 
         TwDefine((m_name + " contained=true").c_str());
     }

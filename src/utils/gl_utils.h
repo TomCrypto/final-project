@@ -26,6 +26,9 @@ namespace gl
         void bind() const;
         void unbind() const;
 
+        //<< Locates a uniform in the shader
+        GLuint locate(const std::string& name) const;
+
         //<< Gets the different build logs
         std::string vert_log() const;
         std::string frag_log() const;

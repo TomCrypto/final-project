@@ -99,6 +99,11 @@ namespace gl
         glUseProgram(0);
     }
 
+    GLuint shader::locate(const std::string& name) const
+    {
+        return glGetUniformLocation(m_prog, name.c_str());
+    }
+
     bool shader::has_compiled(GLuint shader) const
     {
         GLint status;

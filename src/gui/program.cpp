@@ -227,7 +227,7 @@ namespace gui
 
         glViewport(0, 0, width(), height());
 
-        //buf->bind();
+        buf->bind();
 
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	    glEnable(GL_DEPTH_TEST);
@@ -252,7 +252,7 @@ namespace gui
 	    glDisable(GL_LIGHTING);
 	    glDisable(GL_COLOR_MATERIAL);
 
-        //buf->render();
+        buf->render(m_bar->exposure);
 
         TwDraw();
 
