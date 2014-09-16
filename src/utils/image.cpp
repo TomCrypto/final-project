@@ -1,4 +1,4 @@
-#include "image.hpp"
+#include "utils/image.hpp"
 
 #include <functional>
 #include <stdexcept>

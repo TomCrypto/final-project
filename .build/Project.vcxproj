@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -41,13 +41,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).build\obj\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)lib\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)lib\include;$(SolutionDir)src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)lib\bin\win32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir).build\obj\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)lib\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)lib\include;$(SolutionDir)src;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)lib\bin\win32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -84,17 +84,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\G308_Skeleton.cpp" />
+    <ClCompile Include="..\src\utils\gl_utils.cpp" />
+    <ClCompile Include="..\src\gui\bar.cpp" />
+    <ClCompile Include="..\src\gui\framebuffer.cpp" />
+    <ClCompile Include="..\src\gui\program.cpp" />
     <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\fbuffer.cpp" />
-    <ClCompile Include="..\src\gui.cpp" />
-    <ClCompile Include="..\src\image.cpp" />
+    <ClCompile Include="..\src\utils\image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\define.h" />
     <ClInclude Include="..\src\G308_Skeleton.h" />
-    <ClInclude Include="..\src\fbuffer.h" />
-    <ClInclude Include="..\src\gui.hpp" />
-    <ClInclude Include="..\src\image.hpp" />
+    <ClInclude Include="..\src\utils\gl_utils.h" />
+    <ClInclude Include="..\src\gui\bar.h" />
+    <ClInclude Include="..\src\gui\framebuffer.h" />
+    <ClInclude Include="..\src\gui\program.h" />
+    <ClInclude Include="..\src\utils\image.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\res\priman.amc" />
@@ -103,6 +107,8 @@
     <None Include="..\lib\bin\win32\FreeImage.dll" />
     <None Include="..\lib\bin\win32\glew32.dll" />
     <None Include="..\lib\bin\win32\libfftw3f-3.dll" />
+    <None Include="..\res\shaders\default.frag" />
+    <None Include="..\res\shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\lib\bin\win32\AntTweakBar.dll">

@@ -19,10 +19,6 @@
 #ifndef __DEFINE_COMP308__
 #define __DEFINE_COMP308__
 
-// Default Window 
-#define G308_WIN_WIDTH	640
-#define G308_WIN_HEIGHT	480
-
 // Projection parameters
 #define G308_FOVY		20.0
 #define G308_ZNEAR_3D	1

@@ -20,7 +20,9 @@ RES              = $(patsubst $(RESDIR)/%,$(BINDIR)/%,$(RESOURCES))
 LDPATH           = -L$(LIBDIR)/bin/linux
 INCLUDE          = -I$(LIBDIR)/include -I$(SRCDIR)
 CFLAGS           = -O2 -Wall -Wextra -pedantic -std=c99
+CFLAGS          += -Wno-unused-parameter -Wno-unused-variable
 CXXFLAGS         = -O2 -Wall -Wextra -pedantic -std=c++11
+CXXFLAGS        += -Wno-unused-parameter -Wno-unused-variable
 LDFLAGS          = -lm -lGLEW -lGLU -lGL -lglut -lstdc++
 LDFLAGS         += -lfreeimage -lAntTweakBar -lX11
 LDFLAGS         += -lfftw3f -lfftw3f_omp -fopenmp
