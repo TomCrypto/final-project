@@ -3,6 +3,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 #include <stdexcept>
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 
