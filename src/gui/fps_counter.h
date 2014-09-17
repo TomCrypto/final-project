@@ -3,6 +3,7 @@
 
 // simple rolling FPS counter
 
+#include <cstddef>
 #include <vector>
 
 class fps_counter
