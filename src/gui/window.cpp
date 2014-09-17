@@ -452,7 +452,7 @@ namespace gui
 	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	    glShadeModel(GL_SMOOTH);
 
-		glColor3f(0.0f, 1.0f, 0.0f);
+		glColor3f(m_bar->color.x, m_bar->color.y, m_bar->color.z);
 		m_obj->display();
 
         glDisable(GL_DEPTH_TEST);

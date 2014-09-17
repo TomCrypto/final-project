@@ -35,6 +35,7 @@ namespace gui
         exposure = 0.18f;
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
+        color = glm::vec3(0.75f, 0.25f, 0.25f);
 
         TwAddVarRW(m_bar,
             "Rotation", TW_TYPE_FLOAT, &rotation,
@@ -43,6 +44,10 @@ namespace gui
         TwAddVarRW(m_bar,
             "Exposure", TW_TYPE_FLOAT, &exposure,
             " min=0.01 max=3 step=0.01 help='Tonemapping exposure'");
+
+        TwAddVarRW(m_bar,
+            "Color", TW_TYPE_COLOR3F, &color,
+            " colormode=hls");
 
         TwAddVarRW(m_bar,
             "Movement Speed", TW_TYPE_FLOAT, &cam_move_speed,

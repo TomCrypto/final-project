@@ -1,5 +1,5 @@
-#ifndef FRAMEBUFFER_H
-#define FRAMEBUFFER_H
+#ifndef GUI_FRAMEBUFFER_H
+#define GUI_FRAMEBUFFER_H
 
 #include <easylogging.h>
 #include <GL/glew.h>
