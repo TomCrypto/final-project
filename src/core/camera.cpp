@@ -17,10 +17,6 @@ void camera::resize(int width, int height)
     m_height = height;
 }
 
-#include <iostream>
-
-#include "glm/ext.hpp"
-
 void camera::move(const glm::vec3& direction)
 {
     m_pos += glm::vec3(glm::vec4(direction, 0) * view());

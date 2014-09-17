@@ -17,6 +17,8 @@
 #include "core/model.h"
 #include "core/camera.h"
 
+#include "gui/fps_counter.h"
+
 namespace gui
 {
     // This is for deferred exception handling, because throwing exceptions in
@@ -77,13 +79,12 @@ namespace gui
 
         // GLUT windowing/keyboard stuff
         std::map<int, bool> m_keys;
-        std::vector<double> m_fps;
-        int m_frame_count;
         int width();
         int height();
         int m_window;
 
         // Our own stuff
+        fps_counter m_fps;
         main_bar* m_bar;
         framebuffer* m_framebuffer;
         camera m_cam;

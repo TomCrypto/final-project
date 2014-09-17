@@ -72,6 +72,9 @@
     <ClCompile Include="..\src\core\camera.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\gui\fps_counter.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gui\tweakbar.h">
@@ -94,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="..\src\core\camera.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\fps_counter.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

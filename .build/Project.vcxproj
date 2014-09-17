@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\core\camera.cpp" />
     <ClCompile Include="..\src\core\model.cpp" />
+    <ClCompile Include="..\src\gui\fps_counter.cpp" />
     <ClCompile Include="..\src\utils\gl_utils.cpp" />
     <ClCompile Include="..\src\gui\tweakbar.cpp" />
     <ClCompile Include="..\src\gui\framebuffer.cpp" />
@@ -97,6 +98,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\core\camera.h" />
     <ClInclude Include="..\src\core\model.h" />
+    <ClInclude Include="..\src\gui\fps_counter.h" />
     <ClInclude Include="..\src\utils\gl_utils.h" />
     <ClInclude Include="..\src\gui\tweakbar.h" />
     <ClInclude Include="..\src\gui\framebuffer.h" />

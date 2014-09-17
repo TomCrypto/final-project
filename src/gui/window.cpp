@@ -2,26 +2,6 @@
 
 #include <GL/freeglut.h>
 #include <stdexcept>
-#include <cstdint>
-#include <ctime>
-
-#if defined(_WIN32)
-#include <windows.h>
-#endif
-
-static double current_time()
-{
-    #if defined(_WIN32)
-    uint64_t freq, now;
-    QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
-    QueryPerformanceCounter((LARGE_INTEGER*)&now);
-    return (double)now / freq;
-    #else
-    timespec time;
-    clock_gettime(CLOCK_MONOTONIC, &time);
-    return time.tv_sec + time.tv_nsec * 1e-9;
-    #endif
-}
 
 namespace gui
 {
@@ -216,6 +196,7 @@ namespace gui
 
     window::window(const std::string& window_title,
                    const std::pair<int, int>& dims)
+        : m_fps(51)
     {
         if (prog != nullptr)
             throw std::logic_error("program already running");
@@ -312,8 +293,6 @@ namespace gui
         // The timer is to get the loop going
         // without requiring user interaction
         glutTimerFunc(16, __update_cb, 0);
-        m_frame_count = 0;
-        m_fps.resize(51);
         glutMainLoop();
     }
 
@@ -458,6 +437,8 @@ namespace gui
 
     void window::on_display()
     {
+        m_fps.add_frame();
+
         // later on this might look like this:
         // - bind framebuffer
         // - clear framebuffer
@@ -500,29 +481,15 @@ namespace gui
         TwDraw();
 
         glutSwapBuffers();
+
+        if (m_fps.average_ready()) {
+            int fps = (int)(1.0f / m_fps.get_average() + 0.5f);
+            LOG_EVERY_N(400, INFO) << fps << " frames per second.";
+        }
     }
 
     void window::on_update()
     {
-        m_fps[m_frame_count++ % m_fps.size()] = current_time();
-
-        if (m_frame_count > (int)m_fps.size()) {
-            double avg_time = 0;
-            int samples = 0;
-            
-            for (int t = 1; t < (int)m_fps.size(); ++t) {
-                double dt = m_fps[t] - m_fps[t - 1];
-                if (dt > 0) {
-                    avg_time += dt;
-                    ++samples;
-                }
-            }
-            
-            avg_time /= samples;
-
-            LOG_EVERY_N(400, INFO) << (int)(1.0f / avg_time + 0.5f) << " frames per second.";
-        }
-
         if (m_keys[27 /* escape */]) {
             glutLeaveMainLoop();
             return;
