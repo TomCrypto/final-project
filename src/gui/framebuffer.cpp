@@ -28,32 +28,34 @@ fbuffer::fbuffer(int width, int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
 
-   //Here, we'll use :
-   //glGenerateMipmapEXT(GL_TEXTURE_2D);
-   //-------------------------
-   glGenFramebuffersEXT(1, &m_fbo);
-   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
-   //Attach 2D texture to this FBO
-   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_tex, 0);
-   //-------------------------
-   glGenRenderbuffersEXT(1, &m_depth);
-   glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depth);
-   glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, width, height);
-   //-------------------------
-   //Attach depth buffer to FBO
-   glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_depth);
-   //-------------------------
-   //Does the GPU support current FBO configuration?
-   GLenum status;
-   status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-   switch(status)
-   {
-      case GL_FRAMEBUFFER_COMPLETE_EXT:
-      printf("good\n");
-      break;
-   default:
-       printf("ERROR\n");
-   }
+    //Here, we'll use :
+    //glGenerateMipmapEXT(GL_TEXTURE_2D);
+    //-------------------------
+    glGenFramebuffersEXT(1, &m_fbo);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
+    //Attach 2D texture to this FBO
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_tex, 0);
+    //-------------------------
+    glGenRenderbuffersEXT(1, &m_depth);
+    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depth);
+    glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, width, height);
+    //-------------------------
+    //Attach depth buffer to FBO
+    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_depth);
+    //-------------------------
+    //Does the GPU support current FBO configuration?
+    
+    GLenum status;
+    status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+    switch(status)
+    {
+        case GL_FRAMEBUFFER_COMPLETE_EXT:
+            printf("Framebuffer ready for drawing!\n");
+            break;
+        default:
+            printf("Framebuffer could not be created!\n");
+            exit(-1);
+    }
 
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
@@ -76,7 +78,8 @@ void fbuffer::resize(int width, int height)
 void fbuffer::bind()
 {
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_tex, 0);
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+                              GL_TEXTURE_2D, m_tex, 0);
 }
 
 void fbuffer::clear(bool depth)
@@ -105,13 +108,14 @@ void fbuffer::render(float exposure)
     // in m_tmp, so bind m_tmp to the framebuffer and run a fullscreen shader
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_tmp, 0);
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+                              GL_TEXTURE_2D, m_tmp, 0);
 
     m_log_shader.bind();
 
     glBindTexture(GL_TEXTURE_2D, m_tex);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     m_log_shader.fullscreen_quad();
 
@@ -127,8 +131,8 @@ void fbuffer::render(float exposure)
     m_shader.bind();
 
     glBindTexture(GL_TEXTURE_2D, m_tmp);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     m_shader.set("mip_level", (float)mip_level);
     m_shader.set("exposure", exposure);
@@ -137,27 +141,13 @@ void fbuffer::render(float exposure)
     m_shader.fullscreen_quad();
 
     m_shader.unbind();
-
-    return;
-
-    //=====
-
-    // later on:
-
-    // 1. copy current framebuffer contents (m_tex) into (m_tmp)
-
-    // 2. unbind current framebuffer, restoring backbuffer
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-    // 3. tonemap into backbuffer using m_tex and m_tmp
 }
 
 fbuffer::~fbuffer()
 {
-    glDeleteTextures(1, &m_tex);
-    glDeleteTextures(1, &m_tmp);
-    glDeleteRenderbuffersEXT(1, &m_depth);
-    //Bind 0, which means render to back buffer, as a result, fb is unbound  // IMPORTANT IMPORTANT <<<
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    glDeleteRenderbuffersEXT(1, &m_depth);
     glDeleteFramebuffersEXT(1, &m_fbo);
+    glDeleteTextures(1, &m_tmp);
+    glDeleteTextures(1, &m_tex);
 }

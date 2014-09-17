@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include <glm/gtc/type_ptr.hpp>
 #include <FreeImage.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -13,6 +14,7 @@
 
 #include "G308_Skeleton.h"
 #include "define.h"
+#include "core/camera.h"
 
 namespace gui
 {
@@ -56,6 +58,7 @@ namespace gui
         main_bar* m_bar;
         Skeleton* skeleton;
         fbuffer* buf;
+        camera m_cam;
     };
 }
 

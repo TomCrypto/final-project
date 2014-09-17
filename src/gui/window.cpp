@@ -176,6 +176,8 @@ namespace gui
 	    glEnable(GL_LIGHT0);
 
         buf = new fbuffer(width(), height());
+
+        m_cam = camera(width(), height(), 70 * M_PI / 180, glm::vec3(0, 0, -1), glm::vec3(0, 0, 1));
     }
 
     void window::on_free()
@@ -192,7 +194,25 @@ namespace gui
 
     void window::on_mouse_down(int button, int x, int y)
     {
+        static int last_x = 0;
+        static int last_y = 0;
+
         // TODO: do something here?
+
+        if (button == GLUT_LEFT_BUTTON)
+        {
+            if (last_x == 0)
+                last_x = x;
+
+            if (last_y == 0)
+                last_y = y;
+
+            m_cam.turn_horizontal(((float)x - last_x) * 0.001f);
+            m_cam.turn_vertical(((float)y - last_y) * 0.001f);
+
+            last_x = x;
+            last_y = y;
+        }
     }
 
     void window::on_mouse_move(int x, int y)
@@ -207,6 +227,26 @@ namespace gui
             m_bar->rotation += 5;
             m_bar->refresh();
         }
+
+        if (key == 'w')
+        {
+            m_cam.move_forward(0.1);
+        }
+
+        if (key == 's')
+        {
+            m_cam.move_forward(-0.1);
+        }
+
+        if (key == 'a')
+        {
+            m_cam.move_left(0.1);
+        }
+
+        if (key == 'd')
+        {
+            m_cam.move_right(0.1);
+        }
     }
 
     void window::on_special(int key, int x, int y)
@@ -220,11 +260,12 @@ namespace gui
         TwWindowSize(w, h);
         buf->resize(w, h);
 
-        glMatrixMode(GL_PROJECTION);
+        /*glMatrixMode(GL_PROJECTION);
 	    glLoadIdentity();
-	    gluPerspective(G308_FOVY, (double) width() / (double) height(), G308_ZNEAR_3D, G308_ZFAR_3D);
+	    gluPerspective(G308_FOVY, (double) width() / (double) height(), G308_ZNEAR_3D, G308_ZFAR_3D);*/
 
-        glViewport(0, 0, width(), height());
+        glViewport(0, 0, w, h);
+        m_cam.resize(w, h);
     }
 
     void window::on_display()
@@ -246,6 +287,12 @@ namespace gui
 	    glEnable(GL_COLOR_MATERIAL);
 	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	    glShadeModel(GL_SMOOTH);
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixf(glm::value_ptr(m_cam.proj()));
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadMatrixf(glm::value_ptr(m_cam.view()));
 
 	    GLenum err = glGetError();
 	    if (err != GL_NO_ERROR) {

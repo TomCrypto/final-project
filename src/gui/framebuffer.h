@@ -1,5 +1,5 @@
-#ifndef FBUFFER_H
-#define FBUFFER_H
+#ifndef FRAMEBUFFER_H
+#define FRAMEBUFFER_H
 
 #include <GL/glew.h>
 #include <string>
