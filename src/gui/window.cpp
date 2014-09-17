@@ -5,6 +5,7 @@
 
 namespace gui
 {
+    std::exception exception::m_exception;
     bool exception::m_failed = false;
     static window* prog = nullptr;
     const int target_fps = 60;
@@ -266,7 +267,7 @@ namespace gui
 
         buf = new fbuffer(width(), height());
 
-        m_cam = camera(width(), height(), 70 * M_PI / 180, glm::vec3(0, 0, -1), glm::vec3(0, 0, 1));
+        m_cam = camera(width(), height(), (float)(70 * M_PI / 180), glm::vec3(0, 0, -1), glm::vec3(0, 0, 1));
     }
 
     void window::on_free()
@@ -333,22 +334,22 @@ namespace gui
 
         if (key == 'w')
         {
-            m_cam.move_forward(0.1);
+            m_cam.move_forward(0.1f);
         }
 
         if (key == 's')
         {
-            m_cam.move_forward(-0.1);
+            m_cam.move_forward(-0.1f);
         }
 
         if (key == 'a')
         {
-            m_cam.move_left(0.1);
+            m_cam.move_left(0.1f);
         }
 
         if (key == 'd')
         {
-            m_cam.move_right(0.1);
+            m_cam.move_right(0.1f);
         }
     }
 

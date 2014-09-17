@@ -52,8 +52,8 @@ void camera::turn_vertical(float d)
     float theta = acos(m_dir.y);
 
     theta += d;
-    if (theta > M_PI - 1e-4) theta = M_PI - 1e-4;
-    if (theta < 0 + 1e-4) theta = 0 + 1e-4;
+    if (theta > (float)M_PI - 1e-4f) theta = (float)M_PI - 1e-4f;
+    if (theta < 0 + 1e-4f) theta = 0 + 1e-4f;
 
     m_dir = glm::vec3(sin(theta) * cos(phi), cos(theta), sin(theta) * sin(phi));
 }
@@ -65,8 +65,8 @@ glm::mat4 camera::view() const
 
 glm::mat4 camera::proj() const
 {
-    const float near_plane = 0.1;
-    const float far_plane = 1000;
+    const float near_plane = 0.1f;
+    const float far_plane = 1000.0f;
 
     return glm::perspectiveFov(m_fov, (float)m_width, (float)m_height,
                                near_plane, far_plane);

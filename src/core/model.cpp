@@ -161,7 +161,7 @@ void Model::display() {
 		printf("Warning: Wrong Shading Mode. \n");
 	}
 }
-void Model::addToList(G308_Point v, G308_Normal n, G308_UVcoord u = { 0.0, 0.0 }) {
+void Model::addToList(G308_Point v, G308_Normal n, G308_UVcoord u = G308_UVcoord()) {
 	if (m_nNumUV>0) glTexCoord2f(u.u, u.v);
 	glNormal3f(n.x, n.y, n.z); //Add the normal
 	glVertex3f(v.x, v.y, v.z); //Add the vertex

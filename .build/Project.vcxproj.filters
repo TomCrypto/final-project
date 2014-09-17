@@ -115,6 +115,9 @@
     <None Include="..\res\priman.asf">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\lib\bin\win32\freeglut.dll">
+      <Filter>Dependencies</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\res\apertures\circular.png">

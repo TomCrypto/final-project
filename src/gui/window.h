@@ -7,6 +7,7 @@
 #include <FreeImage.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include <stdexcept>
 #include <fftw3.h>
 
 #include "gui/framebuffer.h"

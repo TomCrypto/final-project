@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -24,7 +24,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -59,7 +59,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glu32.lib;glut32.lib;opengl32.lib;glew32.lib;AntTweakBar.lib;FreeImage.lib;libfftw3f-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glu32.lib;freeglut.lib;opengl32.lib;glew32.lib;AntTweakBar.lib;FreeImage.lib;libfftw3f-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /D /S $(SolutionDir)res\* $(OutDir)</Command>
@@ -78,7 +78,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glu32.lib;glut32.lib;opengl32.lib;glew32.lib;AntTweakBar.lib;FreeImage.lib;libfftw3f-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glu32.lib;freeglut.lib;opengl32.lib;glew32.lib;AntTweakBar.lib;FreeImage.lib;libfftw3f-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /D /S $(SolutionDir)res\* $(OutDir)</Command>
@@ -104,6 +104,7 @@
     <ClInclude Include="..\src\utils\image.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\lib\bin\win32\freeglut.dll" />
     <None Include="..\res\priman.amc" />
     <None Include="..\res\priman.asf" />
     <None Include="..\lib\bin\win32\AntTweakBar.dll" />
@@ -143,6 +144,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\lib\bin\win32\libfftw3f-3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+<Content Include="..\lib\bin\win32\freeglut.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
