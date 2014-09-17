@@ -68,6 +68,7 @@ namespace gui
         void on_resize(int w, int h);
         void on_display();
         void on_update();
+        void on_load(int w, int h);
         void on_init();
         void on_free();
     private:

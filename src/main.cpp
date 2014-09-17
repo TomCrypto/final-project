@@ -47,11 +47,18 @@ int main(int argc, char *argv[])
     setup_logger(); /* config/etc. */
     LOG(INFO) << "Program starting.";
 
-    gui::window::initialize(argc, argv);
-    gui::window window("COMP 308 - Final Project",
-                       std::make_pair(1024, 768));
+    try
+    {
+        gui::window::initialize(argc, argv);
+        gui::window window("COMP 308 - Final Project",
+                           std::make_pair(1024, 768));
 
-    window.run();
+        window.run();
+    }
+    catch (...) {
+        LOG(ERROR) << "Fatal error.";
+        return EXIT_FAILURE;
+    }
 
     if (gui::exception::has_failed())
         return EXIT_FAILURE;

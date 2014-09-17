@@ -217,11 +217,13 @@ namespace gui
     window::window(const std::string& window_title,
                    const std::pair<int, int>& dims)
     {
+        if (prog != nullptr)
+            throw std::logic_error("program already running");
+
+        on_load(dims.first, dims.second);
+        
         try
         {
-            if (prog != nullptr)
-                throw std::logic_error("program already running");
-
             glutInit(&_argc, _argv);
             glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
             glutInitWindowSize(dims.first, dims.second);
@@ -326,6 +328,17 @@ namespace gui
     }
 
     /* ==================================================================== */
+
+    void window::on_load(int w, int h)
+    {
+        // put work in here that can be done without any OpenGL support
+        // like loading stuff from files into CPU buffers
+
+        // you cannot use any OpenGL, GLU, GLUT, GLEW, or AntTweakBar
+        // functions in here as there is no OpenGL context active yet
+
+        // w and h are the resolution of the window (once created)
+    }
 
     void window::on_init()
     {
