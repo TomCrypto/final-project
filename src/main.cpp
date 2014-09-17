@@ -28,6 +28,7 @@ void setup_logger()
 
     el::Configurations conf;
     conf.setToDefault();
+    conf.parseFromText("*GLOBAL:\n FILENAME=log.txt");
     conf.set(el::Level::Error, el::ConfigurationType::Format,
          fail + "%datetime{%H:%m:%s} FAIL [%fbase:%line]" + off + ": %msg");
     conf.set(el::Level::Warning, el::ConfigurationType::Format,
