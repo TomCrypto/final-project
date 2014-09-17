@@ -24,7 +24,7 @@ void setup_logger()
     const std::string& warn = use_colors ? "\x1b[33;1m" : "";
     const std::string& more = use_colors ? "\x1b[34;1m" : "";
     const std::string& bold = use_colors ? "\x1b[37;1m" : "";
-    const std::string& off  = use_colors ? "\x1b[0m" : "";
+    const std::string& off  = use_colors ? "\x1b[0m"    : "";
 
     el::Configurations conf;
     conf.setToDefault();
