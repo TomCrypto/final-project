@@ -15,12 +15,12 @@ public:
 
     void resize(int width, int height);
 
-    void move_forward(float amount);
-    void move_left(float amount);
-    void move_right(float amount);
+    // move relative to current direction
+    // e.g. (0, 0, 1) moves forward
+    void move(const glm::vec3& direction);
 
-    void turn_horizontal(float d);
-    void turn_vertical(float d);
+    // change in euler angles
+    void turn(const glm::vec2& delta);
 
     glm::mat4 view() const;
     glm::mat4 proj() const;

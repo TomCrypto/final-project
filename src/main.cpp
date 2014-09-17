@@ -7,7 +7,6 @@
 #include <unistd.h>
 #endif
 
-#undef WIN32_LEAN_AND_MEAN
 #include <easylogging.h>
 _INITIALIZE_EASYLOGGINGPP
 
@@ -56,8 +55,8 @@ int main(int argc, char *argv[])
         window.run();
     }
     catch (...) {
-        LOG(ERROR) << "Fatal error.";
-        return EXIT_FAILURE;
+        LOG(ERROR) << "Unknown error occurred.";
+        return EXIT_FAILURE; // shouldn't happen
     }
 
     if (gui::exception::has_failed())

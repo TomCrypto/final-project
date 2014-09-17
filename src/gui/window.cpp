@@ -385,8 +385,8 @@ namespace gui
         */
 
         delete m_bar;
-		delete m_obj;
-		delete m_framebuffer;
+        delete m_obj;
+        delete m_framebuffer;
         
         TwTerminate();
     }
@@ -419,8 +419,9 @@ namespace gui
         if (pressed)
         {
             float sens = m_bar->cam_sensitivity;
-            m_cam.turn_horizontal(((float)x - last_x) / width() * sens);
-            m_cam.turn_vertical(((float)y - last_y) / width() * sens);
+
+            m_cam.turn(glm::vec2(((float)x - last_x),
+                                 ((float)y - last_y)) / (width() * sens));
         }
 
         last_x = x;
@@ -528,15 +529,15 @@ namespace gui
         }
 
         if (m_keys['w'])
-            m_cam.move_forward(m_bar->cam_move_speed / target_fps);
+            m_cam.move(glm::vec3(0.0f, 0.0f, -1.0f) * (m_bar->cam_move_speed / target_fps));
 
         if (m_keys['s'])
-            m_cam.move_forward(-m_bar->cam_move_speed / target_fps);
+            m_cam.move(glm::vec3(0.0f, 0.0f, 1.0f) * (m_bar->cam_move_speed / target_fps));
 
         if (m_keys['a'])
-            m_cam.move_left(m_bar->cam_move_speed / target_fps);
+            m_cam.move(glm::vec3(-1.0f, 0.0f, 0.0f) * (m_bar->cam_move_speed / target_fps));
 
         if (m_keys['d'])
-            m_cam.move_right(m_bar->cam_move_speed / target_fps);
+            m_cam.move(glm::vec3(1.0f, 0.0f, 0.0f) * (m_bar->cam_move_speed / target_fps));
     }
 }

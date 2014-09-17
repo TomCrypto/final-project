@@ -17,43 +17,27 @@ void camera::resize(int width, int height)
     m_height = height;
 }
 
-void camera::move_forward(float amount)
+#include <iostream>
+
+#include "glm/ext.hpp"
+
+void camera::move(const glm::vec3& direction)
 {
-    m_pos += m_dir * amount;
+    m_pos += glm::vec3(glm::vec4(direction, 0) * view());
 }
 
-void camera::move_left(float amount)
-{
-    auto left = glm::cross(m_dir, glm::vec3(0, 1, 0));
-    m_pos -= left * amount;
-}
-
-void camera::move_right(float amount)
-{
-    auto left = glm::cross(m_dir, glm::vec3(0, 1, 0));
-    m_pos += left * amount;
-}
-
-void camera::turn_horizontal(float d)
+void camera::turn(const glm::vec2& delta)
 {
     float phi = atan2(m_dir.z, m_dir.x);
     float theta = acos(m_dir.y);
 
-    phi += d;
+    phi += delta.x;
+    theta += delta.y;
 
-    m_dir = glm::vec3(sin(theta) * cos(phi), cos(theta), sin(theta) * sin(phi));
-}
-
-#include <cstdio>
-
-void camera::turn_vertical(float d)
-{
-    float phi = atan2(m_dir.z, m_dir.x);
-    float theta = acos(m_dir.y);
-
-    theta += d;
-    if (theta > (float)M_PI - 1e-4f) theta = (float)M_PI - 1e-4f;
-    if (theta < 0 + 1e-4f) theta = 0 + 1e-4f;
+    if (theta > glm::pi<float>() - 1e-4f)
+        theta = glm::pi<float>() - 1e-4f;
+    if (theta < -glm::pi<float>() + 1e-4f)
+        theta = -glm::pi<float>() + 1e-4f;
 
     m_dir = glm::vec3(sin(theta) * cos(phi), cos(theta), sin(theta) * sin(phi));
 }
