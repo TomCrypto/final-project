@@ -53,7 +53,6 @@ void camera::turn_vertical(float d)
     float theta = acos(m_dir.y);
 
     theta += d;
-    printf("theta = %.2f\n", theta);
     if (theta > M_PI - 1e-4) theta = M_PI - 1e-4;
     if (theta < 0 + 1e-4) theta = 0 + 1e-4;
 

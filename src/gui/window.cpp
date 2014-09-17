@@ -187,37 +187,39 @@ namespace gui
 		delete m_obj;
     }
 
+    static bool pressed = false;
+
     void window::on_mouse_up(int button, int x, int y)
     {
-        // TODO: do something here?
+        if (button == GLUT_LEFT_BUTTON)
+            pressed = false;
     }
 
     void window::on_mouse_down(int button, int x, int y)
     {
-        static int last_x = 0;
-        static int last_y = 0;
-
-        // TODO: do something here?
-
         if (button == GLUT_LEFT_BUTTON)
-        {
-            if (last_x == 0)
-                last_x = x;
-
-            if (last_y == 0)
-                last_y = y;
-
-            m_cam.turn_horizontal(((float)x - last_x) * 0.001f);
-            m_cam.turn_vertical(((float)y - last_y) * 0.001f);
-
-            last_x = x;
-            last_y = y;
-        }
+            pressed = true;
     }
 
     void window::on_mouse_move(int x, int y)
     {
-        // TODO: do something here?
+        static int last_x = 0;
+        static int last_y = 0;
+
+        if (last_x == 0)
+            last_x = x;
+
+        if (last_y == 0)
+            last_y = y;
+
+        if (pressed)
+        {
+            m_cam.turn_horizontal(((float)x - last_x) * 0.002f);
+            m_cam.turn_vertical(((float)y - last_y) * 0.002f);
+        }
+
+        last_x = x;
+        last_y = y;
     }
 
     void window::on_key_press(unsigned char key, int x, int y)
