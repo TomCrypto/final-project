@@ -59,7 +59,7 @@ Model::Model(const char *filename) {
 
 	if (m_pNormalArray != NULL)
 		delete[] m_pNormalArray;
-	m_pNormalArray = new G308_Normal[m_nNumNormal];
+	m_pNormalArray = new G308_Normal[(m_nNumNormal==0)?m_nNumPoint:m_nNumNormal];
 
 	if (m_pUVArray != NULL)
 		delete[] m_pUVArray;
@@ -129,6 +129,24 @@ Model::Model(const char *filename) {
 				m_pTriangles[numFace].n2 = n2 - 1;
 				m_pTriangles[numFace].n3 = n3 - 1;
 			}
+			else {
+				m_pTriangles[numFace].n1 = v1 - 1;
+				m_pTriangles[numFace].n2 = v1 - 1;
+				m_pTriangles[numFace].n3 = v1 - 1;
+
+				G308_Point e1; //Create the first vector used to calculate a cross product for the normal
+				e1.x = m_pVertexArray[v2 - 1].x - m_pVertexArray[v1 - 1].x;
+				e1.y = m_pVertexArray[v2 - 1].y - m_pVertexArray[v1 - 1].y;
+				e1.z = m_pVertexArray[v2 - 1].z - m_pVertexArray[v1 - 1].z;
+				G308_Point e2; //Create the second vector used to calculate a cross product for the normal
+				e2.x = m_pVertexArray[v3 - 1].x - m_pVertexArray[v1 - 1].x;
+				e2.y = m_pVertexArray[v3 - 1].y - m_pVertexArray[v1 - 1].y;
+				e2.z = m_pVertexArray[v3 - 1].z - m_pVertexArray[v1 - 1].z;
+
+				m_pNormalArray[v1 - 1].x += (e1.y*e2.z) - (e1.z*e2.y);
+				m_pNormalArray[v1 - 1].y += (e1.z*e2.x) - (e1.x*e2.z);
+				m_pNormalArray[v1 - 1].z += (e1.x*e2.y) - (e1.y*e2.x);
+			}
 
 			// UV indicies for triangle
 			if (numUV != 0) {
@@ -145,16 +163,31 @@ Model::Model(const char *filename) {
 	}
 
 	fclose(fp);
+
+	if (m_nNumNormal == 0) {
+		for (int i = 0; i<m_nNumPoint; i++) {
+			float mag = 0;
+			mag += m_pNormalArray[i].x*m_pNormalArray[i].x;
+			mag += m_pNormalArray[i].y*m_pNormalArray[i].y;
+			mag += m_pNormalArray[i].z*m_pNormalArray[i].z;
+			mag = sqrt(mag);
+
+			m_pNormalArray[i].x /= mag;
+			m_pNormalArray[i].y /= mag;
+			m_pNormalArray[i].z /= mag;
+		}
+	}
+
 	printf("Reading OBJ file is DONE.\n");
-	CreateGLWireGeometry();
-	CreateGLPolyGeometry();
 }
 
 void Model::display() {
 	if (mode == G308_SHADE_POLYGON) {
+		if (m_glGeomListPoly == 0) CreateGLPolyGeometry();
 		glCallList(m_glGeomListPoly);
 	}
 	else if (mode == G308_SHADE_WIREFRAME) {
+		if (m_glGeomListWire == 0) CreateGLWireGeometry();
 		glCallList(m_glGeomListWire);
 	}
 	else {
