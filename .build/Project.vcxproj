@@ -97,7 +97,6 @@
   <ItemGroup>
     <ClInclude Include="..\src\core\camera.h" />
     <ClInclude Include="..\src\core\model.h" />
-    <ClInclude Include="..\src\define.h" />
     <ClInclude Include="..\src\utils\gl_utils.h" />
     <ClInclude Include="..\src\gui\tweakbar.h" />
     <ClInclude Include="..\src\gui\framebuffer.h" />

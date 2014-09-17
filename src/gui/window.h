@@ -13,7 +13,6 @@
 #include "gui/tweakbar.h"
 
 #include "core/model.h"
-#include "define.h"
 #include "core/camera.h"
 
 namespace gui

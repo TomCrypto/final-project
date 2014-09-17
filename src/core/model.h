@@ -3,11 +3,20 @@
 
 #include <cstdio>
 #include <GL/glew.h>
-#include "define.h"
 
 #define G308_SHADE_POLYGON 0		
 #define G308_SHADE_WIREFRAME 1
+struct G308_Point {
+	float x;
+	float y;
+	float z;
+};
+typedef G308_Point G308_Normal;
+struct G308_UVcoord {
 
+	float u;
+	float v;
+};
 struct G308_Triangle2 {
 	unsigned int v1;
 	unsigned int v2;

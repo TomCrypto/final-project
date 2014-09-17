@@ -157,14 +157,6 @@ namespace gui
 
         m_obj = new Model("Teapot.obj");
 
-        glMatrixMode(GL_PROJECTION);
-	    glLoadIdentity();
-	    gluPerspective(G308_FOVY, (double) width() / (double) height(), G308_ZNEAR_3D, G308_ZFAR_3D);
-	    glMatrixMode(GL_MODELVIEW);
-	    glLoadIdentity();
-
-	    gluLookAt(0.0, 0.0, 7.0, 0.0, 0., 0.0, 0.0, 1.0, 0.0);
-
         float direction[] = { 1.0f, 1.0f, 1.0f, 0.0f };
 	    float diffintensity[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	    float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
