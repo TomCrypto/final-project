@@ -75,6 +75,9 @@
     <ClCompile Include="..\src\gui\fps_counter.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\gui\raw_mouse.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gui\tweakbar.h">
@@ -99,6 +102,9 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\src\gui\fps_counter.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\raw_mouse.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>

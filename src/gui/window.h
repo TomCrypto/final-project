@@ -12,12 +12,12 @@
 #include <map>
 
 #include "gui/framebuffer.h"
+#include "gui/fps_counter.h"
+#include "gui/raw_mouse.h"
 #include "gui/tweakbar.h"
 
 #include "core/model.h"
 #include "core/camera.h"
-
-#include "gui/fps_counter.h"
 
 namespace gui
 {
@@ -78,14 +78,16 @@ namespace gui
         window(const window& other);
 
         // GLUT windowing/keyboard stuff
-        std::map<int, bool> m_mouse;
+        std::map<int, bool> m_buttons;
         std::map<int, bool> m_keys;
+        bool m_lock_cursor;
         int width();
         int height();
         int m_window;
 
         // Our own stuff
         fps_counter m_fps;
+        raw_mouse m_mouse;
         main_bar* m_bar;
         framebuffer* m_framebuffer;
         camera m_cam;

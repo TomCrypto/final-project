@@ -210,7 +210,7 @@ namespace gui
 
     window::window(const std::string& window_title,
                    const std::pair<int, int>& dims)
-        : m_fps(51)
+        : m_fps(51), m_lock_cursor(false)
     {
         if (prog != nullptr)
             throw std::logic_error("program already running");
@@ -338,12 +338,19 @@ namespace gui
 
     void window::on_mouse_up(int button, int x, int y)
     {
-        m_mouse[button] = false;
+        m_buttons[button] = false;
     }
 
     void window::on_mouse_down(int button, int x, int y)
     {
-        m_mouse[button] = true;
+        m_buttons[button] = true;
+
+        if (button == GLUT_RIGHT_BUTTON) {
+            m_lock_cursor = !m_lock_cursor;
+
+            glutSetCursor(m_lock_cursor ? GLUT_CURSOR_NONE
+                                        : GLUT_CURSOR_INHERIT);
+        }
     }
 
     /* ==================================================================== */
@@ -472,25 +479,15 @@ namespace gui
 
     void window::on_mouse_move(int x, int y)
     {
-        static int last_x = 0;
-        static int last_y = 0;
-
-        if (last_x == 0)
-            last_x = x;
-
-        if (last_y == 0)
-            last_y = y;
-
-        if (m_mouse[GLUT_LEFT_BUTTON])
-        {
-            float sens = m_bar->cam_sensitivity;
-
-            m_cam.turn(glm::vec2(((float)x - last_x),
-                                 ((float)y - last_y)) / (width() / sens));
+        auto mouse_pos = glm::vec2((float)x / width(),
+                                   (float)y / width()); 
+        
+        if (m_lock_cursor || m_buttons[GLUT_LEFT_BUTTON]) {
+            auto ds = m_mouse.delta(mouse_pos);
+            m_cam.turn(ds * m_bar->cam_sensitivity);
         }
 
-        last_x = x;
-        last_y = y;
+        m_mouse.set_pos(mouse_pos);
     }
 
     void window::on_update()
@@ -511,5 +508,11 @@ namespace gui
 
         if (m_keys['d'])
             m_cam.move(glm::vec3(1.0f, 0.0f, 0.0f) * (m_bar->cam_move_speed / target_fps));
+
+        if (m_lock_cursor) {
+            glutWarpPointer(width() / 2, height() / 2);
+            m_mouse.set_pos(glm::vec2((float)((width() / 2.0f) / width()),
+                                      (float)((height()) / 2.0f) / width()));
+        }
     }
 }
