@@ -75,13 +75,15 @@ namespace gui
 
         // GLUT windowing/keyboard stuff
         std::map<int, bool> m_keys;
+        std::vector<float> m_fps;
+        int m_frame_count;
         int width();
         int height();
         int m_window;
 
         // Our own stuff
         main_bar* m_bar;
-        fbuffer* buf;
+        framebuffer* m_framebuffer;
         camera m_cam;
 		Model* m_obj;
     };

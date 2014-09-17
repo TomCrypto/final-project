@@ -6,12 +6,12 @@
 
 #include "utils/gl_utils.h"
 
-class fbuffer
+class framebuffer
 {
 public:
     //<< Initialize and free the framebuffer
-    fbuffer(int width, int height);
-    ~fbuffer();
+    framebuffer(int width, int height);
+    ~framebuffer();
 
     //<< Setup the framebuffer for rendering
     void bind();

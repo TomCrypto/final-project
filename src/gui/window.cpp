@@ -3,6 +3,26 @@
 #include <easylogging.h>
 #include <GL/freeglut.h>
 #include <stdexcept>
+#include <cstdint>
+#include <ctime>
+
+#if defined(_WIN32)
+#include <windows.h>
+#endif
+
+static double current_time()
+{
+    #if defined(_WIN32)
+    uint64_t freq, now;
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&now);
+    return (double)now / freq;
+    #else
+    timespec time;
+    clock_gettime(CLOCK_MONOTONIC, &time);
+    return time.tv_sec + time.tv_nsec * 1e-9;
+    #endif
+}
 
 namespace gui
 {
@@ -291,6 +311,8 @@ namespace gui
         // The timer is to get the loop going
         // without requiring user interaction
         glutTimerFunc(16, __update_cb, 0);
+        m_frame_count = 0;
+        m_fps.resize(51);
         glutMainLoop();
     }
 
@@ -331,7 +353,7 @@ namespace gui
 	    
 	    LOG(INFO) << "Creating framebuffer.";
 
-        buf = new fbuffer(width(), height());
+        m_framebuffer = new framebuffer(width(), height());
 
         LOG(INFO) << "Creating camera.";
 
@@ -352,7 +374,7 @@ namespace gui
 
         delete m_bar;
 		delete m_obj;
-		delete buf;
+		delete m_framebuffer;
         
         TwTerminate();
     }
@@ -416,9 +438,8 @@ namespace gui
     void window::on_resize(int w, int h)
     {
         TwWindowSize(w, h);
-        buf->resize(w, h);
+        m_framebuffer->resize(w, h);
 
-        glViewport(0, 0, w, h);
         m_cam.resize(w, h);
     }
 
@@ -433,7 +454,8 @@ namespace gui
         // - draw the bar
         // - glutSwapBuffers()
 
-        buf->bind();
+        m_framebuffer->bind();
+        glViewport(0, 0, width(), height());
 
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	    glEnable(GL_DEPTH_TEST);
@@ -453,10 +475,6 @@ namespace gui
 		    printf("%s\n", gluErrorString(err));
 	    }
 
-		// tweakbar example - read rotation from the GUI bar
-		//skeleton->angle = m_bar->rotation;
-
-		//skeleton->display();
 		glColor3f(0.0f, 1.0f, 0.0f);
 		m_obj->display();
 
@@ -464,7 +482,7 @@ namespace gui
 	    glDisable(GL_LIGHTING);
 	    glDisable(GL_COLOR_MATERIAL);
 
-        buf->render(m_bar->exposure);
+        m_framebuffer->render(m_bar->exposure);
 
         TwDraw();
 
@@ -473,6 +491,25 @@ namespace gui
 
     void window::on_update()
     {
+        m_fps[m_frame_count++ % m_fps.size()] = current_time();
+
+        if (m_frame_count > (int)m_fps.size()) {
+            float avg_time = 0;
+            int samples = 0;
+            
+            for (int t = 1; t < (int)m_fps.size(); ++t) {
+                float dt = m_fps[t] - m_fps[t - 1];
+                if (dt > 0) {
+                    avg_time += dt;
+                    ++samples;
+                }
+            }
+            
+            avg_time /= samples;
+
+            LOG_EVERY_N(400, INFO) << (int)(1.0f / avg_time + 0.5f) << " frames per second.";
+        }
+
         if (m_keys[27 /* escape */]) {
             glutLeaveMainLoop();
             return;

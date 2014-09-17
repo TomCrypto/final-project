@@ -7,7 +7,7 @@
 
 #include "utils/image.hpp"
 
-fbuffer::fbuffer(int width, int height)
+framebuffer::framebuffer(int width, int height)
     : m_width(width), m_height(height),
       m_shader("generic/fs_quad.vert", "tonemap/reinhard.frag"),
       m_log_shader("generic/fs_quad.vert", "tonemap/log_lum.frag")
@@ -61,7 +61,7 @@ fbuffer::fbuffer(int width, int height)
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 }
 
-void fbuffer::resize(int width, int height)
+void framebuffer::resize(int width, int height)
 {
     m_width = width;
     m_height = height;
@@ -76,14 +76,14 @@ void fbuffer::resize(int width, int height)
     glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, m_width, m_height);
 }
 
-void fbuffer::bind()
+void framebuffer::bind()
 {
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
                               GL_TEXTURE_2D, m_tex, 0);
 }
 
-void fbuffer::clear(bool depth)
+void framebuffer::clear(bool depth)
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | (depth ? GL_DEPTH_BUFFER_BIT : 0));
@@ -96,7 +96,7 @@ static int get_mip_level(int w, int h)
     return (int)ceil(log(m) / log(2));
 }
 
-void fbuffer::render(float exposure)
+void framebuffer::render(float exposure)
 {
     // Get the 1x1 mip level for the current framebuffer resolutions, this
     // will be equal to the log2 of the largest dimension (width or height)
@@ -144,7 +144,7 @@ void fbuffer::render(float exposure)
     m_shader.unbind();
 }
 
-fbuffer::~fbuffer()
+framebuffer::~framebuffer()
 {
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
     glDeleteRenderbuffersEXT(1, &m_depth);
