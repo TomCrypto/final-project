@@ -1,6 +1,5 @@
 #include "gui/framebuffer.h"
 
-#include <easylogging.h>
 #include <glm/glm.hpp>
 #include <cstdio>
 #include <cmath>

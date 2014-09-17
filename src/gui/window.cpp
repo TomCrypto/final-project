@@ -1,6 +1,5 @@
 #include "gui/window.h"
 
-#include <easylogging.h>
 #include <GL/freeglut.h>
 #include <stdexcept>
 #include <cstdint>
@@ -14,8 +13,8 @@ static double current_time()
 {
     #if defined(_WIN32)
     uint64_t freq, now;
-    QueryPerformanceFrequency(&freq);
-    QueryPerformanceCounter(&now);
+    QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
+    QueryPerformanceCounter((LARGE_INTEGER*)&now);
     return (double)now / freq;
     #else
     timespec time;
@@ -494,11 +493,11 @@ namespace gui
         m_fps[m_frame_count++ % m_fps.size()] = current_time();
 
         if (m_frame_count > (int)m_fps.size()) {
-            float avg_time = 0;
+            double avg_time = 0;
             int samples = 0;
             
             for (int t = 1; t < (int)m_fps.size(); ++t) {
-                float dt = m_fps[t] - m_fps[t - 1];
+                double dt = m_fps[t] - m_fps[t - 1];
                 if (dt > 0) {
                     avg_time += dt;
                     ++samples;

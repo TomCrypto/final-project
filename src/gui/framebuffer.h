@@ -1,6 +1,7 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
+#include <easylogging.h>
 #include <GL/glew.h>
 #include <string>
 

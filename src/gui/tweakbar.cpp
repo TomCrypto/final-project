@@ -1,6 +1,7 @@
 #include "gui/tweakbar.h"
 
 #include <easylogging.h>
+#include <FreeImage.h>
 #include <stdexcept>
 
 namespace gui

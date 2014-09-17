@@ -1,6 +1,7 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
+#include <easylogging.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <FreeImage.h>
 #include <GL/glew.h>
@@ -75,7 +76,7 @@ namespace gui
 
         // GLUT windowing/keyboard stuff
         std::map<int, bool> m_keys;
-        std::vector<float> m_fps;
+        std::vector<double> m_fps;
         int m_frame_count;
         int width();
         int height();

@@ -1500,6 +1500,7 @@ public:
                               term == "screen" || term == "linux" || term == "cygwin";
     }
 };
+
 extern std::string s_currentUser;
 extern std::string s_currentHost;
 extern bool s_termSupportsColor;
