@@ -85,7 +85,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\core\obj.cpp" />
+    <ClCompile Include="..\src\core\model.cpp" />
     <ClCompile Include="..\src\G308_Skeleton.cpp" />
     <ClCompile Include="..\src\utils\gl_utils.cpp" />
     <ClCompile Include="..\src\gui\tweakbar.cpp" />
@@ -95,7 +95,7 @@
     <ClCompile Include="..\src\utils\image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\core\obj.h" />
+    <ClInclude Include="..\src\core\model.h" />
     <ClInclude Include="..\src\define.h" />
     <ClInclude Include="..\src\G308_Skeleton.h" />
     <ClInclude Include="..\src\utils\gl_utils.h" />
@@ -223,6 +223,13 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\res\Bunny.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\res\Teapot.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>

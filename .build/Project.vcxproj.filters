@@ -69,7 +69,7 @@
     <ClCompile Include="..\src\utils\image.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\core\obj.cpp">
+    <ClCompile Include="..\src\core\model.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,7 +95,7 @@
     <ClInclude Include="..\src\utils\image.hpp">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\core\obj.h">
+    <ClInclude Include="..\src\core\model.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -170,6 +170,9 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\res\Bunny.obj">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\res\Teapot.obj">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>

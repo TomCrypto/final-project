@@ -1,8 +1,7 @@
+#include "Model.h"
 
-#include "obj.h"
-
-void obj::ReadOBJ(const char *filename) {
-	mode = G308_SHADE_WIREFRAME;
+Model::Model(const char *filename) {
+	mode = G308_SHADE_POLYGON;
 
 	FILE* fp;
 	char mode, vmode;
@@ -63,7 +62,7 @@ void obj::ReadOBJ(const char *filename) {
 
 	if (m_pTriangles != NULL)
 		delete[] m_pTriangles;
-	m_pTriangles = new G308_Triangle[m_nNumPolygon];
+	m_pTriangles = new G308_Triangle2[m_nNumPolygon];
 
 	//-----------------------------------------------------------
 	//	Read obj file
@@ -142,9 +141,11 @@ void obj::ReadOBJ(const char *filename) {
 
 	fclose(fp);
 	printf("Reading OBJ file is DONE.\n");
+	CreateGLWireGeometry();
+	CreateGLPolyGeometry();
 }
 
-void obj::draw() {
+void Model::display() {
 	if (mode == G308_SHADE_POLYGON) {
 		glCallList(m_glGeomListPoly);
 	}
@@ -155,8 +156,12 @@ void obj::draw() {
 		printf("Warning: Wrong Shading Mode. \n");
 	}
 }
-
-void obj::CreateGLPolyGeometry() {
+void Model::addToList(G308_Point v, G308_Normal n, G308_UVcoord u) {
+	if (m_nNumUV>0) glTexCoord2f(u.u, u.v);
+	glNormal3f(n.x, n.y, n.z); //Add the normal
+	glVertex3f(v.x, v.y, v.z); //Add the vertex
+}
+void Model::CreateGLPolyGeometry() {
 	if (m_glGeomListPoly != 0)
 		glDeleteLists(m_glGeomListPoly, 1);
 
@@ -164,11 +169,17 @@ void obj::CreateGLPolyGeometry() {
 	m_glGeomListPoly = glGenLists(1);
 	glNewList(m_glGeomListPoly, GL_COMPILE);
 
-	//Your code here
+	glBegin(GL_TRIANGLES); //Begin drawing triangles
+	for (int i = 0; i < m_nNumPolygon; i++) { //Add the 3 vertex, normal and UV to the list for each face
+		addToList(m_pVertexArray[m_pTriangles[i].v1], m_pNormalArray[m_pTriangles[i].n1], m_pUVArray[m_pTriangles[i].t1]);
+		addToList(m_pVertexArray[m_pTriangles[i].v2], m_pNormalArray[m_pTriangles[i].n2], m_pUVArray[m_pTriangles[i].t2]);
+		addToList(m_pVertexArray[m_pTriangles[i].v3], m_pNormalArray[m_pTriangles[i].n3], m_pUVArray[m_pTriangles[i].t3]);
+	}
+	glEnd();
 
 	glEndList();
 }
-void obj::CreateGLWireGeometry() {
+void Model::CreateGLWireGeometry() {
 	if (m_glGeomListWire != 0)
 		glDeleteLists(m_glGeomListWire, 1);
 
