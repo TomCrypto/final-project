@@ -1,9 +1,9 @@
 #include "gui/framebuffer.h"
 
+#include <easylogging.h>
+#include <glm/glm.hpp>
 #include <cstdio>
 #include <cmath>
-
-#include <glm/glm.hpp>
 
 #include "utils/image.hpp"
 
@@ -50,11 +50,12 @@ fbuffer::fbuffer(int width, int height)
     switch(status)
     {
         case GL_FRAMEBUFFER_COMPLETE_EXT:
-            printf("Framebuffer ready for drawing!\n");
+            LOG(INFO) << "Framebuffer successfully initialized.";
+            LOG(DEBUG) << "Resolution " << m_width << " by " << m_height << " pixels.";
             break;
         default:
-            printf("Framebuffer could not be created!\n");
-            exit(-1);
+            LOG(ERROR) << "Failed to create the framebuffer!";
+            throw 0;
     }
 
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);

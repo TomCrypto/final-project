@@ -1,11 +1,11 @@
 #include "gui/window.h"
 
+#include <easylogging.h>
 #include <GL/freeglut.h>
 #include <stdexcept>
 
 namespace gui
 {
-    std::exception exception::m_exception;
     bool exception::m_failed = false;
     static window* prog = nullptr;
     const int target_fps = 60;
@@ -32,8 +32,8 @@ namespace gui
                 int retval = TwEventMouseButtonGLUT(glutButton, glutState, mouseX, mouseY);
                 if (!retval) on_mouse_dispatch(glutButton, glutState, mouseX, mouseY);
             }
-         } catch (const std::exception& e) {
-            exception::fail(e);
+         } catch (...) {
+            exception::fail();
             glutLeaveMainLoop();
          }
     }
@@ -48,8 +48,8 @@ namespace gui
                 int retval = TwEventMouseMotionGLUT(mouseX, mouseY);
                 if (!retval) prog->on_mouse_move(mouseX, mouseY);
             }
-        } catch (const std::exception& e) {
-            exception::fail(e);
+        } catch (...) {
+            exception::fail();
             glutLeaveMainLoop();
         }
     }
@@ -64,8 +64,8 @@ namespace gui
                 int retval = TwEventKeyboardGLUT(glutKey, mouseX, mouseY);
                 if (!retval) prog->on_key_press(glutKey, mouseX, mouseY);
             }
-        } catch (const std::exception& e) {
-            exception::fail(e);
+        } catch (...) {
+            exception::fail();
             glutLeaveMainLoop();
         }
     }
@@ -80,8 +80,8 @@ namespace gui
                 int retval = TwEventKeyboardGLUT(glutKey, mouseX, mouseY);
                 if (!retval) prog->on_key_up(glutKey, mouseX, mouseY);
             }
-        } catch (const std::exception& e) {
-            exception::fail(e);
+        } catch (...) {
+            exception::fail();
             glutLeaveMainLoop();
         }
     }
@@ -95,8 +95,8 @@ namespace gui
                 int retval = TwEventSpecialGLUT(glutKey, mouseX, mouseY);
                 if (!retval) prog->on_special(glutKey, mouseX, mouseY);
             }
-        } catch (const std::exception& e) {
-            exception::fail(e);
+        } catch (...) {
+            exception::fail();
             glutLeaveMainLoop();
         }
     }
@@ -110,8 +110,8 @@ namespace gui
                 int retval = TwEventSpecialGLUT(glutKey, mouseX, mouseY);
                 if (!retval) prog->on_special_up(glutKey, mouseX, mouseY);
             }
-        } catch (const std::exception& e) {
-            exception::fail(e);
+        } catch (...) {
+            exception::fail();
             glutLeaveMainLoop();
         }
     }
@@ -126,8 +126,8 @@ namespace gui
                 TwWindowSize(width, height);
                 prog->on_resize(width, height);
             }
-        } catch (const std::exception& e) {
-            exception::fail(e);
+        } catch (...) {
+            exception::fail();
             glutLeaveMainLoop();
         }
     }
@@ -139,8 +139,8 @@ namespace gui
         else try {
             if (prog)
                 prog->on_display();
-        } catch (const std::exception& e) {
-            exception::fail(e);
+        } catch (...) {
+            exception::fail();
             glutLeaveMainLoop();
         }
     }
@@ -155,8 +155,8 @@ namespace gui
                 prog->on_update();
                 glutPostRedisplay();
             }
-        } catch (const std::exception& e) {
-            exception::fail(e);
+        } catch (...) {
+            exception::fail();
             glutLeaveMainLoop();
         }
     }
@@ -168,8 +168,8 @@ namespace gui
         else try {
             if (prog)
                 prog->on_free();
-        } catch (const std::exception& e) {
-            exception::fail(e);
+        } catch (...) {
+            exception::fail();
             glutLeaveMainLoop();
         }
     }
@@ -226,26 +226,50 @@ namespace gui
 
             GLenum err = glewInit();
             if (err != GLEW_OK)
-	            throw std::runtime_error("Failed to initialize GLEW: "
-                                       + std::string((char *)glewGetErrorString(err))
-                                       + ".");
+            {
+                LOG(ERROR) << "GLEW could not be initialized (glewInit failed)";
+                LOG(DEBUG) << "Error: " << std::string((char*)glewGetErrorString(err));
+	            throw 0;
+            }
 
             if (!GLEW_VERSION_2_1)
-                throw std::runtime_error("Sorry, OpenGL 2.1 needed!\n");
+            {
+                LOG(ERROR) << "OpenGL version 2.1 not found, aborting.";
+                throw 0;
+            }
+
+            LOG(INFO) << "OpenGL version string: " << (char*)glGetString(GL_VERSION) << ".";
+            LOG(INFO) << "Renderer string      : " << (char*)glGetString(GL_RENDERER) << ".";
+            LOG(INFO) << "GLSL version string  : " << (char*)glGetString(GL_SHADING_LANGUAGE_VERSION) << ".";
+            LOG(INFO) << "Target framerate is " << target_fps << " frames per second.";
 
             if (GLEW_VERSION_3_3) /* Might as well use core profile for AntTweakBar */
             {
+                LOG(DEBUG) << "OpenGL version 3.3 available, configuring "
+                              "AntTweakBar with TW_OPENGL_CORE.";
+            
                 if (TwInit(TW_OPENGL_CORE, NULL) != 1)
-                    throw std::runtime_error("Failed to initialize AntTweakBar.");
+                {
+                    LOG(ERROR) << "Failed to initialize AntTweakBar";
+                    throw 0;
+                }
             }
             else
+            {
+                LOG(DEBUG) << "OpenGL version 3.3 not available, configuring "
+                              "AntTweakBar with TW_OPENGL fallback.";
+            
                 if (TwInit(TW_OPENGL, NULL) != 1)
-                    throw std::runtime_error("Failed to initialize AntTweakBar.");
+                {
+                    LOG(ERROR) << "Failed to initialize AntTweakBar";
+                    throw 0;
+                }
+            }
 
             prog = this;
             on_init();
         }
-        catch (const std::exception& e)
+        catch (...)
         {
             /* We do this because some drivers like AMD like to segfault if
              * glutMainLoop isn't called at all (due to, say, an error). So
@@ -253,7 +277,7 @@ namespace gui
              * glutMainLoop will instantly return with that exception.
             */
         
-            exception::fail(e);
+            exception::fail();
         }
     }
 
@@ -266,7 +290,7 @@ namespace gui
     {
         // The timer is to get the loop going
         // without requiring user interaction
-        glutTimerFunc(1, __update_cb, 0);
+        glutTimerFunc(16, __update_cb, 0);
         glutMainLoop();
     }
 
@@ -284,10 +308,16 @@ namespace gui
 
     void window::on_init()
     {
+        LOG(INFO) << "Creating tweak bar.";
+
         m_bar = new main_bar("main");
         m_bar->set_title("Configuration");
+        
+        LOG(INFO) << "Loading model.";
 
         m_obj = new Model("Teapot.obj");
+
+        LOG(INFO) << "Setting up fixed function pipeline.";
 
         float direction[] = { 1.0f, 1.0f, 1.0f, 0.0f };
 	    float diffintensity[] = { 0.5f, 0.5f, 0.5f, 1.0f };
@@ -298,8 +328,12 @@ namespace gui
 	    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 
 	    glEnable(GL_LIGHT0);
+	    
+	    LOG(INFO) << "Creating framebuffer.";
 
         buf = new fbuffer(width(), height());
+
+        LOG(INFO) << "Creating camera.";
 
         m_cam = camera(width(), height(), (float)(70 * M_PI / 180), glm::vec3(0, 0, -1), glm::vec3(0, 0, 1));
     }
@@ -399,7 +433,7 @@ namespace gui
         // - draw the bar
         // - glutSwapBuffers()
 
-        //buf->bind();
+        buf->bind();
 
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	    glEnable(GL_DEPTH_TEST);
@@ -430,7 +464,7 @@ namespace gui
 	    glDisable(GL_LIGHTING);
 	    glDisable(GL_COLOR_MATERIAL);
 
-        //buf->render(m_bar->exposure);
+        buf->render(m_bar->exposure);
 
         TwDraw();
 

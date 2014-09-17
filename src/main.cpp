@@ -53,12 +53,7 @@ int main(int argc, char *argv[])
     window.run();
 
     if (gui::exception::has_failed())
-    {
-        auto e = gui::exception::get_exception();
-        LOG(ERROR) << "Top-level exception caught <"
-                   << e.what() << "> (now aborting)";
-        return EXIT_FAILURE; // no need to clean up
-    }
+        return EXIT_FAILURE;
 
     gui::window::finalize();
     return EXIT_SUCCESS;

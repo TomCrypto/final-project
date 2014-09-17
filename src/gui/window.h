@@ -24,22 +24,14 @@ namespace gui
     class exception
     {
     public:
-        // Whether an exception has occurred
         static bool has_failed() {
             return m_failed;
         }
         
-        // Retrieve the last set exception
-        static std::exception get_exception() {
-            return m_exception;
-        }
-        
-        static void fail(const std::exception& exception) {
-            m_exception = exception;
+        static void fail() {
             m_failed = true;
         }
     private:
-        static std::exception m_exception;
         static bool m_failed;
     };
 
