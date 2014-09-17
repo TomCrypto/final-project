@@ -17,6 +17,31 @@
 
 namespace gui
 {
+    // This is for deferred exception handling, because throwing exceptions in
+    // C callbacks is a nice way to destroy your stack, as well as because of
+    // some GLUT peculiarities.
+    class exception
+    {
+    public:
+        // Whether an exception has occurred
+        static bool has_failed() {
+            return m_failed;
+        }
+        
+        // Retrieve the last set exception
+        static std::exception get_exception() {
+            return m_exception;
+        }
+        
+        static void fail(const std::exception& exception) {
+            m_exception = exception;
+            m_failed = true;
+        }
+    private:
+        static std::exception m_exception;
+        static bool m_failed;
+    };
+
     // This controls the main window and the program logic. There should only
     // be one instance of this class, and initialize() should be called first
     class window
@@ -32,6 +57,11 @@ namespace gui
         // To be called at the start and end of the program
         static void initialize(int argc, char* argv[]);
         static void finalize();
+
+        // Special error-handling stuff (see window.cpp)
+        static bool has_failed();
+        static void set_failed(const std::exception& e);
+        static std::exception get_last_exception();
 
         // Different window event callbacks (logic goes here)
         void on_key_press(unsigned char key, int x, int y);

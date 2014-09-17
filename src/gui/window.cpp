@@ -1,13 +1,13 @@
 #include "gui/window.h"
 
+#include <GL/freeglut.h>
 #include <stdexcept>
 
 namespace gui
 {
-    /* ==================================================================== */
-
+    bool exception::m_failed = false;
+    static window* prog = nullptr;
     const int target_fps = 60;
-    static window* prog;
     static char** _argv;
     static int _argc;
 
@@ -24,43 +24,121 @@ namespace gui
 
     static void __button_cb(int glutButton, int glutState, int mouseX, int mouseY)
     {
-        int retval = TwEventMouseButtonGLUT(glutButton, glutState, mouseX, mouseY);
-        if (!retval) on_mouse_dispatch(glutButton, glutState, mouseX, mouseY);
+        if (exception::has_failed())
+            glutLeaveMainLoop();
+        else try {
+            if (prog) {
+                int retval = TwEventMouseButtonGLUT(glutButton, glutState, mouseX, mouseY);
+                if (!retval) on_mouse_dispatch(glutButton, glutState, mouseX, mouseY);
+            }
+         } catch (const std::exception& e) {
+            exception::fail(e);
+            glutLeaveMainLoop();
+         }
     }
 
     static void __motion_cb(int mouseX, int mouseY)
     {
-        int retval = TwEventMouseMotionGLUT(mouseX, mouseY);
-        if (!retval) prog->on_mouse_move(mouseX, mouseY);
+        if (exception::has_failed())
+            glutLeaveMainLoop();
+        else try
+        {
+            if (prog) {
+                int retval = TwEventMouseMotionGLUT(mouseX, mouseY);
+                if (!retval) prog->on_mouse_move(mouseX, mouseY);
+            }
+        } catch (const std::exception& e) {
+            exception::fail(e);
+            glutLeaveMainLoop();
+        }
     }
 
     static void __keyboard_cb(unsigned char glutKey, int mouseX, int mouseY)
     {
-        int retval = TwEventKeyboardGLUT(glutKey, mouseX, mouseY);
-        if (!retval) prog->on_key_press(glutKey, mouseX, mouseY);
+        if (exception::has_failed())
+            glutLeaveMainLoop();
+        else try
+        {
+            if (prog) {
+                int retval = TwEventKeyboardGLUT(glutKey, mouseX, mouseY);
+                if (!retval) prog->on_key_press(glutKey, mouseX, mouseY);
+            }
+        } catch (const std::exception& e) {
+            exception::fail(e);
+            glutLeaveMainLoop();
+        }
     }
 
     static void __special_cb(int glutKey, int mouseX, int mouseY)
     {
-        int retval = TwEventSpecialGLUT(glutKey, mouseX, mouseY);
-        if (!retval) prog->on_special(glutKey, mouseX, mouseY);
+        if (exception::has_failed())
+            glutLeaveMainLoop();
+        else try {
+            if (prog) {
+                int retval = TwEventSpecialGLUT(glutKey, mouseX, mouseY);
+                if (!retval) prog->on_special(glutKey, mouseX, mouseY);
+            }
+        } catch (const std::exception& e) {
+            exception::fail(e);
+            glutLeaveMainLoop();
+        }
     }
 
     static void __resize_cb(int width, int height)
     {
-        TwWindowSize(width, height);
-        prog->on_resize(width, height);
+        if (exception::has_failed())
+            glutLeaveMainLoop();
+        else try
+        {
+            if (prog) {
+                TwWindowSize(width, height);
+                prog->on_resize(width, height);
+            }
+        } catch (const std::exception& e) {
+            exception::fail(e);
+            glutLeaveMainLoop();
+        }
     }
 
     static void __display_cb()
     {
-        prog->on_display();
+        if (exception::has_failed())
+            glutLeaveMainLoop();
+        else try {
+            if (prog)
+                prog->on_display();
+        } catch (const std::exception& e) {
+            exception::fail(e);
+            glutLeaveMainLoop();
+        }
     }
 
     static void __update_cb(int value)
     {
-        glutTimerFunc((int)(1000.0f / target_fps), __update_cb, 0);
-        prog->on_update();
+        if (exception::has_failed())
+            glutLeaveMainLoop();
+        else try {
+            if (prog) {
+                glutTimerFunc((int)(1000.0f / target_fps), __update_cb, 0);
+                prog->on_update();
+            }
+        } catch (const std::exception& e) {
+            exception::fail(e);
+            glutLeaveMainLoop();
+        }
+    }
+    
+    static void __shutdown_cb()
+    {
+        if (exception::has_failed())
+            glutLeaveMainLoop();
+        else try {
+            if (prog)
+                prog->on_free();
+        } catch (const std::exception& e) {
+            exception::fail(e);
+            glutLeaveMainLoop();
+        }
     }
 
     /* ==================================================================== */
@@ -87,54 +165,73 @@ namespace gui
     window::window(const std::string& window_title,
                    const std::pair<int, int>& dims)
     {
-        if (prog != nullptr)
-            throw std::logic_error("program already running");
+        try
+        {
+            if (prog != nullptr)
+                throw std::logic_error("program already running");
 
-        glutInit(&_argc, _argv);
-        glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	    glutInitWindowSize(dims.first, dims.second);
-        glutInitWindowPosition(
-            (glutGet(GLUT_SCREEN_WIDTH)-dims.first)/2,
-            (glutGet(GLUT_SCREEN_HEIGHT)-dims.second)/2);
-	    m_window = glutCreateWindow(window_title.c_str());
+            glutInit(&_argc, _argv);
+            glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+            glutInitWindowSize(dims.first, dims.second);
+            glutInitWindowPosition(
+                (glutGet(GLUT_SCREEN_WIDTH)-dims.first)/2,
+                (glutGet(GLUT_SCREEN_HEIGHT)-dims.second)/2);
+            glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,
+                          GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+            m_window = glutCreateWindow(window_title.c_str());
+            TwGLUTModifiersFunc(glutGetModifiers);
+            glutPassiveMotionFunc(__motion_cb);
+            glutKeyboardFunc(__keyboard_cb);
+            glutSpecialFunc(__special_cb);
+            glutDisplayFunc(__display_cb);
+            glutReshapeFunc(__resize_cb);
+            glutCloseFunc(__shutdown_cb);
+            glutMotionFunc(__motion_cb);
+            glutMouseFunc(__button_cb);
 
-        GLenum err = glewInit();
-        if (err != GLEW_OK)
-	        throw std::runtime_error("Failed to initialize GLEW: "
-                                   + std::string((char *)glewGetErrorString(err))
-                                   + ".");
+            GLenum err = glewInit();
+            if (err != GLEW_OK)
+	            throw std::runtime_error("Failed to initialize GLEW: "
+                                       + std::string((char *)glewGetErrorString(err))
+                                       + ".");
 
-        if (!GLEW_VERSION_2_1)
-            throw std::runtime_error("Sorry, OpenGL 2.1 needed!\n");
+            if (!GLEW_VERSION_2_1)
+                throw std::runtime_error("Sorry, OpenGL 2.1 needed!\n");
 
-        if (TwInit(TW_OPENGL, NULL) != 1)
-            throw std::runtime_error("Failed to initialize AntTweakBar.");
+            if (GLEW_VERSION_3_3) /* Might as well use core profile for AntTweakBar */
+            {
+                if (TwInit(TW_OPENGL_CORE, NULL) != 1)
+                    throw std::runtime_error("Failed to initialize AntTweakBar.");
+            }
+            else
+                if (TwInit(TW_OPENGL, NULL) != 1)
+                    throw std::runtime_error("Failed to initialize AntTweakBar.");
 
-        TwGLUTModifiersFunc(glutGetModifiers);
-        glutPassiveMotionFunc(__motion_cb);
-        glutKeyboardFunc(__keyboard_cb);
-        glutSpecialFunc(__special_cb);
-        glutDisplayFunc(__display_cb);
-        glutReshapeFunc(__resize_cb);
-        glutMotionFunc(__motion_cb);
-        glutMouseFunc(__button_cb);
-
-        on_init();
-        prog = this;
-
-        glutTimerFunc(1, __update_cb, 0);
+            prog = this;
+            on_init();
+        }
+        catch (const std::exception& e)
+        {
+            /* We do this because some drivers like AMD like to segfault if
+             * glutMainLoop isn't called at all (due to, say, an error). So
+             * we simply set the exception here so that the next call to
+             * glutMainLoop will instantly return with that exception.
+            */
+        
+            exception::fail(e);
+        }
     }
 
     window::~window()
     {
-        on_free();
-
-        TwTerminate();
-        glutDestroyWindow(m_window);
+        prog = 0; /* see on_free() */
     }
 
     void window::run()
     {
+        // The timer is to get the loop going
+        // without requiring user interaction
+        glutTimerFunc(1, __update_cb, 0);
         glutMainLoop();
     }
 
@@ -174,9 +271,21 @@ namespace gui
 
     void window::on_free()
     {
-        delete buf;
+        /* This probably deserves some kind of explanation. The reason we call
+         * TwTerminate() here and not in the destructor, is because due to the
+         * way GLUT works, the OpenGL context is gone the moment the window is
+         * closed, and hence will be long gone by the time the destructor gets
+         * called. However graphics resources should be cleaned up before that
+         * happens, thus the on_free() callback is hooked up not to the window
+         * destructor but to __shutdown_cb()->glutCloseFunc which is basically
+         * our only chance to execute cleanup code within an OpenGL context.
+        */
+
         delete m_bar;
 		delete m_obj;
+		delete buf;
+        
+        TwTerminate();
     }
 
     static bool pressed = false;
