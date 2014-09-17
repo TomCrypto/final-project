@@ -155,7 +155,7 @@ namespace gui
         m_bar = new main_bar("main");
         m_bar->set_title("Configuration");
 
-        m_obj = new Model("Teapot.obj");
+        m_obj = new Model("Bunny.obj");
 
         glMatrixMode(GL_PROJECTION);
 	    glLoadIdentity();

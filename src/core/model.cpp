@@ -161,7 +161,7 @@ void Model::display() {
 		printf("Warning: Wrong Shading Mode. \n");
 	}
 }
-void Model::addToList(G308_Point v, G308_Normal n, G308_UVcoord u) {
+void Model::addToList(G308_Point v, G308_Normal n, G308_UVcoord u = { 0.0, 0.0 }) {
 	if (m_nNumUV>0) glTexCoord2f(u.u, u.v);
 	glNormal3f(n.x, n.y, n.z); //Add the normal
 	glVertex3f(v.x, v.y, v.z); //Add the vertex
@@ -176,9 +176,16 @@ void Model::CreateGLPolyGeometry() {
 
 	glBegin(GL_TRIANGLES); //Begin drawing triangles
 	for (int i = 0; i < m_nNumPolygon; i++) { //Add the 3 vertex, normal and UV to the list for each face
-		addToList(m_pVertexArray[m_pTriangles[i].v1], m_pNormalArray[m_pTriangles[i].n1], m_pUVArray[m_pTriangles[i].t1]);
-		addToList(m_pVertexArray[m_pTriangles[i].v2], m_pNormalArray[m_pTriangles[i].n2], m_pUVArray[m_pTriangles[i].t2]);
-		addToList(m_pVertexArray[m_pTriangles[i].v3], m_pNormalArray[m_pTriangles[i].n3], m_pUVArray[m_pTriangles[i].t3]);
+		if (m_nNumUV > 0) {
+			addToList(m_pVertexArray[m_pTriangles[i].v1], m_pNormalArray[m_pTriangles[i].n1], m_pUVArray[m_pTriangles[i].t1]);
+			addToList(m_pVertexArray[m_pTriangles[i].v2], m_pNormalArray[m_pTriangles[i].n2], m_pUVArray[m_pTriangles[i].t2]);
+			addToList(m_pVertexArray[m_pTriangles[i].v3], m_pNormalArray[m_pTriangles[i].n3], m_pUVArray[m_pTriangles[i].t3]);
+		}
+		else {
+			addToList(m_pVertexArray[m_pTriangles[i].v1], m_pNormalArray[m_pTriangles[i].n1]);
+			addToList(m_pVertexArray[m_pTriangles[i].v2], m_pNormalArray[m_pTriangles[i].n2]);
+			addToList(m_pVertexArray[m_pTriangles[i].v3], m_pNormalArray[m_pTriangles[i].n3]);
+		}
 	}
 	glEnd();
 
