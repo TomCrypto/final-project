@@ -33,8 +33,8 @@ namespace gui
     {
         rotation = 0;
         exposure = 0.18f;
-        cam_move_speed = 1.5f;
-        cam_sensitivity = 0.5f;
+        cam_move_speed = 3.5f;
+        cam_sensitivity = 1.5f;
 
         TwAddVarRW(m_bar,
             "Rotation", TW_TYPE_FLOAT, &rotation,
@@ -51,7 +51,7 @@ namespace gui
 
         TwAddVarRW(m_bar,
             "Camera Sensitivity", TW_TYPE_FLOAT, &cam_sensitivity,
-            " min=0.01 max=1.5 step=0.01 help='Rotation sensitivity'"
+            " min=0.01 max=2.5 step=0.01 help='Rotation sensitivity'"
             " group='Navigation'");
 
         TwDefine((m_name + " contained=true").c_str());
