@@ -3,6 +3,7 @@
 
 #include <cstdio>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 #define G308_SHADE_POLYGON 0		
 #define G308_SHADE_WIREFRAME 1
