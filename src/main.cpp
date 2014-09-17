@@ -28,7 +28,7 @@ void setup_logger()
 
     el::Configurations conf;
     conf.setToDefault();
-    conf.parseFromText("*GLOBAL:\n FILENAME=log.txt");
+    conf.parseFromText("*GLOBAL:\n TO_FILE=false");
     conf.set(el::Level::Error, el::ConfigurationType::Format,
          fail + "%datetime{%H:%m:%s} FAIL [%fbase:%line]" + off + ": %msg");
     conf.set(el::Level::Warning, el::ConfigurationType::Format,
@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 {
     _START_EASYLOGGINGPP(argc, argv);
     setup_logger(); /* config/etc. */
+    LOG(INFO) << "Program starting.";
 
     gui::window::initialize(argc, argv);
     gui::window window("COMP 308 - Final Project",

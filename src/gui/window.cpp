@@ -69,6 +69,22 @@ namespace gui
             glutLeaveMainLoop();
         }
     }
+    
+    static void __keyboard_up_cb(unsigned char glutKey, int mouseX, int mouseY)
+    {
+        if (exception::has_failed())
+            glutLeaveMainLoop();
+        else try
+        {
+            if (prog) {
+                int retval = TwEventKeyboardGLUT(glutKey, mouseX, mouseY);
+                if (!retval) prog->on_key_up(glutKey, mouseX, mouseY);
+            }
+        } catch (const std::exception& e) {
+            exception::fail(e);
+            glutLeaveMainLoop();
+        }
+    }
 
     static void __special_cb(int glutKey, int mouseX, int mouseY)
     {
@@ -78,6 +94,21 @@ namespace gui
             if (prog) {
                 int retval = TwEventSpecialGLUT(glutKey, mouseX, mouseY);
                 if (!retval) prog->on_special(glutKey, mouseX, mouseY);
+            }
+        } catch (const std::exception& e) {
+            exception::fail(e);
+            glutLeaveMainLoop();
+        }
+    }
+    
+    static void __special_up_cb(int glutKey, int mouseX, int mouseY)
+    {
+        if (exception::has_failed())
+            glutLeaveMainLoop();
+        else try {
+            if (prog) {
+                int retval = TwEventSpecialGLUT(glutKey, mouseX, mouseY);
+                if (!retval) prog->on_special_up(glutKey, mouseX, mouseY);
             }
         } catch (const std::exception& e) {
             exception::fail(e);
@@ -122,6 +153,7 @@ namespace gui
             if (prog) {
                 glutTimerFunc((int)(1000.0f / target_fps), __update_cb, 0);
                 prog->on_update();
+                glutPostRedisplay();
             }
         } catch (const std::exception& e) {
             exception::fail(e);
@@ -183,7 +215,9 @@ namespace gui
             TwGLUTModifiersFunc(glutGetModifiers);
             glutPassiveMotionFunc(__motion_cb);
             glutKeyboardFunc(__keyboard_cb);
+            glutKeyboardUpFunc(__keyboard_up_cb);
             glutSpecialFunc(__special_cb);
+            glutSpecialUpFunc(__special_up_cb);
             glutDisplayFunc(__display_cb);
             glutReshapeFunc(__resize_cb);
             glutCloseFunc(__shutdown_cb);
@@ -316,47 +350,33 @@ namespace gui
 
         if (pressed)
         {
-            m_cam.turn_horizontal(((float)x - last_x) * 0.002f);
-            m_cam.turn_vertical(((float)y - last_y) * 0.002f);
+            float sens = m_bar->cam_sensitivity;
+            m_cam.turn_horizontal(((float)x - last_x) / width() * sens);
+            m_cam.turn_vertical(((float)y - last_y) / width() * sens);
         }
 
         last_x = x;
         last_y = y;
     }
+    
+    void window::on_key_up(unsigned char key, int x, int y)
+    {
+        m_keys[key] = false;
+    }
 
     void window::on_key_press(unsigned char key, int x, int y)
     {
-        if(key=='r') //when the r key is pressed
-        {
-            m_bar->rotation += 5;
-            m_bar->refresh();
-        }
+        m_keys[key] = true;
+    }
 
-        if (key == 'w')
-        {
-            m_cam.move_forward(0.1f);
-        }
-
-        if (key == 's')
-        {
-            m_cam.move_forward(-0.1f);
-        }
-
-        if (key == 'a')
-        {
-            m_cam.move_left(0.1f);
-        }
-
-        if (key == 'd')
-        {
-            m_cam.move_right(0.1f);
-        }
+    void window::on_special_up(int key, int x, int y)
+    {
+        m_keys[key] = false;
     }
 
     void window::on_special(int key, int x, int y)
     {
-        // TODO: do something here?
-        // actually I have no idea if this will be useful
+        m_keys[key] = true;
     }
 
     void window::on_resize(int w, int h)
@@ -379,7 +399,7 @@ namespace gui
         // - draw the bar
         // - glutSwapBuffers()
 
-        buf->bind();
+        //buf->bind();
 
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	    glEnable(GL_DEPTH_TEST);
@@ -410,7 +430,7 @@ namespace gui
 	    glDisable(GL_LIGHTING);
 	    glDisable(GL_COLOR_MATERIAL);
 
-        buf->render(m_bar->exposure);
+        //buf->render(m_bar->exposure);
 
         TwDraw();
 
@@ -419,6 +439,21 @@ namespace gui
 
     void window::on_update()
     {
-        glutPostRedisplay();
+        if (m_keys[27 /* escape */]) {
+            glutLeaveMainLoop();
+            return;
+        }
+
+        if (m_keys['w'])
+            m_cam.move_forward(m_bar->cam_move_speed / target_fps);
+
+        if (m_keys['s'])
+            m_cam.move_forward(-m_bar->cam_move_speed / target_fps);
+
+        if (m_keys['a'])
+            m_cam.move_left(m_bar->cam_move_speed / target_fps);
+
+        if (m_keys['d'])
+            m_cam.move_right(m_bar->cam_move_speed / target_fps);
     }
 }

@@ -35,6 +35,9 @@ namespace gui
 
         float rotation;
         float exposure;
+        
+        float cam_move_speed;
+        float cam_sensitivity;
     };
 }
 

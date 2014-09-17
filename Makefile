@@ -23,8 +23,9 @@ CFLAGS           = -O2 -Wall -Wextra -pedantic -std=c99
 CFLAGS          += -Wno-unused-parameter -Wno-unused-variable
 CXXFLAGS         = -O2 -Wall -Wextra -pedantic -std=c++11
 CXXFLAGS        += -Wno-unused-parameter -Wno-unused-variable
-CXXFLAGS        += -D_ELPP_DISABLE_DEFAULT_CRASH_HANDLING
 CXXFLAGS        += -Wno-reorder -DGLM_FORCE_RADIANS
+CXXFLAGS        += -D_ELPP_DISABLE_DEFAULT_CRASH_HANDLING
+CXXFLAGS        += -D_ELPP_NO_DEFAULT_LOG_FILE
 LDFLAGS          = -lm -lGLEW -lGLU -lGL -lglut -lstdc++
 LDFLAGS         += -lfreeimage -lAntTweakBar -lX11
 LDFLAGS         += -lfftw3f -lfftw3f_omp -fopenmp

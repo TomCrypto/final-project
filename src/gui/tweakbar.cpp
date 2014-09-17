@@ -1,13 +1,16 @@
 #include "gui/tweakbar.h"
 
+#include <easylogging.h>
 #include <stdexcept>
 
 namespace gui
 {
     basic_bar::basic_bar(const std::string& name)
     {
-        if (!(m_bar = TwNewBar((m_name = name).c_str())))
+        if (!(m_bar = TwNewBar((m_name = name).c_str()))) {
+            LOG(ERROR) << "TwNewBar failed";
             throw std::runtime_error("failed to create tweakbar");
+        }
     }
 
     basic_bar::~basic_bar()
@@ -29,14 +32,26 @@ namespace gui
     {
         rotation = 0;
         exposure = 0.18f;
+        cam_move_speed = 1.5f;
+        cam_sensitivity = 0.5f;
 
         TwAddVarRW(m_bar,
             "Rotation", TW_TYPE_FLOAT, &rotation,
-            "min=0 max=360 step=1.0 help='Rotate the skeleton'");
+            " min=0 max=360 step=1.0 help='Rotate the skeleton'");
 
         TwAddVarRW(m_bar,
             "Exposure", TW_TYPE_FLOAT, &exposure,
-            "min=0.01 max=3 step=0.01 help='Tonemapping exposure'");
+            " min=0.01 max=3 step=0.01 help='Tonemapping exposure'");
+
+        TwAddVarRW(m_bar,
+            "Movement Speed", TW_TYPE_FLOAT, &cam_move_speed,
+            " min=0.1 max=5 step=0.1 help='Movement speed (WASD)'"
+            " group='Navigation'");
+
+        TwAddVarRW(m_bar,
+            "Camera Sensitivity", TW_TYPE_FLOAT, &cam_sensitivity,
+            " min=0.01 max=1.5 step=0.01 help='Rotation sensitivity'"
+            " group='Navigation'");
 
         TwDefine((m_name + " contained=true").c_str());
     }

@@ -1,14 +1,14 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
-#include <string>
-
 #include <glm/gtc/type_ptr.hpp>
 #include <FreeImage.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <stdexcept>
 #include <fftw3.h>
+#include <string>
+#include <map>
 
 #include "gui/framebuffer.h"
 #include "gui/tweakbar.h"
@@ -66,8 +66,10 @@ namespace gui
 
         // Different window event callbacks (logic goes here)
         void on_key_press(unsigned char key, int x, int y);
+        void on_key_up(unsigned char key, int x, int y);
         void on_mouse_down(int button, int x, int y);
         void on_mouse_up(int button, int x, int y);
+        void on_special_up(int key, int x, int y);
         void on_special(int key, int x, int y);
         void on_mouse_move(int x, int y);
         void on_resize(int w, int h);
@@ -79,7 +81,8 @@ namespace gui
         window& operator=(const window& other);
         window(const window& other);
 
-        // GLUT window stuff
+        // GLUT windowing/keyboard stuff
+        std::map<int, bool> m_keys;
         int width();
         int height();
         int m_window;
