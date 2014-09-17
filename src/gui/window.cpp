@@ -155,7 +155,7 @@ namespace gui
         m_bar = new main_bar("main");
         m_bar->set_title("Configuration");
 
-        skeleton = new Skeleton("priman.asf");
+        m_obj = new Model("Teapot.obj");
 
         glMatrixMode(GL_PROJECTION);
 	    glLoadIdentity();
@@ -180,9 +180,9 @@ namespace gui
 
     void window::on_free()
     {
-        delete skeleton;
         delete buf;
         delete m_bar;
+		delete m_obj;
     }
 
     void window::on_mouse_up(int button, int x, int y)
@@ -223,7 +223,7 @@ namespace gui
         glMatrixMode(GL_PROJECTION);
 	    glLoadIdentity();
 	    gluPerspective(G308_FOVY, (double) width() / (double) height(), G308_ZNEAR_3D, G308_ZFAR_3D);
-
+		gluLookAt(0.0, 2.5, 25.0, 0.0, 2.5, 0.0, 0.0, 1.0, 0.0);
         glViewport(0, 0, width(), height());
     }
 
@@ -253,9 +253,11 @@ namespace gui
 	    }
 
 		// tweakbar example - read rotation from the GUI bar
-		skeleton->angle = m_bar->rotation;
+		//skeleton->angle = m_bar->rotation;
 
-		skeleton->display();
+		//skeleton->display();
+		glColor3f(0.0f, 1.0f, 0.0f);
+		m_obj->display();
 
         glDisable(GL_DEPTH_TEST);
 	    glDisable(GL_LIGHTING);
