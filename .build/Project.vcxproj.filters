@@ -52,6 +52,9 @@
     <Filter Include="Resource Files\san-miguel\Maps">
       <UniqueIdentifier>{1abf58e7-1156-4369-bc61-d4a0db97780f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\lighthouse">
+      <UniqueIdentifier>{86740743-44f5-4730-b85b-41747f352d11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -954,6 +957,30 @@
     </Media>
     <Media Include="..\res\san-miguel\san-miguel.obj">
       <Filter>Resource Files\san-miguel</Filter>
+    </Media>
+    <Media Include="..\res\lighthouse\Lighthouse.mtl">
+      <Filter>Resource Files\lighthouse</Filter>
+    </Media>
+    <Media Include="..\res\lighthouse\Lighthouse.obj">
+      <Filter>Resource Files\lighthouse</Filter>
+    </Media>
+    <Media Include="..\res\lighthouse\OutBuilding.mtl">
+      <Filter>Resource Files\lighthouse</Filter>
+    </Media>
+    <Media Include="..\res\lighthouse\OutBuilding.obj">
+      <Filter>Resource Files\lighthouse</Filter>
+    </Media>
+    <Media Include="..\res\lighthouse\Terrain.mtl">
+      <Filter>Resource Files\lighthouse</Filter>
+    </Media>
+    <Media Include="..\res\lighthouse\Terrain.obj">
+      <Filter>Resource Files\lighthouse</Filter>
+    </Media>
+    <Media Include="..\res\lighthouse\Trees.mtl">
+      <Filter>Resource Files\lighthouse</Filter>
+    </Media>
+    <Media Include="..\res\lighthouse\Trees.obj">
+      <Filter>Resource Files\lighthouse</Filter>
     </Media>
   </ItemGroup>
 </Project>
