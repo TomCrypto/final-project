@@ -1,6 +1,7 @@
 #include "core/camera.h"
 
 #include <cmath>
+
 camera::camera(int width, int height, float fov,
                const glm::vec3& position,
                const glm::vec3& direction)
@@ -30,10 +31,9 @@ void camera::turn(const glm::vec2& delta)
     phi += delta.x;
     theta += delta.y;
 
-    if (theta > glm::pi<float>() - 1e-4f)
-        theta = glm::pi<float>() - 1e-4f;
-    if (theta < -glm::pi<float>() + 1e-4f)
-        theta = -glm::pi<float>() + 1e-4f;
+    if (theta > glm::pi<float>() - 1e-1f)
+        theta = glm::pi<float>() - 1e-1f;
+    if (theta < 1e-1f) theta = 1e-1f;
 
     m_dir = glm::vec3(sin(theta) * cos(phi), cos(theta), sin(theta) * sin(phi));
 }
