@@ -10,7 +10,7 @@ class fps_counter
 public:
     fps_counter(size_t backlog);
 
-    // a new frame has just started
+    // a new frame has just been presented
     void add_frame();
 
     // false if not enough frame times

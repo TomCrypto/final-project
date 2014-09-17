@@ -5,6 +5,12 @@
 
 namespace gui
 {
+    /* ==================================================================== */
+    /* ==================================================================== */
+    /* ========== BOILERPLATE GLUT CALLBACK STUFF - SCROLL DOWN =========== */
+    /* ==================================================================== */
+    /* ==================================================================== */
+
     bool exception::m_failed = false;
     static window* prog = nullptr;
     const int target_fps = 60;
@@ -174,6 +180,10 @@ namespace gui
     }
 
     /* ==================================================================== */
+    /* ==================================================================== */
+    /* =========== LIBRARY SETUP/TEARDOWN (EXCEPT OPENGL/ETC) ============= */
+    /* ==================================================================== */
+    /* ==================================================================== */
 
     void window::initialize(int argc, char* argv[])
     {
@@ -192,6 +202,10 @@ namespace gui
         fftwf_cleanup();
     }
 
+    /* ==================================================================== */
+    /* ==================================================================== */
+    /* ============== GENERIC WINDOWING SETUP AND SERVICES ================ */
+    /* ==================================================================== */
     /* ==================================================================== */
 
     window::window(const std::string& window_title,
@@ -306,6 +320,36 @@ namespace gui
         return glutGet(GLUT_WINDOW_HEIGHT);
     }
 
+    void window::on_key_up(unsigned char key, int x, int y) {
+        m_keys[key] = false;
+    }
+
+    void window::on_key_press(unsigned char key, int x, int y) {
+        m_keys[key] = true;
+    }
+
+    void window::on_special_up(int key, int x, int y) {
+        m_keys[key] = false;
+    }
+
+    void window::on_special(int key, int x, int y) {
+        m_keys[key] = true;
+    }
+
+    void window::on_mouse_up(int button, int x, int y)
+    {
+        m_mouse[button] = false;
+    }
+
+    void window::on_mouse_down(int button, int x, int y)
+    {
+        m_mouse[button] = true;
+    }
+
+    /* ==================================================================== */
+    /* ==================================================================== */
+    /* =========================== PROGRAM LOGIC ========================== */
+    /* ==================================================================== */
     /* ==================================================================== */
 
     void window::on_load(int w, int h)
@@ -328,7 +372,7 @@ namespace gui
         
         LOG(INFO) << "Loading model.";
 
-        m_obj = new Model("Teapot.obj");
+        m_obj = new Model("Bunny.obj");
 
         LOG(INFO) << "Setting up fixed function pipeline.";
 
@@ -348,7 +392,8 @@ namespace gui
 
         LOG(INFO) << "Creating camera.";
 
-        m_cam = camera(width(), height(), (float)(70 * M_PI / 180), glm::vec3(0, 0, -1), glm::vec3(0, 0, 1));
+        m_cam = camera(width(), height(), (float)(70 * M_PI / 180),
+                       glm::vec3(0, 0, -1), glm::vec3(0, 0, 1));
     }
 
     void window::on_free()
@@ -370,18 +415,59 @@ namespace gui
         TwTerminate();
     }
 
-    static bool pressed = false;
-
-    void window::on_mouse_up(int button, int x, int y)
+    void window::on_resize(int w, int h)
     {
-        if (button == GLUT_LEFT_BUTTON)
-            pressed = false;
+        m_framebuffer->resize(w, h);
+        TwWindowSize(w, h);
+        m_cam.resize(w, h);
     }
 
-    void window::on_mouse_down(int button, int x, int y)
+    void window::on_display()
     {
-        if (button == GLUT_LEFT_BUTTON)
-            pressed = true;
+        // Step 1: bind and clear the HDR framebuffer, to render in it
+
+        m_framebuffer->bind();
+        m_framebuffer->clear(true);
+
+        // Step 2: draw our objects and effects in the HDR framebuffer
+
+        glViewport(0, 0, width(), height());
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixf(glm::value_ptr(m_cam.proj()));
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadMatrixf(glm::value_ptr(m_cam.view()));
+
+        glEnable(GL_DEPTH_TEST);
+	    glEnable(GL_LIGHTING);
+	    glEnable(GL_COLOR_MATERIAL);
+	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	    glShadeModel(GL_SMOOTH);
+
+		glColor3f(0.0f, 1.0f, 0.0f);
+		m_obj->display();
+
+        glDisable(GL_DEPTH_TEST);
+	    glDisable(GL_LIGHTING);
+	    glDisable(GL_COLOR_MATERIAL);
+
+        // Step 3: render tonemapped HDR render to backbuffer
+
+        m_framebuffer->render(m_bar->exposure);
+
+        // Step 4: draw the AntTweakBar overlay on top
+
+        TwDraw();
+
+        // Step 5: present the result to the screen
+
+        glutSwapBuffers();
+        m_fps.add_frame();
+        if (m_fps.average_ready()) {
+            int fps = (int)(1.0f / m_fps.get_average() + 0.5f);
+            LOG_EVERY_N(400, INFO) << fps << " frames per second.";
+        }
     }
 
     void window::on_mouse_move(int x, int y)
@@ -395,97 +481,16 @@ namespace gui
         if (last_y == 0)
             last_y = y;
 
-        if (pressed)
+        if (m_mouse[GLUT_LEFT_BUTTON])
         {
             float sens = m_bar->cam_sensitivity;
 
             m_cam.turn(glm::vec2(((float)x - last_x),
-                                 ((float)y - last_y)) / (width() * sens));
+                                 ((float)y - last_y)) / (width() / sens));
         }
 
         last_x = x;
         last_y = y;
-    }
-    
-    void window::on_key_up(unsigned char key, int x, int y)
-    {
-        m_keys[key] = false;
-    }
-
-    void window::on_key_press(unsigned char key, int x, int y)
-    {
-        m_keys[key] = true;
-    }
-
-    void window::on_special_up(int key, int x, int y)
-    {
-        m_keys[key] = false;
-    }
-
-    void window::on_special(int key, int x, int y)
-    {
-        m_keys[key] = true;
-    }
-
-    void window::on_resize(int w, int h)
-    {
-        TwWindowSize(w, h);
-        m_framebuffer->resize(w, h);
-
-        m_cam.resize(w, h);
-    }
-
-    void window::on_display()
-    {
-        m_fps.add_frame();
-
-        // later on this might look like this:
-        // - bind framebuffer
-        // - clear framebuffer
-        // - render scene (model + sky)
-        // - render lens flares into framebuffer
-        // - tonemap framebuffer into backbuffer
-        // - draw the bar
-        // - glutSwapBuffers()
-
-        m_framebuffer->bind();
-        glViewport(0, 0, width(), height());
-
-        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	    glEnable(GL_DEPTH_TEST);
-	    glEnable(GL_LIGHTING);
-	    glEnable(GL_COLOR_MATERIAL);
-	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	    glShadeModel(GL_SMOOTH);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(glm::value_ptr(m_cam.proj()));
-
-        glMatrixMode(GL_MODELVIEW);
-        glLoadMatrixf(glm::value_ptr(m_cam.view()));
-
-	    GLenum err = glGetError();
-	    if (err != GL_NO_ERROR) {
-		    printf("%s\n", gluErrorString(err));
-	    }
-
-		glColor3f(0.0f, 1.0f, 0.0f);
-		m_obj->display();
-
-        glDisable(GL_DEPTH_TEST);
-	    glDisable(GL_LIGHTING);
-	    glDisable(GL_COLOR_MATERIAL);
-
-        m_framebuffer->render(m_bar->exposure);
-
-        TwDraw();
-
-        glutSwapBuffers();
-
-        if (m_fps.average_ready()) {
-            int fps = (int)(1.0f / m_fps.get_average() + 0.5f);
-            LOG_EVERY_N(400, INFO) << fps << " frames per second.";
-        }
     }
 
     void window::on_update()

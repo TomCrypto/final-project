@@ -78,6 +78,7 @@ namespace gui
         window(const window& other);
 
         // GLUT windowing/keyboard stuff
+        std::map<int, bool> m_mouse;
         std::map<int, bool> m_keys;
         int width();
         int height();
