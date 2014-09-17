@@ -1,4 +1,4 @@
-#include "Model.h"
+#include "core/model.h"
 
 Model::Model(const char *filename) {
 	mode = G308_SHADE_POLYGON;
@@ -41,6 +41,11 @@ Model::Model(const char *filename) {
 	m_nNumUV = numUV;
 	m_nNumPolygon = numFace;
 	m_nNumNormal = numNorm;
+
+    m_pVertexArray = 0;
+    m_pNormalArray = 0;
+    m_pUVArray = 0;
+    m_pTriangles = 0;
 
 	printf("Number of Point %d, UV %d, Normal %d, Face %d\n", numVert, numUV,
 		numNorm, numFace);

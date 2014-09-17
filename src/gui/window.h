@@ -12,7 +12,7 @@
 #include "gui/framebuffer.h"
 #include "gui/tweakbar.h"
 
-#include "G308_Skeleton.h"
+#include "core/model.h"
 #include "define.h"
 #include "core/camera.h"
 
@@ -56,9 +56,9 @@ namespace gui
 
         // Our own stuff
         main_bar* m_bar;
-        Skeleton* skeleton;
         fbuffer* buf;
         camera m_cam;
+		Model* m_obj;
     };
 }
 
