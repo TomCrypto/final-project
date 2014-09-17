@@ -85,8 +85,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\core\camera.cpp" />
     <ClCompile Include="..\src\core\model.cpp" />
-    <ClCompile Include="..\src\G308_Skeleton.cpp" />
     <ClCompile Include="..\src\utils\gl_utils.cpp" />
     <ClCompile Include="..\src\gui\tweakbar.cpp" />
     <ClCompile Include="..\src\gui\framebuffer.cpp" />
@@ -95,9 +95,9 @@
     <ClCompile Include="..\src\utils\image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\core\camera.h" />
     <ClInclude Include="..\src\core\model.h" />
     <ClInclude Include="..\src\define.h" />
-    <ClInclude Include="..\src\G308_Skeleton.h" />
     <ClInclude Include="..\src\utils\gl_utils.h" />
     <ClInclude Include="..\src\gui\tweakbar.h" />
     <ClInclude Include="..\src\gui\framebuffer.h" />

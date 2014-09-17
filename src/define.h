@@ -19,6 +19,7 @@
 #ifndef __DEFINE_COMP308__
 #define __DEFINE_COMP308__
 
+#define M_PI 3.14159265
 // Projection parameters
 #define G308_FOVY		20.0
 #define G308_ZNEAR_3D	1
