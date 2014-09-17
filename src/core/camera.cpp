@@ -1,8 +1,6 @@
 #include "core/camera.h"
 
 #include <cmath>
-#define M_PI 3.14159265
-
 camera::camera(int width, int height, float fov,
                const glm::vec3& position,
                const glm::vec3& direction)
