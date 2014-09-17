@@ -331,6 +331,8 @@ namespace gui
 
     void window::on_load(int w, int h)
     {
+		m_obj = new Model("san-miguel/san-miguel.obj");
+		//PostQuitMessage(0);
         // put work in here that can be done without any OpenGL support
         // like loading stuff from files into CPU buffers
 
@@ -349,7 +351,7 @@ namespace gui
         
         LOG(INFO) << "Loading model.";
 
-        m_obj = new Model("Teapot.obj");
+        
 
         LOG(INFO) << "Setting up fixed function pipeline.";
 
