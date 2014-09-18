@@ -112,10 +112,7 @@ namespace gui
         if (exception::has_failed())
             glutLeaveMainLoop();
         else try {
-            if (prog) {
-                int retval = TwEventSpecialGLUT(glutKey, mouseX, mouseY);
-                if (!retval) prog->on_special_up(glutKey);
-            }
+            if (prog) prog->on_special_up(glutKey);
         } catch (...) {
             exception::fail();
             glutLeaveMainLoop();
