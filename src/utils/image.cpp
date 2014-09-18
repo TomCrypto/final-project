@@ -59,6 +59,7 @@ static void rop1c(const image &src, const std::function<void(const glm::vec4&)>&
     }
 }
 
+#if 0
 static void rop2c(const image &src, const image &img, const std::function<void(const glm::vec4&, const glm::vec4&)>& rop)
 {
     assert((src.width() == img.width()) && (src.height() == img.height()));
@@ -75,6 +76,7 @@ static void rop2c(const image &src, const image &img, const std::function<void(c
             rop(*(srcPtr++), *(imgPtr++));
     }
 }
+#endif
 
 static bool bitmap_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, int w, int h)
 {
