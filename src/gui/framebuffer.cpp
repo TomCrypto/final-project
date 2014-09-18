@@ -14,6 +14,7 @@ framebuffer::framebuffer(const glm::ivec2& dims)
     glGenTextures(1, &m_tex);
     glGenTextures(1, &m_tmp);
     glGenFramebuffersEXT(1, &m_fbo);
+    glGenRenderbuffersEXT(1, &m_depth);
 
     resize(m_dims);
 
