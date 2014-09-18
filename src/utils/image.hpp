@@ -1,6 +1,7 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#include <easylogging.h>
 #include <FreeImage.h>
 #include <glm/glm.hpp>
 #include <GL/glew.h>

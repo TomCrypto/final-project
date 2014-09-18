@@ -260,15 +260,19 @@ namespace gl
         else if (m_fmt == GL_FLOAT)
         {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_FLOAT, img.data());
+        } else {
+            LOG(ERROR) << "Bad texture format";
+            throw 0;
         }
-        else throw std::logic_error("Bad texture format");
     }
 
     texture::texture(int width, int height, GLenum format)
         : w(width), h(height), m_fmt(format)
     {
-        if ((m_fmt != GL_UNSIGNED_BYTE) && (m_fmt != GL_FLOAT))
-            throw std::logic_error("Bad texture format");
+        if ((m_fmt != GL_UNSIGNED_BYTE) && (m_fmt != GL_FLOAT)) {
+            LOG(ERROR) << "Bad texture format";
+            throw 0;
+        }
 
         init_texture();
 
