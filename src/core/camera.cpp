@@ -39,6 +39,11 @@ void camera::turn(const glm::vec2& delta)
                       sin(theta) * sin(phi));
 }
 
+void camera::set_fov(float fov)
+{
+    m_fov = fov;
+}
+
 glm::mat4 camera::view() const
 {
     return glm::lookAt(m_pos, m_pos + m_dir, glm::vec3(0, 1, 0));

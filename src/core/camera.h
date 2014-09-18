@@ -23,6 +23,9 @@ public:
     // change in euler angles
     void turn(const glm::vec2& delta);
 
+    // change the field of view (radians)
+    void set_fov(float fov);
+
     glm::mat4 view() const;
     glm::mat4 proj() const;
 

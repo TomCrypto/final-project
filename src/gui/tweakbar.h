@@ -41,6 +41,8 @@ namespace gui
         
         float cam_move_speed;
         float cam_sensitivity;
+        bool cam_locked;
+        float cam_fov;
     };
 }
 

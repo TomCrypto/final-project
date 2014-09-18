@@ -85,10 +85,7 @@ namespace gui
             glutLeaveMainLoop();
         else try
         {
-            if (prog) {
-                int retval = TwEventKeyboardGLUT(glutKey, mouseX, mouseY);
-                if (!retval) prog->on_key_up(glutKey);
-            }
+            if (prog) prog->on_key_up(glutKey);
         } catch (...) {
             exception::fail();
             glutLeaveMainLoop();
@@ -404,7 +401,7 @@ namespace gui
         LOG(INFO) << "Creating camera.";
 
         m_cam = camera(m_dims, glm::vec3(0, 0, -1), glm::vec3(0, 0, 1),
-                       (float)(70 * glm::pi<float>() / 180));
+                       m_bar->cam_fov * glm::pi<float>() / 180);
     }
 
     void window::on_free()
@@ -450,6 +447,8 @@ namespace gui
 
         glMatrixMode(GL_MODELVIEW);
         glLoadMatrixf(glm::value_ptr(m_cam.view()));
+
+        glRotatef(m_bar->rotation, 0, 1, 0);
 
         glEnable(GL_DEPTH_TEST);
 	    glEnable(GL_LIGHTING);
@@ -497,6 +496,10 @@ namespace gui
 
     void window::on_update()
     {
+        m_cam.set_fov(m_bar->cam_fov * glm::pi<float>() / 180);
+        m_bar->cam_locked = m_lock_cursor;
+        m_bar->refresh();
+
         if (m_keys[27 /* escape */]) {
             glutLeaveMainLoop();
             return;

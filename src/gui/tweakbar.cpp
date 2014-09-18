@@ -35,6 +35,7 @@ namespace gui
         exposure = 0.18f;
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
+        cam_fov = 50;
         color = glm::vec3(0.75f, 0.25f, 0.25f);
 
         TwAddVarRW(m_bar,
@@ -57,6 +58,16 @@ namespace gui
         TwAddVarRW(m_bar,
             "Camera Sensitivity", TW_TYPE_FLOAT, &cam_sensitivity,
             " min=0.01 max=2.5 step=0.01 help='Rotation sensitivity'"
+            " group='Navigation'");
+
+        TwAddVarRW(m_bar,
+            "Field of View", TW_TYPE_FLOAT, &cam_fov,
+            " min=10 max=90 step=0.1 help='Camera field of view'"
+            " group='Navigation'");
+
+        TwAddVarRO(m_bar,
+            "Cursor Locked", TW_TYPE_BOOLCPP, &cam_locked,
+            " help='Right-click to lock or unlock cursor'"
             " group='Navigation'");
 
         TwDefine((m_name + " contained=true").c_str());
