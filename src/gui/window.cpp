@@ -185,6 +185,13 @@ namespace gui
     /* ==================================================================== */
     /* ==================================================================== */
 
+    static void fi_error_handler(FREE_IMAGE_FORMAT fif, const char *msg)
+    {
+        LOG(WARNING) << "FreeImage error: " << msg << ".";
+        const char *fmt = FreeImage_GetFormatFromFIF(fif);
+        if (fmt) LOG(TRACE) << "Context: " << fmt << ".";
+    }
+
     void window::initialize(int argc, char* argv[])
     {
         LOG(INFO) << "Initializing FFTW - multithreaded, 8 threads.";
@@ -196,6 +203,7 @@ namespace gui
         LOG(INFO) << "Initializing FreeImage.";
         
         FreeImage_Initialise();
+        FreeImage_SetOutputMessage(fi_error_handler);
         
         LOG(TRACE) << "FreeImage " << FreeImage_GetVersion() << ".";
 
