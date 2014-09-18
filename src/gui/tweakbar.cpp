@@ -9,8 +9,9 @@ namespace gui
     basic_bar::basic_bar(const std::string& name)
     {
         if (!(m_bar = TwNewBar((m_name = name).c_str()))) {
-            LOG(ERROR) << "TwNewBar failed";
-            throw std::runtime_error("failed to create tweakbar");
+            LOG(ERROR) << "Failed to create tweakbar.";
+            LOG(TRACE) << "TwNewBar failed.";
+            throw 0;
         }
     }
 
