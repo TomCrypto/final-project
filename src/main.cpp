@@ -35,8 +35,6 @@ void setup_logger()
          warn + "%datetime{%H:%m:%s} WARN" + off + ": %msg");
     conf.set(el::Level::Trace, el::ConfigurationType::Format,
          more + "%datetime{%H:%m:%s} MORE" + off + ": %msg");
-    conf.set(el::Level::Trace, el::ConfigurationType::Format,
-         more + "%datetime{%H:%m:%s} MORE" + off + ": %msg");
     conf.set(el::Level::Info, el::ConfigurationType::Format,
          bold + "%datetime{%H:%m:%s} INFO" + off + ": %msg");
     el::Loggers::reconfigureLogger("default", conf);
