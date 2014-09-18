@@ -3,6 +3,7 @@
 
 #include <easylogging.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
 #include <FreeImage.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -43,8 +44,7 @@ namespace gui
     class window
     {
     public:
-        window(const std::string& window_title,
-                const std::pair<int, int>& dims);
+        window(const std::string& window_title, const glm::ivec2& dims);
         ~window();
 
         // Runs the window's main loop, returns on window close (or crash)
@@ -54,23 +54,18 @@ namespace gui
         static void initialize(int argc, char* argv[]);
         static void finalize();
 
-        // Special error-handling stuff (see window.cpp)
-        static bool has_failed();
-        static void set_failed(const std::exception& e);
-        static std::exception get_last_exception();
-
         // Different window event callbacks (logic goes here)
-        void on_key_press(unsigned char key, int x, int y);
-        void on_key_up(unsigned char key, int x, int y);
-        void on_mouse_down(int button, int x, int y);
-        void on_mouse_up(int button, int x, int y);
-        void on_special_up(int key, int x, int y);
-        void on_special(int key, int x, int y);
-        void on_mouse_move(int x, int y);
-        void on_resize(int w, int h);
+        void on_key_press(unsigned char key);
+        void on_key_up(unsigned char key);
+        void on_mouse_down(int button);
+        void on_mouse_up(int button);
+        void on_special_up(int key);
+        void on_special(int key);
+        void on_mouse_move(const glm::ivec2& pos);
+        void on_resize(const glm::ivec2& new_dims);
         void on_display();
         void on_update();
-        void on_load(int w, int h);
+        void on_load();
         void on_init();
         void on_free();
     private:
@@ -81,8 +76,7 @@ namespace gui
         std::map<int, bool> m_buttons;
         std::map<int, bool> m_keys;
         bool m_lock_cursor;
-        int width();
-        int height();
+        glm::ivec2 m_dims;
         int m_window;
 
         // Our own stuff

@@ -2,16 +2,19 @@
 #define GUI_FRAMEBUFFER_H
 
 #include <easylogging.h>
+#include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <string>
 
 #include "utils/gl_utils.h"
 
+// manages an HDR framebuffer with tonemapping capabilities
+
 class framebuffer
 {
 public:
     //<< Initialize and free the framebuffer
-    framebuffer(int width, int height);
+    framebuffer(const glm::ivec2& dims);
     ~framebuffer();
 
     //<< Setup the framebuffer for rendering
@@ -21,7 +24,7 @@ public:
     void clear(bool depth);
 
     //<< Resize the framebuffer
-    void resize(int width, int height);
+    void resize(const glm::ivec2& dims);
 
     //<< Render framebuffer into the backbuffer
     void render(float exposure);
@@ -39,8 +42,7 @@ private:
     gl::shader m_shader;
     gl::shader m_log_shader;
 
-    int m_width;
-    int m_height;
+    glm::ivec2 m_dims;
 };
 
 #endif

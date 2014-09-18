@@ -33,7 +33,9 @@ void setup_logger()
          fail + "%datetime{%H:%m:%s} FAIL [%fbase:%line]" + off + ": %msg");
     conf.set(el::Level::Warning, el::ConfigurationType::Format,
          warn + "%datetime{%H:%m:%s} WARN" + off + ": %msg");
-    conf.set(el::Level::Debug, el::ConfigurationType::Format,
+    conf.set(el::Level::Trace, el::ConfigurationType::Format,
+         more + "%datetime{%H:%m:%s} MORE" + off + ": %msg");
+    conf.set(el::Level::Trace, el::ConfigurationType::Format,
          more + "%datetime{%H:%m:%s} MORE" + off + ": %msg");
     conf.set(el::Level::Info, el::ConfigurationType::Format,
          bold + "%datetime{%H:%m:%s} INFO" + off + ": %msg");
@@ -50,7 +52,7 @@ int main(int argc, char *argv[])
     {
         gui::window::initialize(argc, argv);
         gui::window window("COMP 308 - Final Project",
-                           std::make_pair(1024, 768));
+                           glm::ivec2(1024, 768));
 
         window.run();
     }

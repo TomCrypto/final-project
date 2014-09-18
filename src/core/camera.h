@@ -8,12 +8,13 @@
 class camera
 {
 public:
-    camera(int width, int height, float fov,
+    camera(const glm::ivec2& dims,
            const glm::vec3& position,
-           const glm::vec3& direction);
+           const glm::vec3& direction,
+           float fov);
     camera() {};
 
-    void resize(int width, int height);
+    void resize(const glm::ivec2& dims);
 
     // move relative to current direction
     // e.g. (0, 0, 1) moves forward
@@ -26,10 +27,9 @@ public:
     glm::mat4 proj() const;
 
 private:
+    glm::ivec2 m_dims;
     glm::vec3 m_pos;
     glm::vec3 m_dir;
-    int m_width;
-    int m_height;
     float m_fov;
 };
 

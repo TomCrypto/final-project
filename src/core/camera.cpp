@@ -2,20 +2,19 @@
 
 #include <cmath>
 
-camera::camera(int width, int height, float fov,
+camera::camera(const glm::ivec2& dims,
                const glm::vec3& position,
-               const glm::vec3& direction)
-    : m_width(width), m_height(height),
-      m_fov(fov), m_pos(position),
-      m_dir(direction)
+               const glm::vec3& direction,
+               float fov)
+    : m_dims(dims), m_pos(position), m_dir(direction),
+      m_fov(fov)
 {
 
 }
 
-void camera::resize(int width, int height)
+void camera::resize(const glm::ivec2& dims)
 {
-    m_width = width;
-    m_height = height;
+    m_dims = dims;
 }
 
 void camera::move(const glm::vec3& direction)
@@ -35,7 +34,9 @@ void camera::turn(const glm::vec2& delta)
         theta = glm::pi<float>() - 1e-1f;
     if (theta < 1e-1f) theta = 1e-1f;
 
-    m_dir = glm::vec3(sin(theta) * cos(phi), cos(theta), sin(theta) * sin(phi));
+    m_dir = glm::vec3(sin(theta) * cos(phi),
+                      cos(theta),
+                      sin(theta) * sin(phi));
 }
 
 glm::mat4 camera::view() const
@@ -48,6 +49,8 @@ glm::mat4 camera::proj() const
     const float near_plane = 0.1f;
     const float far_plane = 1000.0f;
 
-    return glm::perspectiveFov(m_fov, (float)m_width, (float)m_height,
+    return glm::perspectiveFov(m_fov,
+                               (float)m_dims.x,
+                               (float)m_dims.y,
                                near_plane, far_plane);
 }
