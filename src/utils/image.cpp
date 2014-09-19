@@ -327,6 +327,33 @@ void image::fill(const glm::vec4& bkgd, const channels& which)
     });
 }
 
+void image::negate(const channels& which,
+                   const glm::vec3& norm_min,
+                   const glm::vec3& norm_max)
+{
+    rop1n(*this, [norm_min, norm_max, which](const glm::vec4& a){
+        glm::vec4 out;
+
+        if (channels::R & which)
+            out.x = norm_max.x - a.x + norm_min.x;
+        else
+            out.x = a.x;
+
+        if (channels::G & which)
+            out.y = norm_max.y - a.y + norm_min.y;
+        else
+            out.y = a.y;
+
+        if (channels::B & which)
+            out.z = norm_max.z - a.z + norm_min.z;
+        else
+            out.z = a.z;
+
+
+        return out;
+    });
+}
+
 void image::grayscale()
 {
     rop1n(*this, [](const glm::vec4& a){
@@ -335,10 +362,10 @@ void image::grayscale()
     });
 }
 
-void image::colorize(const glm::vec4& color)
+void image::colorize(const glm::vec3& color)
 {
     rop1n(*this, [color](const glm::vec4& a){
-        return a * color;
+        return a * glm::vec4(color, 1.0f);
     });
 }
 
