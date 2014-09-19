@@ -1,3 +1,5 @@
+#include <easylogging.h>
+
 #include "utils/image.hpp"
 
 #include <functional>

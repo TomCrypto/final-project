@@ -1,7 +1,6 @@
 #ifndef GUI_FRAMEBUFFER_H
 #define GUI_FRAMEBUFFER_H
 
-#include <easylogging.h>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <string>

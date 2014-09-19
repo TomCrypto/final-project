@@ -1,4 +1,4 @@
-#include "scratch/fft.hpp"
+#include "core/fft.hpp"
 
 #include <stdexcept>
 #include <cassert>
@@ -90,7 +90,7 @@ void fft_planner::power_spectrum_channel(const image& src, image& dst,
 
         for (int x = 0; x < w; ++x)
         {
-            this->powspectrum_buf[y * srcW + x][0] = src_op(*ptr) * pow(-1, x + y);
+            this->powspectrum_buf[y * srcW + x][0] = src_op(*ptr) * (float)pow(-1, x + y);
             this->powspectrum_buf[y * srcW + x][1] = 0;
 
             ++ptr;

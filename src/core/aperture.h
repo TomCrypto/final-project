@@ -1,7 +1,6 @@
-#ifndef APERTURE_H
-#define APERTURE_H
+#ifndef CORE_APERTURE_H
+#define CORE_APERTURE_H
 
-#include <easylogging.h>
 #include <glm/glm.hpp>
 #include <fftw3.h>
 #include <vector>
