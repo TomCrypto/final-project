@@ -1,3 +1,6 @@
+#include <easylogging.h>
+_INITIALIZE_EASYLOGGINGPP
+
 #include <cstdlib>
 #include <cstdio>
 #include <string>
@@ -5,9 +8,6 @@
 #if !defined(_WIN32)
 #include <unistd.h>
 #endif
-
-#include <easylogging.h>
-_INITIALIZE_EASYLOGGINGPP
 
 #include "gui/window.h"
 
@@ -45,15 +45,13 @@ int main(int argc, char *argv[])
     setup_logger(); /* config/etc. */
     LOG(INFO) << "Program starting.";
 
-    gui::window::initialize(argc, argv);
-    gui::window window("COMP 308 - Final Project",
-                        glm::ivec2(1024, 768));
+    gui::window::initialize();
 
-    window.run();
-
-    if (gui::exception::has_failed())
-        return EXIT_FAILURE;
+    gui::window window("COMP 308 - Final Project", glm::ivec2(1024, 768));
+    window.run(); /* Will return when the window is closed or on crash. */
 
     gui::window::finalize();
-    return EXIT_SUCCESS;
+
+    return gui::exception::has_failed()
+         ? EXIT_FAILURE : EXIT_SUCCESS;
 }

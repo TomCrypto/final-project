@@ -5,8 +5,8 @@
 // Generate() method which takes an aperture texture of given
 // dimensions, and returns the corresponding lens flare
 
-#ifndef FFT_H
-#define FFT_H
+#ifndef CORE_FFT_H
+#define CORE_FFT_H
 
 #include <functional>
 #include <cstdio>

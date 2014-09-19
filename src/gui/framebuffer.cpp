@@ -1,3 +1,5 @@
+#include <easylogging.h>
+
 #include "gui/framebuffer.h"
 
 #include <glm/glm.hpp>
@@ -37,7 +39,7 @@ framebuffer::framebuffer(const glm::ivec2& dims)
             break;
         default:
             LOG(ERROR) << "Failed to create the framebuffer!";
-            throw 0;
+            throw std::runtime_error("");
     }
 
    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
