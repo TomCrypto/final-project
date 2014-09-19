@@ -1,4 +1,4 @@
-#include "scratch/fft.hpp"
+#include "core/fft.hpp"
 
 #include <stdexcept>
 #include <cassert>

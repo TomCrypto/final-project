@@ -11,7 +11,7 @@ namespace gui
         if (!(m_bar = TwNewBar((m_name = name).c_str()))) {
             LOG(ERROR) << "Failed to create tweakbar.";
             LOG(TRACE) << "TwNewBar failed.";
-            throw 0;
+            throw std::runtime_error("");
         }
     }
 
@@ -52,12 +52,12 @@ namespace gui
             " colormode=hls");
 
         TwAddVarRW(m_bar,
-            "Movement Speed", TW_TYPE_FLOAT, &cam_move_speed,
+            "Camera Speed", TW_TYPE_FLOAT, &cam_move_speed,
             " min=0.1 max=5 step=0.1 help='Movement speed (WASD)'"
             " group='Navigation'");
 
         TwAddVarRW(m_bar,
-            "Camera Sensitivity", TW_TYPE_FLOAT, &cam_sensitivity,
+            "Sensitivity", TW_TYPE_FLOAT, &cam_sensitivity,
             " min=0.01 max=2.5 step=0.01 help='Rotation sensitivity'"
             " group='Navigation'");
 

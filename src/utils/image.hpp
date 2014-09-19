@@ -1,5 +1,5 @@
-#ifndef IMAGE_H
-#define IMAGE_H
+#ifndef UTILS_IMAGE_H
+#define UTILS_IMAGE_H
 
 #include <easylogging.h>
 #include <FreeImage.h>
