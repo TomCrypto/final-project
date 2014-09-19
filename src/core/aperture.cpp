@@ -10,15 +10,14 @@ aperture::aperture()
 
     LOG(INFO) << "Loading aperture textures.";
 
-    //m_apertures.push_back(image(base + "circular.png"));
+    m_apertures.push_back(image(base + "circular.png"));
+    m_apertures.push_back(image(base + "elliptical.png"));
+    m_apertures.push_back(image(base + "pentagonal.png"));
+    m_apertures.push_back(image(base + "hexagonal.png"));
     m_apertures.push_back(image(base + "heptagonal.png"));
-    //m_apertures.push_back(image(base + "pentagonal.png"));
-    //m_apertures.push_back(image(base + "pupil_closing.png"));
-    //m_apertures.push_back(image(base + "pupil_glare.png"));
-    //m_apertures.push_back(image(base + "pupil_open.png"));
-
-    //m_apertures.push_back(image(base + "circle.png"));
-    //m_apertures.push_back(image(base + "pentagon.bmp"));
+    m_apertures.push_back(image(base + "octagonal.png"));
+    m_apertures.push_back(image(base + "nonagonal.png"));
+    m_apertures.push_back(image(base + "decagonal.png"));
 
     m_noise.push_back(image(base + "noise1.png"));
     m_noise.push_back(image(base + "noise2.png"));
@@ -42,7 +41,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 
     // and add random noise to it at random locations
 
-    const int noise_num = 0;
+    const int noise_num = 250;
 
     for (int t = 0; t < noise_num; ++t)
     {
@@ -52,7 +51,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 
         // and a random size between some reasonable bounds
         int min_size = 5;
-        int max_size = (int)(out.width() / 5);
+        int max_size = (int)(out.width() / 2);
 
         int size = (int)(rand(m_rng) * (max_size - min_size) + min_size);
 
@@ -65,7 +64,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
     }
 
     out = out.resize(dims.x, dims.y);
-    out.normalize(false);
+    out.save("input.exr");
     return out;
 }
 
