@@ -1,7 +1,6 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
-#include <easylogging.h>
 #include <glm/glm.hpp>
 #include <FreeImage.h>
 #include <GL/glew.h>

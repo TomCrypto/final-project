@@ -1,3 +1,5 @@
+#include <easylogging.h>
+
 #include "gui/framebuffer.h"
 
 #include <glm/glm.hpp>

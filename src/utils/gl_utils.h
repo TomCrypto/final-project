@@ -4,7 +4,6 @@
 #ifndef UTILS_GL_UTILS_H
 #define UTILS_GL_UTILS_H
 
-#include <easylogging.h>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <utility>

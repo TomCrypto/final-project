@@ -1,3 +1,6 @@
+#include <easylogging.h>
+_INITIALIZE_EASYLOGGINGPP
+
 #include <cstdlib>
 #include <cstdio>
 #include <string>
@@ -5,9 +8,6 @@
 #if !defined(_WIN32)
 #include <unistd.h>
 #endif
-
-#include <easylogging.h>
-_INITIALIZE_EASYLOGGINGPP
 
 #include "gui/window.h"
 

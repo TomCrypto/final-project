@@ -78,6 +78,12 @@
     <ClCompile Include="..\src\gui\raw_mouse.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\core\aperture.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\fft.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gui\tweakbar.h">
@@ -107,6 +113,12 @@
     <ClInclude Include="..\src\gui\raw_mouse.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\core\aperture.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\fft.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\lib\bin\win32\FreeImage.dll">
@@ -132,12 +144,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\res\apertures\circular.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\heptagonal.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
     <Image Include="..\res\apertures\noise1.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
@@ -156,16 +162,28 @@
     <Image Include="..\res\apertures\noise6.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
+    <Image Include="..\res\apertures\circular.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\decagonal.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\elliptical.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\heptagonal.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\hexagonal.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\nonagonal.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\octagonal.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
     <Image Include="..\res\apertures\pentagonal.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\pupil_closing.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\pupil_glare.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\pupil_open.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
   </ItemGroup>

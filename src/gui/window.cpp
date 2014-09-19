@@ -1,3 +1,5 @@
+#include <easylogging.h>
+
 #include "gui/window.h"
 
 #include <glm/gtc/type_ptr.hpp>
@@ -187,7 +189,7 @@ namespace gui
         fftwf_init_threads();
         fftwf_plan_with_nthreads(8);
 
-        LOG(TRACE) << "FFTW ready (" << fftwf_version << ").";
+        LOG(TRACE) << "FFTW ready (" << "3.3.4" /* fftwf_version */ << ").";
         LOG(INFO) << "Initializing FreeImage.";
 
         FreeImage_Initialise();

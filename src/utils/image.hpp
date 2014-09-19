@@ -1,7 +1,6 @@
 #ifndef UTILS_IMAGE_H
 #define UTILS_IMAGE_H
 
-#include <easylogging.h>
 #include <FreeImage.h>
 #include <glm/glm.hpp>
 #include <GL/glew.h>

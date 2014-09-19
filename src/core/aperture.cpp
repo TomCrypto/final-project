@@ -1,3 +1,5 @@
+#include <easylogging.h>
+
 #include "core/aperture.h"
 
 #include <string>
@@ -123,7 +125,7 @@ static image power_spectrum(const image& img, fftwf_complex* buf, fftwf_plan pla
 
         for (int x = 0; x < w; ++x)
         {
-            buf[y * w + x][0] = ptr->x * pow(-1, x + y);
+            buf[y * w + x][0] = ptr->x * (float)pow(-1, x + y);
             buf[y * w + x][1] = 0;
 
             ++ptr;
