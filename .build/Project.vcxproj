@@ -18,7 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>120</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -89,6 +89,8 @@
     <ClCompile Include="..\src\core\model.cpp" />
     <ClCompile Include="..\src\gui\fps_counter.cpp" />
     <ClCompile Include="..\src\gui\raw_mouse.cpp" />
+    <ClCompile Include="..\src\scratch\aperture.cpp" />
+    <ClCompile Include="..\src\scratch\fft.cpp" />
     <ClCompile Include="..\src\utils\gl_utils.cpp" />
     <ClCompile Include="..\src\gui\tweakbar.cpp" />
     <ClCompile Include="..\src\gui\framebuffer.cpp" />
@@ -101,6 +103,9 @@
     <ClInclude Include="..\src\core\model.h" />
     <ClInclude Include="..\src\gui\fps_counter.h" />
     <ClInclude Include="..\src\gui\raw_mouse.h" />
+    <ClInclude Include="..\src\scratch\aperture.hpp" />
+    <ClInclude Include="..\src\scratch\fft.hpp" />
+    <ClInclude Include="..\src\scratch\optical_system.hpp" />
     <ClInclude Include="..\src\utils\gl_utils.h" />
     <ClInclude Include="..\src\gui\tweakbar.h" />
     <ClInclude Include="..\src\gui\framebuffer.h" />

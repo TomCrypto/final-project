@@ -55,6 +55,12 @@
     <Filter Include="Resource Files\lighthouse">
       <UniqueIdentifier>{86740743-44f5-4730-b85b-41747f352d11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Scratch">
+      <UniqueIdentifier>{cb956b6d-5765-4517-95ef-bd9d49a4cc42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scratch">
+      <UniqueIdentifier>{9267a64a-4eb2-406b-866c-2ed248321273}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -87,6 +93,12 @@
     <ClCompile Include="..\src\gui\raw_mouse.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\scratch\fft.cpp">
+      <Filter>Source Files\Scratch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scratch\aperture.cpp">
+      <Filter>Source Files\Scratch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gui\tweakbar.h">
@@ -115,6 +127,15 @@
     </ClInclude>
     <ClInclude Include="..\src\gui\raw_mouse.h">
       <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scratch\optical_system.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scratch\aperture.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scratch\fft.hpp">
+      <Filter>Header Files\Scratch</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
