@@ -59,6 +59,7 @@ static void rop1c(const image &src, const std::function<void(const glm::vec4&)>&
     }
 }
 
+#if 0
 static void rop2c(const image &src, const image &img, const std::function<void(const glm::vec4&, const glm::vec4&)>& rop)
 {
     assert((src.width() == img.width()) && (src.height() == img.height()));
@@ -75,6 +76,7 @@ static void rop2c(const image &src, const image &img, const std::function<void(c
             rop(*(srcPtr++), *(imgPtr++));
     }
 }
+#endif
 
 static bool bitmap_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, int w, int h)
 {
@@ -152,7 +154,10 @@ image::image(int width, int height, GLuint tex)
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, ptr);
 
     this->dib = FreeImage_AllocateT(FIT_RGBAF, width, height, 128);
-    if (!this->dib) throw std::runtime_error("image::image()");
+    if (!this->dib) {
+        LOG(ERROR) << "Failed to allocate memory for image.";
+        throw 0;
+    }
 
     for (int y = 0; y < height; ++y)
     {
@@ -167,8 +172,10 @@ image::image(int width, int height, GLuint tex)
 image& image::operator=(const image &other)
 {
     FreeImage_Unload(this->dib); // delete old image
-    if (!(this->dib = FreeImage_Clone(other.dib)))
-        throw std::runtime_error("image::=");
+    if (!(this->dib = FreeImage_Clone(other.dib))) {
+        LOG(ERROR) << "Failed to clone image.";
+        throw 0;
+    }
 
     return *this;
 }
@@ -178,7 +185,10 @@ image::image(int width, int height)
     assert(width + height > 0);
 
     this->dib = FreeImage_AllocateT(FIT_RGBAF, width, height, 128);
-    if (!this->dib) throw std::runtime_error("image::image()");
+    if (!this->dib) {
+        LOG(ERROR) << "Failed to allocate memory for image.";
+        throw 0;
+    }
 }
 
 image::image(const std::string& path)
@@ -188,8 +198,10 @@ image::image(const std::string& path)
 
 image::image(const image &other)
 {
-    if (!(this->dib = FreeImage_Clone(other.dib)))
-        throw std::runtime_error("image::image()");
+    if (!(this->dib = FreeImage_Clone(other.dib))) {
+        LOG(ERROR) << "Failed to clone image.";
+        throw 0;
+    }
 }
 
 image::image(FIBITMAP *dib)
@@ -209,16 +221,21 @@ void image::load(const std::string& path)
 
     FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(path.c_str(), 0);
     if(fif == FIF_UNKNOWN) fif = FreeImage_GetFIFFromFilename(path.c_str());
-    if ((fif == FIF_UNKNOWN) || !FreeImage_FIFSupportsReading(fif))
-        throw std::runtime_error("image::load -> unknown file format");
+    if ((fif == FIF_UNKNOWN) || !FreeImage_FIFSupportsReading(fif)) {
+        LOG(ERROR) << "'" << path << "': unknown file format.";
+        throw 0;
+    }
 
-    if ((loaded = FreeImage_Load(fif, path.c_str(), 0)) == nullptr)
-        throw std::runtime_error("image::load -> failed to load file");
+    if ((loaded = FreeImage_Load(fif, path.c_str(), 0)) == nullptr) {
+        LOG(ERROR) << "'" << path << "': failed to load file.";
+        throw 0;
+    }
 
     if (!FreeImage_HasPixels(loaded))
     {
         FreeImage_Unload(loaded);
-        throw std::runtime_error("image::load -> file has no pixels");
+        LOG(ERROR) << "'" << path << "': file has no pixels.";
+        throw 0;
     }
 
     int w = FreeImage_GetWidth(loaded);
@@ -232,7 +249,8 @@ void image::load(const std::string& path)
         if (!this->dib)
         {
             FreeImage_Unload(loaded);
-            throw std::runtime_error("image::load -> allocation error");
+            LOG(ERROR) << "Failed to allocate memory for image.";
+            throw 0;
         }
 
         bool success = false;
@@ -244,8 +262,10 @@ void image::load(const std::string& path)
 
         FreeImage_Unload(loaded);
 
-        if (!success)
-            throw std::runtime_error("image::load -> bad image type");
+        if (!success) {
+            LOG(ERROR) << "'" << path << "': bad image type.";
+            throw 0;
+        }
     }
 
     assert(FreeImage_GetLine(dib) == FreeImage_GetPitch(dib));
@@ -253,8 +273,10 @@ void image::load(const std::string& path)
 
 void image::save(const std::string& path) const
 {
-    if (!FreeImage_Save(FIF_EXR, this->dib, path.c_str()))
-        throw std::runtime_error("image::save");
+    if (!FreeImage_Save(FIF_EXR, this->dib, path.c_str())) {
+        LOG(ERROR) << "'" << path << "': failed to save.";
+        throw 0;
+    }
 }
 
 void image::add(const image& other, const channels& which)
@@ -305,6 +327,33 @@ void image::fill(const glm::vec4& bkgd, const channels& which)
     });
 }
 
+void image::negate(const channels& which,
+                   const glm::vec3& norm_min,
+                   const glm::vec3& norm_max)
+{
+    rop1n(*this, [norm_min, norm_max, which](const glm::vec4& a){
+        glm::vec4 out;
+
+        if (channels::R & which)
+            out.x = norm_max.x - a.x + norm_min.x;
+        else
+            out.x = a.x;
+
+        if (channels::G & which)
+            out.y = norm_max.y - a.y + norm_min.y;
+        else
+            out.y = a.y;
+
+        if (channels::B & which)
+            out.z = norm_max.z - a.z + norm_min.z;
+        else
+            out.z = a.z;
+
+
+        return out;
+    });
+}
+
 void image::grayscale()
 {
     rop1n(*this, [](const glm::vec4& a){
@@ -313,10 +362,10 @@ void image::grayscale()
     });
 }
 
-void image::colorize(const glm::vec4& color)
+void image::colorize(const glm::vec3& color)
 {
     rop1n(*this, [color](const glm::vec4& a){
-        return a * color;
+        return a * glm::vec4(color, 1.0f);
     });
 }
 
@@ -410,7 +459,10 @@ image image::resize(int newWidth, int newHeight, FREE_IMAGE_FILTER filter) const
     assert(newWidth + newHeight > 0);
 
     FIBITMAP *resized = FreeImage_Rescale(this->dib, newWidth, newHeight, filter);
-    if (!resized) throw std::runtime_error("image::resize");
+    if (!resized) {
+        LOG(ERROR) << "Failed to resize image.";
+        throw 0;
+    }
 
     return image(resized);
 }
@@ -435,7 +487,10 @@ image image::subregion(int rectX, int rectY, int rectW, int rectH) const
     assert(rectY + rectH <= height());
 
     FIBITMAP *region = FreeImage_Copy(this->dib, rectX, rectY, rectX + rectW, rectY + rectH);
-    if (!region) throw std::runtime_error("image::subregion");
+    if (!region) {
+        LOG(ERROR) << "Failed to take image subregion.";
+        throw 0;
+    }
 
     return image(region);
 }
@@ -445,7 +500,10 @@ image image::zero_pad(int left, int top, int right, int bottom) const
     glm::vec4 black;
 
     FIBITMAP *padded = FreeImage_EnlargeCanvas(this->dib, left, top, right, bottom, &black);
-    if (!padded) throw std::runtime_error("image::zero_pad");
+    if (!padded) {
+        LOG(ERROR) << "Failed to zero-pad image.";
+        throw 0;
+    }
 
     return image(padded);
 }

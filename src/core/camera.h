@@ -8,28 +8,31 @@
 class camera
 {
 public:
-    camera(int width, int height, float fov,
+    camera(const glm::ivec2& dims,
            const glm::vec3& position,
-           const glm::vec3& direction);
+           const glm::vec3& direction,
+           float fov);
     camera() {};
 
-    void resize(int width, int height);
+    void resize(const glm::ivec2& dims);
 
-    void move_forward(float amount);
-    void move_left(float amount);
-    void move_right(float amount);
+    // move relative to current direction
+    // e.g. (0, 0, 1) moves forward
+    void move(const glm::vec3& direction);
 
-    void turn_horizontal(float d);
-    void turn_vertical(float d);
+    // change in euler angles
+    void turn(const glm::vec2& delta);
+
+    // change the field of view (radians)
+    void set_fov(float fov);
 
     glm::mat4 view() const;
     glm::mat4 proj() const;
 
 private:
+    glm::ivec2 m_dims;
     glm::vec3 m_pos;
     glm::vec3 m_dir;
-    int m_width;
-    int m_height;
     float m_fov;
 };
 

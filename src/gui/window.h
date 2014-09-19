@@ -3,6 +3,7 @@
 
 #include <easylogging.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
 #include <FreeImage.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -12,10 +13,13 @@
 #include <map>
 
 #include "gui/framebuffer.h"
+#include "gui/fps_counter.h"
+#include "gui/raw_mouse.h"
 #include "gui/tweakbar.h"
 
 #include "core/model.h"
 #include "core/camera.h"
+#include "core/aperture.h"
 
 namespace gui
 {
@@ -28,7 +32,7 @@ namespace gui
         static bool has_failed() {
             return m_failed;
         }
-        
+
         static void fail() {
             m_failed = true;
         }
@@ -41,8 +45,7 @@ namespace gui
     class window
     {
     public:
-        window(const std::string& window_title,
-                const std::pair<int, int>& dims);
+        window(const std::string& window_title, const glm::ivec2& dims);
         ~window();
 
         // Runs the window's main loop, returns on window close (or crash)
@@ -52,23 +55,18 @@ namespace gui
         static void initialize(int argc, char* argv[]);
         static void finalize();
 
-        // Special error-handling stuff (see window.cpp)
-        static bool has_failed();
-        static void set_failed(const std::exception& e);
-        static std::exception get_last_exception();
-
         // Different window event callbacks (logic goes here)
-        void on_key_press(unsigned char key, int x, int y);
-        void on_key_up(unsigned char key, int x, int y);
-        void on_mouse_down(int button, int x, int y);
-        void on_mouse_up(int button, int x, int y);
-        void on_special_up(int key, int x, int y);
-        void on_special(int key, int x, int y);
-        void on_mouse_move(int x, int y);
-        void on_resize(int w, int h);
+        void on_key_press(unsigned char key);
+        void on_key_up(unsigned char key);
+        void on_mouse_down(int button);
+        void on_mouse_up(int button);
+        void on_special_up(int key);
+        void on_special(int key);
+        void on_mouse_move(const glm::ivec2& pos);
+        void on_resize(const glm::ivec2& new_dims);
         void on_display();
         void on_update();
-        void on_load(int w, int h);
+        void on_load();
         void on_init();
         void on_free();
     private:
@@ -76,16 +74,18 @@ namespace gui
         window(const window& other);
 
         // GLUT windowing/keyboard stuff
+        std::map<int, bool> m_buttons;
         std::map<int, bool> m_keys;
-        std::vector<double> m_fps;
-        int m_frame_count;
-        int width();
-        int height();
+        bool m_lock_cursor;
+        glm::ivec2 m_dims;
         int m_window;
 
         // Our own stuff
+        fps_counter m_fps;
+        raw_mouse m_mouse;
         main_bar* m_bar;
         framebuffer* m_framebuffer;
+        aperture* m_aperture;
         camera m_cam;
 		Model* m_obj;
     };
