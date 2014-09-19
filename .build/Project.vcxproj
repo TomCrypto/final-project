@@ -18,13 +18,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -55,7 +55,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GLM_FORCE_RADIANS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GLM_FORCE_RADIANS;_ELPP_DISABLE_DEFAULT_CRASH_HANDLING;_ELPP_NO_DEFAULT_LOG_FILE</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -72,7 +72,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GLM_FORCE_RADIANS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GLM_FORCE_RADIANS;_ELPP_DISABLE_DEFAULT_CRASH_HANDLING;_ELPP_NO_DEFAULT_LOG_FILE</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -87,6 +87,8 @@
   <ItemGroup>
     <ClCompile Include="..\src\core\camera.cpp" />
     <ClCompile Include="..\src\core\model.cpp" />
+    <ClCompile Include="..\src\gui\fps_counter.cpp" />
+    <ClCompile Include="..\src\gui\raw_mouse.cpp" />
     <ClCompile Include="..\src\utils\gl_utils.cpp" />
     <ClCompile Include="..\src\gui\tweakbar.cpp" />
     <ClCompile Include="..\src\gui\framebuffer.cpp" />
@@ -97,6 +99,8 @@
   <ItemGroup>
     <ClInclude Include="..\src\core\camera.h" />
     <ClInclude Include="..\src\core\model.h" />
+    <ClInclude Include="..\src\gui\fps_counter.h" />
+    <ClInclude Include="..\src\gui\raw_mouse.h" />
     <ClInclude Include="..\src\utils\gl_utils.h" />
     <ClInclude Include="..\src\gui\tweakbar.h" />
     <ClInclude Include="..\src\gui\framebuffer.h" />

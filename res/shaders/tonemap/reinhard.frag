@@ -20,7 +20,7 @@ void main()
     float avg_lum = exp(avg_log_lum / pixel_count);
     float key = exposure / avg_lum;
 
-    gl_FragColor = vec4(color.rgb * (key / (1.0 + luminance(color.rgb) * key)), 1);
+    vec3 final = color.rgb * (key / (1.0 + luminance(color.rgb) * key));
 
-    gl_FragColor = pow(gl_FragColor, vec4(1.0 / 2.2)); // TODO: check this later
+    gl_FragColor = vec4(pow(final, vec3(1.0 / 2.2)), 1); // TODO: check this later
 }

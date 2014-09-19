@@ -18,10 +18,16 @@ namespace gl
 
     shader& shader::operator=(const shader& other)
     {
+        *this = other;
+        return *this;
+    }
+
+    shader::shader(const shader& other)
+    {
+        m_vars = other.m_vars;
         m_vert = other.m_vert;
         m_frag = other.m_frag;
         m_prog = other.m_prog;
-        return *this;
     }
 
     shader::shader(const std::string& vert_name,
@@ -42,31 +48,30 @@ namespace gl
 
         glCompileShader(m_vert);
 
-        if (!has_compiled(m_vert))
-            throw std::runtime_error("Failed to compile vertex shader '"
-                                   + vert_name + "':\n\n" + vert_log());
+        if (!has_compiled(m_vert)) {
+            LOG(ERROR) << "Failed to compile vertex shader '" << vert_name << "':";
+            LOG(TRACE) << vert_log();
+            throw 0;
+        }
 
         glCompileShader(m_frag);
 
-        if (!has_compiled(m_frag))
-            throw std::runtime_error("Failed to compile fragment shader '"
-                                   + frag_name + "':\n\n" + frag_log());
+        if (!has_compiled(m_frag)) {
+            LOG(ERROR) << "Failed to compile fragment shader '" << frag_name << "':";
+            LOG(TRACE) << frag_log();
+            throw 0;
+        }
 
         m_prog = glCreateProgram();
         glAttachShader(m_prog, m_vert);
         glAttachShader(m_prog, m_frag);
         glLinkProgram(m_prog);
 
-        if (!has_linked(m_prog))
-            throw std::runtime_error("Failed to link shader program:\n\n"
-                                   + link_log());
-    }
-
-    shader::shader(const shader& other)
-    {
-        m_vert = other.m_vert;
-        m_frag = other.m_frag;
-        m_prog = other.m_prog;
+        if (!has_linked(m_prog)) {
+            LOG(ERROR) << "Failed to link shader program:";
+            LOG(TRACE) << link_log();
+            throw 0;
+        }
     }
 
     shader::~shader()
@@ -254,15 +259,19 @@ namespace gl
         else if (m_fmt == GL_FLOAT)
         {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_FLOAT, img.data());
+        } else {
+            LOG(ERROR) << "Bad texture format";
+            throw 0;
         }
-        else throw std::logic_error("Bad texture format");
     }
 
     texture::texture(int width, int height, GLenum format)
         : w(width), h(height), m_fmt(format)
     {
-        if ((m_fmt != GL_UNSIGNED_BYTE) && (m_fmt != GL_FLOAT))
-            throw std::logic_error("Bad texture format");
+        if ((m_fmt != GL_UNSIGNED_BYTE) && (m_fmt != GL_FLOAT)) {
+            LOG(ERROR) << "Bad texture format";
+            throw 0;
+        }
 
         init_texture();
 
