@@ -4,14 +4,6 @@
 #include <cstdio>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-#include <string>
-#include <vector>
-#include <map>
-#include <sstream>
-#include <fstream>
-#include <iostream>
-#include <iterator>
-#include <algorithm>
 
 #define G308_SHADE_POLYGON 0		
 #define G308_SHADE_WIREFRAME 1
@@ -26,7 +18,7 @@ struct G308_UVcoord {
 	float u;
 	float v;
 };
-struct Triangle {
+struct G308_Triangle2 {
 	unsigned int v1;
 	unsigned int v2;
 	unsigned int v3;
@@ -36,27 +28,16 @@ struct Triangle {
 	unsigned int t1;
 	unsigned int t2;
 	unsigned int t3;
-		/*unsigned int v[3];
-		unsigned int n[3];
-		unsigned int t[3];*/
-	std::string materialIdx;
-};
-struct Material {
-	glm::vec3 Ka, Kd, Ks, Ke, Tf;
-	int illum;
-	float Ni, Ns, d, Tr;
 };
 
 class Model {
 public:
-	Model(std::string filename);
+	Model(const char *filename);
 	void display();
 private:
-	void readMTL(std::string filename);
-	void useMTL(std::string mtl);
 	void CreateGLPolyGeometry();
 	void CreateGLWireGeometry();
-	void addToList(int v, int n, int u);
+	void addToList(G308_Point v, G308_Normal n, G308_UVcoord u);
 
 	int m_nNumPoint;
 	int m_nNumUV;
@@ -65,11 +46,10 @@ private:
 
 	int mode; // Which mode to display
 
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> uv;
-	std::vector<glm::vec3> normals;
-	std::vector<Triangle> triangles;
-	std::map < std::string, Material > materials;
+	G308_Point* m_pVertexArray;		// Vertex Array
+	G308_Normal* m_pNormalArray;	// Normal Array
+	G308_Triangle2* m_pTriangles;	// Triangle Array
+	G308_UVcoord* m_pUVArray;	    // Texture Coordinate Array
 
 	int m_glGeomListPoly;	// Display List for Polygon
 	int m_glGeomListWire;	// Display List for Wireframe
