@@ -44,7 +44,7 @@ Model::Model(std::string filename) {
 				int found = filename.find_last_of("/");
 				if (found == std::string::npos) readMTL(t[1]);
 				else {
-					readMTL(filename.substr(0, found+1) + t[1]);
+					readMTL(filename.substr(0, found + 1) + t[1]);
 				}
 			}
 			else if (t[0] == "usemtl") {
@@ -132,7 +132,7 @@ float *specular(glm::vec3 v, float ns) {
 void Model::useMTL(std::string mtl) {
 	glMaterialfv(GL_FRONT, GL_AMBIENT, vec3TofloatArr(materials[mtl].Ka));
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, vec3TofloatArr(materials[mtl].Kd));
-	glMaterialfv(GL_FRONT, GL_SPECULAR, specular(materials[mtl].Ks,materials[mtl].Ns));
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specular(materials[mtl].Ks, materials[mtl].Ns));
 }
 void Model::addToList(int v, int n, int u) {
 	if (uv.size()>0) glTexCoord2f(uv[u].x, uv[u].y);
