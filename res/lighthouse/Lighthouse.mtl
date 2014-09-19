@@ -1,151 +1,35 @@
-#
-#
-#
-
-newmtl Balcony_Banister Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Bars_insideGlass Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Ceiling_aboveLamp Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Floor_belowLamp Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Glass Mesh_LightHouse_1a:phong1SG
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.500000 0.500000 0.500000
-Ns 18.000000
-
-newmtl Lamp_Base Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Lamp_Cord Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Lamp_FresnelLens Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Lamp_LensCage Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Lamp_Reflector1 Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl LightHouse_1a:Railing_1 Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl LightHouse_1a:Top_Floor_Plate Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl LightHouse_Base Mesh_phongE3SG
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.500000 0.500000 0.500000
-Ns 0.000000
-
-newmtl Lighthouse_Roof Mesh_phongE4SG
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.930000 0.430000 0.490000
-Ks 0.500000 0.500000 0.500000
-Ns 0.000000
-
-newmtl Lower_Ladder Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Mid_Railing Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Top_Railing Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Tower_Body Mesh_phongE2SG
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.870000 0.820000 0.750000
-Ks 0.500000 0.500000 0.500000
-Ns 0.000000
-
-newmtl Upper_Ladder Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl Weather_Vane Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
-newmtl WoodenParts Mesh_initialShadingGroup
-illum 2
-Ka 0.000000 0.000000 0.000000
-Kd 0.500000 0.500000 0.500000
-Ks 0.000000 0.000000 0.000000
-Ns 0.000000
-
+newmtl LightHouse_1a:phong1SG
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 0.39 0.39 0.39
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl initialShadingGroup
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl phongE2SG
+illum 4
+Kd 0.87 0.82 0.75
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.50 0.50 0.50
+newmtl phongE3SG
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.50 0.50 0.50
+newmtl phongE4SG
+illum 4
+Kd 0.93 0.43 0.49
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.50 0.50 0.50
