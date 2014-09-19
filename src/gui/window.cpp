@@ -331,7 +331,7 @@ namespace gui
 
     void window::on_load(int w, int h)
     {
-		m_obj = new Model("lighthouse/Lighthouse.obj");
+		m_obj = new Model("teapot.obj");
 		//PostQuitMessage(0);
         // put work in here that can be done without any OpenGL support
         // like loading stuff from files into CPU buffers
@@ -489,7 +489,7 @@ namespace gui
 		    printf("%s\n", gluErrorString(err));
 	    }
 
-		glColor3f(0.0f, 1.0f, 0.0f);
+		//glColor3f(0.0f, 1.0f, 0.0f);
 		m_obj->display();
 
         glDisable(GL_DEPTH_TEST);
