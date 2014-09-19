@@ -1,3 +1,5 @@
+#include <easylogging.h>
+
 #include "utils/gl_utils.h"
 
 #include <glm/gtc/type_ptr.hpp>

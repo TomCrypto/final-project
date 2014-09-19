@@ -1,13 +1,9 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
-#include <easylogging.h>
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
 #include <FreeImage.h>
 #include <GL/glew.h>
-#include <GL/glut.h>
-#include <stdexcept>
 #include <fftw3.h>
 #include <string>
 #include <map>
@@ -36,6 +32,7 @@ namespace gui
         static void fail() {
             m_failed = true;
         }
+
     private:
         static bool m_failed;
     };
@@ -52,7 +49,7 @@ namespace gui
         void run();
 
         // To be called at the start and end of the program
-        static void initialize(int argc, char* argv[]);
+        static void initialize();
         static void finalize();
 
         // Different window event callbacks (logic goes here)

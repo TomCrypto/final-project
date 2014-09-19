@@ -1,10 +1,9 @@
 // contains various C++ wrappers of OpenGL objects
 // like shaders and such
 
-#ifndef GL_UTILS_H
-#define GL_UTILS_H
+#ifndef UTILS_GL_UTILS_H
+#define UTILS_GL_UTILS_H
 
-#include <easylogging.h>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <utility>

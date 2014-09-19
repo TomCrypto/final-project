@@ -1,3 +1,5 @@
+#include <easylogging.h>
+
 #include "core/aperture.h"
 
 #include <string>
@@ -10,15 +12,14 @@ aperture::aperture()
 
     LOG(INFO) << "Loading aperture textures.";
 
-    //m_apertures.push_back(image(base + "circular.png"));
+    m_apertures.push_back(image(base + "circular.png"));
+    m_apertures.push_back(image(base + "elliptical.png"));
+    m_apertures.push_back(image(base + "pentagonal.png"));
+    m_apertures.push_back(image(base + "hexagonal.png"));
     m_apertures.push_back(image(base + "heptagonal.png"));
-    //m_apertures.push_back(image(base + "pentagonal.png"));
-    //m_apertures.push_back(image(base + "pupil_closing.png"));
-    //m_apertures.push_back(image(base + "pupil_glare.png"));
-    //m_apertures.push_back(image(base + "pupil_open.png"));
-
-    //m_apertures.push_back(image(base + "circle.png"));
-    //m_apertures.push_back(image(base + "pentagon.bmp"));
+    m_apertures.push_back(image(base + "octagonal.png"));
+    m_apertures.push_back(image(base + "nonagonal.png"));
+    m_apertures.push_back(image(base + "decagonal.png"));
 
     m_noise.push_back(image(base + "noise1.png"));
     m_noise.push_back(image(base + "noise2.png"));
@@ -42,9 +43,12 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 
     // and add random noise to it at random locations
 
-    const int noise_num = 0;
+    // LOW-FREQUENCY DETAILS (large noise, few of them)
 
-    for (int t = 0; t < noise_num; ++t)
+    const int l_noise_max = 35;
+    int l_noise_num = (int)(rand(m_rng) * l_noise_max);
+
+    for (int t = 0; t < l_noise_num; ++t)
     {
         // select a random point on the aperture
         int x = (int)(rand(m_rng) * out.width());
@@ -63,9 +67,48 @@ image aperture::gen_aperture(const glm::ivec2& dims)
         noise.negate();
         out.mul(noise);
     }
+    
+    // HIGH-FREQUENCY DETAILS (small noise, lots of them)
+    
+    const int h_noise_max = 500;
+    int h_noise_num = (int)(rand(m_rng) * h_noise_max);
+
+    for (int t = 0; t < h_noise_num; ++t)
+    {
+        // select a random point on the aperture
+        int x = (int)(rand(m_rng) * out.width());
+        int y = (int)(rand(m_rng) * out.height());
+
+        // and a random size between some reasonable bounds
+        int min_size = 1;
+        int max_size = 8;
+
+        int size = (int)(rand(m_rng) * (max_size - min_size) + min_size);
+
+        // resize the noise accordingly
+        image noise = m_noise[dist2(m_rng)].resize(size, size).zero_pad(
+            x, y, out.width() - size - x, out.height() - size - y);
+
+        noise.negate();
+        
+        for (int y = 0; y < noise.height(); ++y)
+        {
+            glm::vec4* ptr = noise[y];
+
+            for (int x = 0; x < noise.width(); ++x)
+            {
+                if (ptr->x < 1)
+                    *ptr *= 0.2f;
+
+                ++ptr;
+            }
+        }
+        
+        out.mul(noise);
+    }
 
     out = out.resize(dims.x, dims.y);
-    out.normalize(false);
+    out.save("input.exr");
     return out;
 }
 
@@ -82,7 +125,7 @@ static image power_spectrum(const image& img, fftwf_complex* buf, fftwf_plan pla
 
         for (int x = 0; x < w; ++x)
         {
-            buf[y * w + x][0] = ptr->x * pow(-1, x + y);
+            buf[y * w + x][0] = ptr->x * (float)pow(-1, x + y);
             buf[y * w + x][1] = 0;
 
             ++ptr;
@@ -171,7 +214,7 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
     fftwf_complex* buf = fftwf_alloc_complex(aperture.width() * aperture.height());
 
     fftwf_plan plan = fftwf_plan_dft_2d(aperture.width(), aperture.height(),
-                                        buf, buf, FFTW_FORWARD, FFTW_MEASURE);
+                                        buf, buf, FFTW_FORWARD, FFTW_ESTIMATE);
 
     // first compute the power spectrum of the aperture
 
