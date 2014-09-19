@@ -19,6 +19,7 @@
 
 #include "core/model.h"
 #include "core/camera.h"
+#include "core/aperture.h"
 
 namespace gui
 {
@@ -31,7 +32,7 @@ namespace gui
         static bool has_failed() {
             return m_failed;
         }
-        
+
         static void fail() {
             m_failed = true;
         }
@@ -84,6 +85,7 @@ namespace gui
         raw_mouse m_mouse;
         main_bar* m_bar;
         framebuffer* m_framebuffer;
+        aperture* m_aperture;
         camera m_cam;
 		Model* m_obj;
     };

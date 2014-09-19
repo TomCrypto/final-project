@@ -77,7 +77,7 @@ namespace gui
             glutLeaveMainLoop();
         }
     }
-    
+
     static void __keyboard_up_cb(unsigned char glutKey,
                                  int mouseX, int mouseY)
     {
@@ -106,7 +106,7 @@ namespace gui
             glutLeaveMainLoop();
         }
     }
-    
+
     static void __special_up_cb(int glutKey, int mouseX, int mouseY)
     {
         if (exception::has_failed())
@@ -163,7 +163,7 @@ namespace gui
             glutLeaveMainLoop();
         }
     }
-    
+
     static void __shutdown_cb()
     {
         if (exception::has_failed())
@@ -196,12 +196,12 @@ namespace gui
 
         fftwf_init_threads();
         fftwf_plan_with_nthreads(8);
-        
+
         LOG(INFO) << "Initializing FreeImage.";
-        
+
         FreeImage_Initialise();
         FreeImage_SetOutputMessage(fi_error_handler);
-        
+
         LOG(TRACE) << "FreeImage " << FreeImage_GetVersion() << ".";
 
         _argv = argv;
@@ -215,7 +215,7 @@ namespace gui
         FreeImage_DeInitialise();
         fftwf_cleanup_threads();
         fftwf_cleanup();
-        
+
         LOG(INFO) << "Deinitialization complete.";
     }
 
@@ -226,15 +226,21 @@ namespace gui
     /* ==================================================================== */
 
     window::window(const std::string& window_title, const glm::ivec2& dims)
-        : m_fps(51), m_lock_cursor(false), m_dims(dims)
+        : m_fps(51), m_lock_cursor(false), m_dims(dims), m_window(-1)
     {
         if (prog != nullptr) {
             LOG(ERROR) << "Internal error, window already opened.";
-            throw 0;
+            exception::fail();
+            return;
         }
 
-        on_load();
-        
+        try {
+            on_load();
+        } catch (...) {
+            exception::fail();
+            return;
+        }
+
         try
         {
             glutInit(&_argc, _argv);
@@ -281,7 +287,7 @@ namespace gui
             {
                 LOG(TRACE) << "OpenGL version 3.3 available, configuring "
                               "AntTweakBar with TW_OPENGL_CORE.";
-            
+
                 if (TwInit(TW_OPENGL_CORE, NULL) != 1)
                 {
                     LOG(ERROR) << "Failed to initialize AntTweakBar";
@@ -292,7 +298,7 @@ namespace gui
             {
                 LOG(TRACE) << "OpenGL version 3.3 not available, configuring "
                               "AntTweakBar with TW_OPENGL fallback.";
-            
+
                 if (TwInit(TW_OPENGL, NULL) != 1)
                 {
                     LOG(ERROR) << "Failed to initialize AntTweakBar";
@@ -310,7 +316,7 @@ namespace gui
              * we simply set the exception here so that the next call to
              * glutMainLoop will instantly return with an error.
             */
-        
+
             exception::fail();
         }
     }
@@ -322,10 +328,13 @@ namespace gui
 
     void window::run()
     {
-        // The timer is to get the loop going
-        // without requiring user interaction
-        glutTimerFunc(16, __update_cb, 0);
-        glutMainLoop();
+        if (m_window != -1)
+        {
+            // The timer is to get the loop going
+            // without requiring user interaction
+            glutTimerFunc(16, __update_cb, 0);
+            glutMainLoop();
+        }
     }
 
     void window::on_key_up(unsigned char key) {
@@ -369,6 +378,19 @@ namespace gui
 
     void window::on_load()
     {
+        m_aperture = new aperture();
+
+        LOG(INFO) << "Generating aperture.";
+
+        auto ap = m_aperture->gen_aperture(glm::ivec2(512, 512));
+        ap = ap.resize(350, 350);
+        ap = ap.enlarge(1024, 1024);
+
+        LOG(INFO) << "Generating chromatic FFT.";
+
+        auto cfft = m_aperture->get_cfft(ap, glm::ivec2(512, 512));
+        cfft.save("flare.exr");
+
         // put work in here that can be done without any OpenGL support
         // like loading stuff from files into CPU buffers
 
@@ -382,7 +404,7 @@ namespace gui
 
         m_bar = new main_bar("main");
         m_bar->set_title("Configuration");
-        
+
         LOG(INFO) << "Loading model.";
 
         m_obj = new Model("Bunny.obj");
@@ -398,7 +420,7 @@ namespace gui
 	    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 
 	    glEnable(GL_LIGHT0);
-	    
+
 	    LOG(INFO) << "Creating framebuffer.";
 
         m_framebuffer = new framebuffer(m_dims);
@@ -424,7 +446,8 @@ namespace gui
         delete m_bar;
         delete m_obj;
         delete m_framebuffer;
-        
+        delete m_aperture;
+
         TwTerminate();
     }
 
@@ -489,8 +512,8 @@ namespace gui
 
     void window::on_mouse_move(const glm::ivec2& pos)
     {
-        auto mouse_pos = (glm::vec2)pos / (float)m_dims.x; 
-        
+        auto mouse_pos = (glm::vec2)pos / (float)m_dims.x;
+
         if (m_lock_cursor || m_buttons[GLUT_LEFT_BUTTON]) {
             auto ds = m_mouse.delta(mouse_pos);
             m_cam.turn(ds * m_bar->cam_sensitivity);
