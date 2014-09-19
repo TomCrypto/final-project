@@ -2,6 +2,7 @@
 #define GUI_TWEAKBAR_H
 
 #include <AntTweakBar.h>
+#include <glm/glm.hpp>
 #include <string>
 
 namespace gui
@@ -36,8 +37,12 @@ namespace gui
         float rotation;
         float exposure;
         
+        glm::vec3 color;
+        
         float cam_move_speed;
         float cam_sensitivity;
+        bool cam_locked;
+        float cam_fov;
     };
 }
 

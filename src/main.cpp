@@ -1,4 +1,3 @@
-#include <stdexcept>
 #include <cstdlib>
 #include <cstdio>
 #include <string>
@@ -7,7 +6,6 @@
 #include <unistd.h>
 #endif
 
-#undef WIN32_LEAN_AND_MEAN
 #include <easylogging.h>
 _INITIALIZE_EASYLOGGINGPP
 
@@ -34,7 +32,7 @@ void setup_logger()
          fail + "%datetime{%H:%m:%s} FAIL [%fbase:%line]" + off + ": %msg");
     conf.set(el::Level::Warning, el::ConfigurationType::Format,
          warn + "%datetime{%H:%m:%s} WARN" + off + ": %msg");
-    conf.set(el::Level::Debug, el::ConfigurationType::Format,
+    conf.set(el::Level::Trace, el::ConfigurationType::Format,
          more + "%datetime{%H:%m:%s} MORE" + off + ": %msg");
     conf.set(el::Level::Info, el::ConfigurationType::Format,
          bold + "%datetime{%H:%m:%s} INFO" + off + ": %msg");
@@ -47,18 +45,11 @@ int main(int argc, char *argv[])
     setup_logger(); /* config/etc. */
     LOG(INFO) << "Program starting.";
 
-    try
-    {
-        gui::window::initialize(argc, argv);
-        gui::window window("COMP 308 - Final Project",
-                           std::make_pair(1024, 768));
+    gui::window::initialize(argc, argv);
+    gui::window window("COMP 308 - Final Project",
+                        glm::ivec2(1024, 768));
 
-        window.run();
-    }
-    catch (...) {
-        LOG(ERROR) << "Fatal error.";
-        return EXIT_FAILURE;
-    }
+    window.run();
 
     if (gui::exception::has_failed())
         return EXIT_FAILURE;

@@ -1,6 +1,7 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#include <easylogging.h>
 #include <FreeImage.h>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
@@ -49,16 +50,22 @@ public:
     //<< Fills channels of this image with a given background color
     void fill(const glm::vec4& bkgd, const channels& which = channels::RGB);
 
+    //<< Negates the channels of this image, by subtracting them from the
+    //<< input vector (for LDR images, the vector probably should be 0,1)
+    void negate(const channels& which = channels::RGB,
+                const glm::vec3& norm_min = glm::vec3(0, 0, 0),
+                const glm::vec3& norm_max = glm::vec3(1, 1, 1));
+
     //<< Sets each channel of this image to the average of all channels
     void grayscale();
 
     //<< Multiplies every pixel of this image with a given color
-    void colorize(const glm::vec4& color);
+    void colorize(const glm::vec3& color);
 
     //<< Copies one channel (which must be R, G, or B) to all others
     void reproduce(const channels& which);
 
-    //<< Composes an image out the the R channel of r, g, b images
+    //<< Composes an image out of the R channel of r, g, b images
     static image compose(const image& r, const image& g, const image& b);
 
     //<< Normalizes channels of this image such that:
