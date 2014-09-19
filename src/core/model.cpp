@@ -1,184 +1,113 @@
 #include "core/model.h"
 
-Model::Model(const char *filename) {
+Model::Model(std::string filename) {
 	mode = G308_SHADE_POLYGON;
 
-	FILE* fp;
-	char mode, vmode;
-	char str[200];
+	std::string line;
+	std::ifstream myfile(filename);
 	int v1, v2, v3, n1, n2, n3, t1, t2, t3;
-	int numVert, numNorm, numUV, numFace;
-	float x, y, z;
-	float u, v;
-
-	numVert = numNorm = numUV = numFace = 0;
-
-	fp = fopen(filename, "r");
-	if (fp == NULL)
-		printf("Error reading %s file\n", filename);
-	else
-		printf("Reading %s file\n", filename);
-
-	// Check number of vertex, normal, uvCoord, and Face
-	while (fgets(str, 200, fp) != NULL) {
-		sscanf(str, "%c%c", &mode, &vmode);
-		switch (mode) {
-		case 'v': /* vertex, uv, normal */
-			if (vmode == 't') // uv coordinate
-				numUV++;
-			else if (vmode == 'n') // normal
-				numNorm++;
-			else if (vmode == ' ') // vertex
-				numVert++;
-			break;
-		case 'f': /* faces */
-			numFace++;
-			break;
-		}
-	}
-
-	m_nNumPoint = numVert;
-	m_nNumUV = numUV;
-	m_nNumPolygon = numFace;
-	m_nNumNormal = numNorm;
-
-    m_pVertexArray = 0;
-    m_pNormalArray = 0;
-    m_pUVArray = 0;
-    m_pTriangles = 0;
-
-	printf("Number of Point %d, UV %d, Normal %d, Face %d\n", numVert, numUV,
-		numNorm, numFace);
-	//-------------------------------------------------------------
-	//	Allocate memory for array
-	//-------------------------------------------------------------
-
-	if (m_pVertexArray != NULL)
-		delete[] m_pVertexArray;
-	m_pVertexArray = new G308_Point[m_nNumPoint];
-
-	if (m_pNormalArray != NULL)
-		delete[] m_pNormalArray;
-	m_pNormalArray = new G308_Normal[(m_nNumNormal==0)?m_nNumPoint:m_nNumNormal];
-
-	if (m_pUVArray != NULL)
-		delete[] m_pUVArray;
-	m_pUVArray = new G308_UVcoord[m_nNumUV];
-
-	if (m_pTriangles != NULL)
-		delete[] m_pTriangles;
-	m_pTriangles = new G308_Triangle2[m_nNumPolygon];
-
-	//-----------------------------------------------------------
-	//	Read obj file
-	//-----------------------------------------------------------
-	numVert = numNorm = numUV = numFace = 0;
-
-	fseek(fp, 0L, SEEK_SET);
-	while (fgets(str, 200, fp) != NULL) {
-		sscanf(str, "%c%c", &mode, &vmode);
-		switch (mode) {
-		case 'v': /* vertex, uv, normal */
-			if (vmode == 't') // uv coordinate
-			{
-				sscanf(str, "vt %f %f", &u, &v);
-				m_pUVArray[numUV].u = u;
-				m_pUVArray[numUV].v = v;
-				numUV++;
+	std::string mtl;
+	if (myfile.is_open())
+	{
+		while (getline(myfile, line))
+		{
+			std::istringstream iss(line);
+			std::vector<std::string> t{ std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{} };
+			if (t.size() == 0 || t[0] == "#" || t[0] == "\n");
+			else if (t[0] == "v" && t.size() == 4) {
+				vertices.push_back({ std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) });
 			}
-			else if (vmode == 'n') // normal
-			{
-				sscanf(str, "vn %f %f %f", &x, &y, &z);
-				m_pNormalArray[numNorm].x = x;
-				m_pNormalArray[numNorm].y = y;
-				m_pNormalArray[numNorm].z = z;
-				numNorm++;
+			else if (t[0] == "vt" && t.size() == 4) {
+				uv.push_back({ std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) });
 			}
-			else if (vmode == ' ') // vertex
-			{
-				sscanf(str, "v %f %f %f", &x, &y, &z);
-				m_pVertexArray[numVert].x = x;
-				m_pVertexArray[numVert].y = y;
-				m_pVertexArray[numVert].z = z;
-				numVert++;
+			else if (t[0] == "vt" && t.size() == 3) {
+				uv.push_back({ std::stof(t[1], nullptr), std::stof(t[2], nullptr), 0 });
 			}
-			break;
-		case 'f': /* faces : stored value is index - 1 since our index starts from 0, but obj starts from 1 */
-			if (numNorm > 0 && numUV > 0) {
-				sscanf(str, "f %d/%d/%d %d/%d/%d %d/%d/%d", &v1, &t1, &n1, &v2, &t2, &n2, &v3, &t3, &n3);
+			else if (t[0] == "vn" && t.size() == 4) {
+				normals.push_back({ std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) });
 			}
-			else if (numNorm > 0 && numUV == 0){
-				sscanf(str, "f %d//%d %d//%d %d//%d", &v1, &n1, &v2, &n2, &v3, &n3);
+			else if (t[0] == "f") {
+				int scan = sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d", &v1, &t1, &n1, &v2, &t2, &n2, &v3, &t3, &n3);
+				if (scan < 9) {
+					scan = sscanf(line.c_str(), "f %d//%d %d//%d %d//%d", &v1, &n1, &v2, &n2, &v3, &n3);
+					if (scan < 6) {
+						scan = sscanf(line.c_str(), "f %d/%d %d/%d %d/%d", &v1, &t1, &v2, &t2, &v3, &t3);
+						if (scan < 6) {
+							std::cout << line << "\n\n";
+							while (true);
+						}
+					}
+				}
+				triangles.push_back({ v1 - 1, v2 - 1, v3 - 1, n1 - 1, n2 - 1, n3 - 1, t1 - 1, t2 - 1, t3 - 1, mtl });
 			}
-			else if (numUV > 0 && numNorm == 0){
-				sscanf(str, "f %d/%d %d/%d %d/%d", &v1, &t1, &v2, &t2, &v3, &t3);
+			else if (t[0] == "mtllib") {
+				int found = filename.find_last_of("/");
+				if (found == std::string::npos) readMTL(t[1]);
+				else {
+					readMTL(filename.substr(0, found+1) + t[1]);
+				}
 			}
-			else if (numUV == 0 && numNorm == 0){
-				sscanf(str, "f %d %d %d", &v1, &v2, &v3);
+			else if (t[0] == "usemtl") {
+				mtl = t[1];
+				if (materials.find(mtl) == materials.end()) {
+					std::cout << "missing material " << mtl << "\n";
+					while (true);
+				}
 			}
-			// Vertex indicies for triangle:
-			if (numVert != 0) {
-				m_pTriangles[numFace].v1 = v1 - 1;
-				m_pTriangles[numFace].v2 = v2 - 1;
-				m_pTriangles[numFace].v3 = v3 - 1;
-			}
-
-			// Normal indicies for triangle
-			if (numNorm != 0) {
-				m_pTriangles[numFace].n1 = n1 - 1;
-				m_pTriangles[numFace].n2 = n2 - 1;
-				m_pTriangles[numFace].n3 = n3 - 1;
+			else if (t[0] == "g" || t[0] == "s") {
+				std::cout << line << "\n";
 			}
 			else {
-				m_pTriangles[numFace].n1 = v1 - 1;
-				m_pTriangles[numFace].n2 = v1 - 1;
-				m_pTriangles[numFace].n3 = v1 - 1;
-
-				G308_Point e1; //Create the first vector used to calculate a cross product for the normal
-				e1.x = m_pVertexArray[v2 - 1].x - m_pVertexArray[v1 - 1].x;
-				e1.y = m_pVertexArray[v2 - 1].y - m_pVertexArray[v1 - 1].y;
-				e1.z = m_pVertexArray[v2 - 1].z - m_pVertexArray[v1 - 1].z;
-				G308_Point e2; //Create the second vector used to calculate a cross product for the normal
-				e2.x = m_pVertexArray[v3 - 1].x - m_pVertexArray[v1 - 1].x;
-				e2.y = m_pVertexArray[v3 - 1].y - m_pVertexArray[v1 - 1].y;
-				e2.z = m_pVertexArray[v3 - 1].z - m_pVertexArray[v1 - 1].z;
-
-				m_pNormalArray[v1 - 1].x += (e1.y*e2.z) - (e1.z*e2.y);
-				m_pNormalArray[v1 - 1].y += (e1.z*e2.x) - (e1.x*e2.z);
-				m_pNormalArray[v1 - 1].z += (e1.x*e2.y) - (e1.y*e2.x);
+				std::cout << line << "\n\n";
+				while (true);
 			}
+		}
+		myfile.close();
+	}
+	std::cout << "Finished" << "\n\n";
+	printf("Number of Point %d, UV %d, Normal %d, Face %d\n", vertices.size(), uv.size(),
+		normals.size(), triangles.size());
+	//while (true);
+}
 
-			// UV indicies for triangle
-			if (numUV != 0) {
-				m_pTriangles[numFace].t1 = t1 - 1;
-				m_pTriangles[numFace].t2 = t2 - 1;
-				m_pTriangles[numFace].t3 = t3 - 1;
+void Model::readMTL(std::string filename) {
+	std::string line;
+	std::ifstream myfile(filename);
+	int prev = materials.size();
+	std::cout << "reading mtl file" << filename << "\n";
+	if (myfile.is_open())
+	{
+		while (getline(myfile, line)) {
+			std::istringstream iss(line);
+			std::vector<std::string> t{ std::istream_iterator < std::string > {iss}, std::istream_iterator < std::string > {} };
+			if (t.size() == 0 || t[0] == "#" || t[0] == "\n");
+			else if (t[0] == "newmtl") {
+				std::string newline;
+				Material m;
+				while (getline(myfile, newline)) {
+					std::istringstream iss(newline);
+					std::vector<std::string> t2{ std::istream_iterator < std::string > {iss}, std::istream_iterator < std::string > {} };
+
+					if (t2.size() == 0) break;
+					else if (t2[0] == "illum") m.illum = stoi(t2[1]);
+					else if (t2[0] == "Ka") m.Ka = { std::stof(t2[1], nullptr), std::stof(t2[2], nullptr), std::stof(t2[3], nullptr) };
+					else if (t2[0] == "Kd") m.Kd = { std::stof(t2[1], nullptr), std::stof(t2[2], nullptr), std::stof(t2[3], nullptr) };
+					else if (t2[0] == "Ks") m.Ks = { std::stof(t2[1], nullptr), std::stof(t2[2], nullptr), std::stof(t2[3], nullptr) };
+					else if (t2[0] == "Ke") m.Ke = { std::stof(t2[1], nullptr), std::stof(t2[2], nullptr), std::stof(t2[3], nullptr) };
+					else if (t2[0] == "Tf") m.Tf = { std::stof(t2[1], nullptr), std::stof(t2[2], nullptr), std::stof(t2[3], nullptr) };
+					else if (t2[0] == "Ns") m.Ns = stof(t2[1]);
+					else if (t2[0] == "Ni") m.Ni = stof(t2[1]);
+					else if (t2[0] == "d") m.d = stof(t2[1]);
+					else if (t2[0] == "Tr") m.Tr = stof(t2[1]);
+					else {
+						std::cout << t2[0] << "n";
+					}
+				}
+				materials[t[1]] = m;
 			}
-
-			numFace++;
-			break;
-		default:
-			break;
 		}
 	}
-
-	fclose(fp);
-
-	if (m_nNumNormal == 0) {
-		for (int i = 0; i<m_nNumPoint; i++) {
-			float mag = 0;
-			mag += m_pNormalArray[i].x*m_pNormalArray[i].x;
-			mag += m_pNormalArray[i].y*m_pNormalArray[i].y;
-			mag += m_pNormalArray[i].z*m_pNormalArray[i].z;
-			mag = sqrt(mag);
-
-			m_pNormalArray[i].x /= mag;
-			m_pNormalArray[i].y /= mag;
-			m_pNormalArray[i].z /= mag;
-		}
-	}
-
-	printf("Reading OBJ file is DONE.\n");
+	std::cout << "finished reading mtl file " << std::to_string(materials.size() - prev) << "\n";
 }
 
 void Model::display() {
@@ -194,10 +123,21 @@ void Model::display() {
 		printf("Warning: Wrong Shading Mode. \n");
 	}
 }
-void Model::addToList(G308_Point v, G308_Normal n, G308_UVcoord u = G308_UVcoord()) {
-	if (m_nNumUV>0) glTexCoord2f(u.u, u.v);
-	glNormal3f(n.x, n.y, n.z); //Add the normal
-	glVertex3f(v.x, v.y, v.z); //Add the vertex
+float *vec3TofloatArr(glm::vec3 v) {
+	return new float[] {v.x, v.y, v.z};
+}
+float *specular(glm::vec3 v, float ns) {
+	return new float[] {v.x, v.y, v.z, ns};
+}
+void Model::useMTL(std::string mtl) {
+	glMaterialfv(GL_FRONT, GL_AMBIENT, vec3TofloatArr(materials[mtl].Ka));
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, vec3TofloatArr(materials[mtl].Kd));
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specular(materials[mtl].Ks,materials[mtl].Ns));
+}
+void Model::addToList(int v, int n, int u) {
+	if (uv.size()>0) glTexCoord2f(uv[u].x, uv[u].y);
+	glNormal3f(normals[n].x, normals[n].y, normals[n].z); //Add the normal
+	glVertex3f(vertices[v].x, vertices[v].y, vertices[v].z); //Add the vertex
 }
 void Model::CreateGLPolyGeometry() {
 	if (m_glGeomListPoly != 0)
@@ -208,20 +148,13 @@ void Model::CreateGLPolyGeometry() {
 	glNewList(m_glGeomListPoly, GL_COMPILE);
 
 	glBegin(GL_TRIANGLES); //Begin drawing triangles
-	for (int i = 0; i < m_nNumPolygon; i++) { //Add the 3 vertex, normal and UV to the list for each face
-		if (m_nNumUV > 0) {
-			addToList(m_pVertexArray[m_pTriangles[i].v1], m_pNormalArray[m_pTriangles[i].n1], m_pUVArray[m_pTriangles[i].t1]);
-			addToList(m_pVertexArray[m_pTriangles[i].v2], m_pNormalArray[m_pTriangles[i].n2], m_pUVArray[m_pTriangles[i].t2]);
-			addToList(m_pVertexArray[m_pTriangles[i].v3], m_pNormalArray[m_pTriangles[i].n3], m_pUVArray[m_pTriangles[i].t3]);
-		}
-		else {
-			addToList(m_pVertexArray[m_pTriangles[i].v1], m_pNormalArray[m_pTriangles[i].n1]);
-			addToList(m_pVertexArray[m_pTriangles[i].v2], m_pNormalArray[m_pTriangles[i].n2]);
-			addToList(m_pVertexArray[m_pTriangles[i].v3], m_pNormalArray[m_pTriangles[i].n3]);
-		}
+	for (Triangle t : triangles) {
+		useMTL(t.materialIdx);
+		addToList(t.v1, t.n1, t.t1);
+		addToList(t.v2, t.n2, t.t2);
+		addToList(t.v3, t.n3, t.t3);
 	}
 	glEnd();
-
 	glEndList();
 }
 void Model::CreateGLWireGeometry() {
@@ -232,28 +165,12 @@ void Model::CreateGLWireGeometry() {
 	m_glGeomListWire = glGenLists(1);
 	glNewList(m_glGeomListWire, GL_COMPILE);
 
-	for (int i = 0; i < m_nNumPolygon; i++) {
+	for (Triangle t : triangles) {
 		glBegin(GL_LINE_LOOP);
-		glNormal3f(m_pNormalArray[m_pTriangles[i].n1].x,
-			m_pNormalArray[m_pTriangles[i].n1].y,
-			m_pNormalArray[m_pTriangles[i].n1].z);
-		glVertex3f(m_pVertexArray[m_pTriangles[i].v1].x,
-			m_pVertexArray[m_pTriangles[i].v1].y,
-			m_pVertexArray[m_pTriangles[i].v1].z);
-		glNormal3f(m_pNormalArray[m_pTriangles[i].n2].x,
-			m_pNormalArray[m_pTriangles[i].n2].y,
-			m_pNormalArray[m_pTriangles[i].n2].z);
-		glVertex3f(m_pVertexArray[m_pTriangles[i].v2].x,
-			m_pVertexArray[m_pTriangles[i].v2].y,
-			m_pVertexArray[m_pTriangles[i].v2].z);
-		glNormal3f(m_pNormalArray[m_pTriangles[i].n3].x,
-			m_pNormalArray[m_pTriangles[i].n3].y,
-			m_pNormalArray[m_pTriangles[i].n3].z);
-		glVertex3f(m_pVertexArray[m_pTriangles[i].v3].x,
-			m_pVertexArray[m_pTriangles[i].v3].y,
-			m_pVertexArray[m_pTriangles[i].v3].z);
+		addToList(t.v1, t.n1, t.t1);
+		addToList(t.v2, t.n2, t.t2);
+		addToList(t.v3, t.n3, t.t3);
 		glEnd();
 	}
-
 	glEndList();
 }
