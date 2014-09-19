@@ -18,10 +18,16 @@ namespace gl
 
     shader& shader::operator=(const shader& other)
     {
+        *this = other;
+        return *this;
+    }
+
+    shader::shader(const shader& other)
+    {
+        m_vars = other.m_vars;
         m_vert = other.m_vert;
         m_frag = other.m_frag;
         m_prog = other.m_prog;
-        return *this;
     }
 
     shader::shader(const std::string& vert_name,
@@ -66,13 +72,6 @@ namespace gl
             LOG(TRACE) << link_log();
             throw 0;
         }
-    }
-
-    shader::shader(const shader& other)
-    {
-        m_vert = other.m_vert;
-        m_frag = other.m_frag;
-        m_prog = other.m_prog;
     }
 
     shader::~shader()
