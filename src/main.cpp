@@ -1,4 +1,3 @@
-#include <stdexcept>
 #include <cstdlib>
 #include <cstdio>
 #include <string>
@@ -46,18 +45,11 @@ int main(int argc, char *argv[])
     setup_logger(); /* config/etc. */
     LOG(INFO) << "Program starting.";
 
-    try
-    {
-        gui::window::initialize(argc, argv);
-        gui::window window("COMP 308 - Final Project",
-                           glm::ivec2(1024, 768));
+    gui::window::initialize(argc, argv);
+    gui::window window("COMP 308 - Final Project",
+                        glm::ivec2(1024, 768));
 
-        window.run();
-    }
-    catch (...) {
-        LOG(ERROR) << "Unknown error occurred.";
-        return EXIT_FAILURE; // shouldn't happen
-    }
+    window.run();
 
     if (gui::exception::has_failed())
         return EXIT_FAILURE;
