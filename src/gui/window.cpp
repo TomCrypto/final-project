@@ -376,16 +376,16 @@ namespace gui
 
         m_aperture = new aperture();
 
-        LOG(INFO) << "Generating aperture.";
+        /*LOG(INFO) << "Generating aperture.";
 
-        auto ap = m_aperture->gen_aperture(glm::ivec2(512, 512));
+        auto ap = m_aperture->gen_aperture(glm::ivec2(1024, 1024));
         ap = ap.resize(350, 350);
         ap = ap.enlarge(1024, 1024);
 
         LOG(INFO) << "Generating chromatic FFT.";
 
-        auto cfft = m_aperture->get_cfft(ap, glm::ivec2(512, 512));
-        cfft.save("flare.exr");
+        auto cfft = m_aperture->get_cfft(ap, glm::ivec2(1024, 1024));
+        cfft.save("flare.exr");*/
     }
 
     void window::on_init()

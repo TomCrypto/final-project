@@ -6,6 +6,7 @@
 #include <vector>
 #include <random>
 
+#include "utils/fft_engine.h"
 #include "utils/image.hpp"
 
 // allows one to generate random apertures of a given size as well as their
@@ -33,6 +34,7 @@ private:
 
     std::random_device m_rd;
     std::mt19937 m_rng;
+    fft_engine m_fft;
 };
 
 #endif

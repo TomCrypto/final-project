@@ -6,7 +6,7 @@
 #include <cmath>
 
 aperture::aperture()
-    : m_rng(m_rd())
+    : m_rng(m_rd()), m_fft(glm::ivec2(3072, 3072))
 {
     const std::string& base = "apertures/";
 
@@ -108,47 +108,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
     }
 
     out = out.resize(dims.x, dims.y);
-    out.save("input.exr");
     return out;
-}
-
-static image power_spectrum(const image& img, fftwf_complex* buf, fftwf_plan plan)
-{
-    int w = img.width();
-    int h = img.height();
-
-    image dst(w, h);
-
-    for (int y = 0; y < h; ++y)
-    {
-        const glm::vec4* ptr = img[y];
-
-        for (int x = 0; x < w; ++x)
-        {
-            buf[y * w + x][0] = ptr->x * (float)pow(-1, x + y);
-            buf[y * w + x][1] = 0;
-
-            ++ptr;
-        }
-    }
-
-    fftwf_execute(plan);
-
-    for (int y = 0; y < h; ++y)
-    {
-        glm::vec4* ptr = dst[y];
-
-        for (int x = 0; x < w; ++x)
-        {
-            float re = buf[y * w + x][0];
-            float im = buf[y * w + x][1];
-            ptr->x = re * re + im * im;
-
-            ++ptr;
-        }
-    }
-
-    return dst;
 }
 
 static glm::vec3 curve[81] = {
@@ -211,14 +171,9 @@ static glm::vec3 wavelength_rgb(float lambda)
 
 image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
 {
-    fftwf_complex* buf = fftwf_alloc_complex(aperture.width() * aperture.height());
-
-    fftwf_plan plan = fftwf_plan_dft_2d(aperture.width(), aperture.height(),
-                                        buf, buf, FFTW_FORWARD, FFTW_ESTIMATE);
-
     // first compute the power spectrum of the aperture
 
-    image spectrum = power_spectrum(aperture, buf, plan);
+    image spectrum = m_fft.psf(aperture, glm::ivec2(aperture.width(), aperture.height()));
     spectrum.reproduce(channels::R);
     spectrum.normalize(false);
 
@@ -226,7 +181,7 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
 
     image out(spectrum.width(), spectrum.height());
 
-    const int samples = 80;
+    const int samples = 40; // pass as quality parameter?
     const float scale = 0.75; // TODO: pass this as parameter later!
 
     for (int t = 0; t < samples; ++t)
@@ -251,9 +206,6 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
 
         out.add(ps_resized);
     }
-
-    fftwf_destroy_plan(plan);
-    fftwf_free(buf);
 
     out = out.resize(dims.x, dims.y, FILTER_BILINEAR);
     out.normalize(false);
