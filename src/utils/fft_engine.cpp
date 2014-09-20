@@ -49,9 +49,9 @@ fft_engine::fft_engine(const glm::ivec2& max_dims)
     : m_fft_buf(buf_alloc(max_dims), buf_free),
       m_max_dims(make_smooth(max_dims))
 {
-    LOG(TRACE) << "Requested maximum size "
+    LOG(TRACE) << "Requested maximum Fourier transform dimensions "
                << max_dims.x << " by " << max_dims.y
-               << ", going with "
+               << ", using "
                << m_max_dims.x << " by " << m_max_dims.y
                << ".";
 }

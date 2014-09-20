@@ -84,6 +84,9 @@
     <ClCompile Include="..\src\core\fft.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\utils\fft_engine.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gui\tweakbar.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="..\src\core\fft.hpp">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utils\fft_engine.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
