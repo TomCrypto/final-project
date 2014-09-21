@@ -3,10 +3,33 @@
 #include "utils/gl_utils.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <functional>
 #include <stdexcept>
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <cctype>
+#include <locale>
+
+// These string-trimming functions from:
+//      http://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
+
+// trim from start
+static inline std::string &ltrim(std::string &s) {
+        s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+        return s;
+}
+
+// trim from end
+static inline std::string &rtrim(std::string &s) {
+        s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+        return s;
+}
+
+// trim from both ends
+static inline std::string &trim(std::string &s) {
+        return ltrim(rtrim(s));
+}
 
 namespace gl
 {
@@ -116,7 +139,9 @@ namespace gl
         if ((it == m_vars.end()) || (it->first != variable))
         {
             GLint loc = glGetUniformLocation(m_prog, variable.c_str());
-            m_vars.insert(it, std::make_pair(variable, loc));
+            if (loc == -1) {
+                LOG(WARNING) << "Uniform '" << variable << "' not found.";
+            } else m_vars.insert(it, std::make_pair(variable, loc));
             return loc;
         }
         else return it->second;
@@ -180,44 +205,42 @@ namespace gl
 
     std::string shader::get_compile_log(GLuint shader) const
     {
-        int infologLength = 0;
         std::string lg = "";
+        int log_length;
 
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infologLength);
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_length);
 
-        if (infologLength > 0)
+        if (log_length > 0)
         {
-            char *line = (char *)malloc(infologLength);
-            int charsWritten  = 0;
+            char buffer[65536];
+            int tmp  = 0;
 
-            glGetShaderInfoLog(shader, infologLength, &charsWritten, line);
-            lg += line;
+            glGetShaderInfoLog(shader, log_length, &tmp, buffer);
+            lg += buffer;
             lg += "\n";
-            free(line);
         }
 
-        return lg;
+        return trim(lg);
     }
 
     std::string shader::get_link_log(GLuint program) const
     {
-        int infologLength = 0;
         std::string lg = "";
+        int log_length;
 
-        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infologLength);
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &log_length);
 
-        if (infologLength > 0)
+        if (log_length > 0)
         {
-            char *line = (char *)malloc(infologLength);
-            int charsWritten  = 0;
+            char buffer[65536];
+            int tmp  = 0;
 
-            glGetProgramInfoLog(program, infologLength, &charsWritten, line);
-            lg += line;
+            glGetProgramInfoLog(program, log_length, &tmp, buffer);
+            lg += buffer;
             lg += "\n";
-            free(line);
         }
 
-        return lg;
+        return trim(lg);
     }
 
     static unsigned char clamp(float x)
