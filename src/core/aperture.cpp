@@ -45,7 +45,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 
     // LOW-FREQUENCY DETAILS (large noise, few of them)
 
-    const int l_noise_max = 35;
+    const int l_noise_max = 25;
     int l_noise_num = (int)(rand(m_rng) * l_noise_max);
 
     for (int t = 0; t < l_noise_num; ++t)
@@ -70,7 +70,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
     
     // HIGH-FREQUENCY DETAILS (small noise, lots of them)
     
-    const int h_noise_max = 500;
+    const int h_noise_max = 1000;
     int h_noise_num = (int)(rand(m_rng) * h_noise_max);
 
     for (int t = 0; t < h_noise_num; ++t)
@@ -211,4 +211,9 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
     out.normalize(false);
 
     return out;
+}
+
+image aperture::get_flare(const image& cfft, float radius)
+{
+    return m_fft.convolve_disk(cfft, radius);
 }

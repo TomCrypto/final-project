@@ -25,6 +25,8 @@ public:
     // the final output is resized to the given dimensions
     image get_cfft(const image& aperture, const glm::ivec2& dims);
 
+    image get_flare(const image& cfft, float radius);
+
 private:
     aperture& operator=(const aperture& other);
     aperture(const aperture& other);

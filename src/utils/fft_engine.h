@@ -4,26 +4,9 @@
 #include <glm/glm.hpp>
 #include <fftw3.h>
 #include <memory>
-#include <map>
 #include <unordered_map>
 
 #include "utils/image.hpp"
-
-namespace
-{
-    struct ivec2_order_helper
-    {
-        size_t operator()(const glm::ivec2& k) const
-        {
-            return std::hash<int>()(k.x) ^ std::hash<int>()(k.y);
-        }
-
-        bool operator()(const glm::ivec2& a, const glm::ivec2& b) const
-        {
-                return a.x == b.x && a.y == b.y;
-        }
-    };
-}
 
 class fft_engine
 {
@@ -37,9 +20,25 @@ public:
     // ONLY THE RED CHANNEL IS CONSIDERED
     image psf(const image& input, const glm::ivec2& dims);
 
-    // TODO: add more stuff like convolution or airy disk convolution
+    // Convolves the given image with a disk of given radius
+    // (in units of the input's resolution)
+    // the output image will have dimensions dim(input) + 2(radius, radius)
+    image convolve_disk(const image& input, float radius);
 
 private:
+    struct ivec2_order_helper
+    {
+        size_t operator()(const glm::ivec2& k) const
+        {
+            return std::hash<int>()(k.x) ^ std::hash<int>()(k.y);
+        }
+
+        bool operator()(const glm::ivec2& a, const glm::ivec2& b) const
+        {
+                return a.x == b.x && a.y == b.y;
+        }
+    };
+
     typedef void(* buf_free_fn)(fftwf_complex*);
     typedef void(* plan_free_fn)(fftwf_plan_s*);
 
@@ -52,6 +51,7 @@ private:
                        ivec2_order_helper,
                        ivec2_order_helper> m_plans;
     std::unique_ptr<fftwf_complex, buf_free_fn> m_fft_buf;
+    std::unique_ptr<fftwf_complex, buf_free_fn> m_tmp_buf;
 };
 
 #endif

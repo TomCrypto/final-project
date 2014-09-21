@@ -376,7 +376,7 @@ namespace gui
 
         m_aperture = new aperture();
 
-        /*LOG(INFO) << "Generating aperture.";
+        LOG(INFO) << "Generating aperture.";
 
         auto ap = m_aperture->gen_aperture(glm::ivec2(1024, 1024));
         ap = ap.resize(350, 350);
@@ -385,7 +385,13 @@ namespace gui
         LOG(INFO) << "Generating chromatic FFT.";
 
         auto cfft = m_aperture->get_cfft(ap, glm::ivec2(1024, 1024));
-        cfft.save("flare.exr");*/
+        cfft.save("flare.exr");
+        
+        auto test = m_aperture->get_flare(cfft, 8);
+        test.save("convolved8.exr");
+        
+        test = m_aperture->get_flare(cfft, 16);
+        test.save("convolved16.exr");
     }
 
     void window::on_init()
@@ -515,6 +521,31 @@ namespace gui
         m_cam.set_fov(m_bar->cam_fov * glm::pi<float>() / 180);
         m_bar->cam_locked = m_lock_cursor;
         m_bar->refresh();
+
+        if (m_bar->aperture_regen_btn) {
+            m_bar->aperture_regen_btn = false;
+            LOG(INFO) << "Regenerating aperture (this may take a while)";
+        
+            auto ap = m_aperture->gen_aperture(glm::ivec2(1024, 1024));
+            ap = ap.resize(350, 350);
+            ap = ap.enlarge(1024, 1024);
+
+            LOG(INFO) << "Generating chromatic FFT.";
+
+            auto cfft = m_aperture->get_cfft(ap, glm::ivec2(1024, 1024));
+            cfft.save("flare.exr");
+            
+            auto test = m_aperture->get_flare(cfft, 8);
+            test.save("convolved8.exr");
+            
+            test = m_aperture->get_flare(cfft, 16);
+            test.save("convolved16.exr");
+            
+            test = m_aperture->get_flare(cfft, 2);
+            test.save("convolved2.exr");
+            
+            LOG(INFO) << "Done!";
+        }
 
         if (m_keys[27 /* escape */]) {
             glutLeaveMainLoop();

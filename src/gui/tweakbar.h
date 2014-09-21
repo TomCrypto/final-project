@@ -39,6 +39,9 @@ namespace gui
         
         glm::vec3 color;
         
+        bool aperture_regen_btn;
+        
+        // camera stuff
         float cam_move_speed;
         float cam_sensitivity;
         bool cam_locked;

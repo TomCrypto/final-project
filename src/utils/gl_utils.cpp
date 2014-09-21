@@ -147,11 +147,11 @@ namespace gl
     }
 
     void shader::set(const std::string& var, const glm::mat3& value) {
-        glUniformMatrix3fv((*this)[var], 1, GL_TRUE, glm::value_ptr(value));
+        glUniformMatrix3fv((*this)[var], 1, GL_FALSE, glm::value_ptr(value));
     }
 
     void shader::set(const std::string& var, const glm::mat4& value) {
-        glUniformMatrix4fv((*this)[var], 1, GL_TRUE, glm::value_ptr(value));
+        glUniformMatrix4fv((*this)[var], 1, GL_FALSE, glm::value_ptr(value));
     }
 
     void shader::fullscreen_quad()
