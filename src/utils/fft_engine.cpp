@@ -188,7 +188,7 @@ image fft_engine::convolve_disk(const image& _input, float radius)
         glm::ivec2(_input.width(), _input.height())
       + glm::ivec2(2 * radius, 2 * radius));
 
-    image disk = utils::draw_circle(radius, false).enlarge(dims.x, dims.y);
+    image disk = utils::draw_circle(radius, true).enlarge(dims.x, dims.y);
     image input = _input.enlarge(dims.x, dims.y);
     image convolved(dims.x, dims.y);
     

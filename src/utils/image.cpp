@@ -580,7 +580,7 @@ image utils::draw_circle(int radius, bool anti_alias, const glm::vec4& color)
         }
     }
 
-    if (anti_alias) circle = circle.resize(radius, radius);
+    if (anti_alias) circle = circle.resize(radius, radius, FILTER_BILINEAR);
 
     return circle;
 }
