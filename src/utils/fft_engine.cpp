@@ -63,7 +63,7 @@ static void pack_image(const image& src, fftwf_complex* dst,
 
         for (int x = 0; x < w; ++x)
         {
-            float norm = center ? pow(-1, x + y) : 1;
+            float norm = center ? (float)pow(-1, x + y) : 1;
 
             if (channels::R & which)
                 dst[y * w + x][0] = ptr->x * norm;
@@ -127,8 +127,8 @@ static void pointwise_multiply(fftwf_complex* a, const fftwf_complex* b,
             float r = r1 * r2 - c1 * c2;
             float c = r1 * c2 + c1 * r2;
 
-            a[y * dims.x + x][0] = r * pow(-1, x + y);
-            a[y * dims.x + x][1] = c * pow(-1, x + y);
+            a[y * dims.x + x][0] = r * (float)pow(-1, x + y);
+            a[y * dims.x + x][1] = c * (float)pow(-1, x + y);
         }
 }
 
@@ -181,7 +181,7 @@ image fft_engine::psf(const image& input, const glm::ivec2& _dims)
     return tmp.subregion(dx, dy, input.width(), input.height());
 }
 
-image fft_engine::convolve_disk(const image& _input, float radius)
+image fft_engine::convolve_disk(const image& _input, int radius)
 {
     // work out convolution dimensions (at least dim(input) + 2 radius)
     const glm::ivec2& dims = make_smooth(

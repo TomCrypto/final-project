@@ -230,7 +230,7 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
     return out;
 }
 
-image aperture::get_flare(const image& cfft, float radius)
+image aperture::get_flare(const image& cfft, int radius)
 {
     return m_fft.convolve_disk(cfft, radius);
 }

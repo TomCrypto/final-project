@@ -23,7 +23,7 @@ public:
     // Convolves the given image with a disk of given radius
     // (in units of the input's resolution)
     // the output image will have dimensions dim(input) + 2(radius, radius)
-    image convolve_disk(const image& input, float radius);
+    image convolve_disk(const image& input, int radius);
 
 private:
     struct ivec2_order_helper

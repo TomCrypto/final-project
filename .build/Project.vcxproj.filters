@@ -81,9 +81,6 @@
     <ClCompile Include="..\src\core\aperture.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\core\fft.cpp">
-      <Filter>Source Files\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\utils\fft_engine.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
@@ -117,9 +114,6 @@
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="..\src\core\aperture.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\core\fft.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\src\utils\fft_engine.h">
