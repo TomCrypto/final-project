@@ -98,7 +98,7 @@
     <ClInclude Include="..\src\utils\gl_utils.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\utils\image.hpp">
+    <ClInclude Include="..\src\utils\image.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\src\core\model.h">

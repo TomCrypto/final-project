@@ -60,17 +60,18 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 
         int sizex = (int)(rand(m_rng) * (max_size - min_size) + min_size);
         int sizey = (int)(rand(m_rng) * (max_size - min_size) + min_size);
+        auto size = glm::ivec2(sizex, sizey);
 
         // resize the noise accordingly
-        image noise = m_noise[dist2(m_rng)].resize(sizex, sizey).zero_pad(
-            x, y, out.width() - sizex - x, out.height() - sizey - y);
+        image noise = m_noise[dist2(m_rng)].resize(size).zero_pad(
+            x, y, out.width() - size.x - x, out.height() - size.y - y);
 
         noise.negate();
         out.mul(noise);
     }
-    
+
     // HIGH-FREQUENCY DETAILS (small noise, lots of them)
-    
+
     const int h_noise_max = 150;
     int h_noise_num = (int)(rand(m_rng) * h_noise_max);
 
@@ -86,13 +87,14 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 
         int sizex = (int)(rand(m_rng) * (max_size - min_size) + min_size);
         int sizey = (int)(rand(m_rng) * (max_size - min_size) + min_size);
+        auto size = glm::ivec2(sizex, sizey);
 
         // resize the noise accordingly
-        image noise = m_noise[dist2(m_rng)].resize(sizex, sizey).zero_pad(
-            x, y, out.width() - sizex - x, out.height() - sizey - y);
+        image noise = m_noise[dist2(m_rng)].resize(size).zero_pad(
+            x, y, out.width() - size.x - x, out.height() - size.y - y);
 
         noise.negate();
-        
+
         for (int y = 0; y < noise.height(); ++y)
         {
             glm::vec4* ptr = noise[y];
@@ -105,11 +107,11 @@ image aperture::gen_aperture(const glm::ivec2& dims)
                 ++ptr;
             }
         }
-        
+
         out.mul(noise);
     }
 
-    out = out.resize(dims.x, dims.y);
+    out = out.resize(dims);
     return out;
 }
 
@@ -196,7 +198,7 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
 
     // next superimpose it resized over different wavelengths
 
-    image out(spectrum.width(), spectrum.height());
+    image out(spectrum.dims());
 
     const int samples = 40; // pass as quality parameter?
     const float scale = 0.75; // TODO: pass this as parameter later!
@@ -215,7 +217,8 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
         int right = dx - left;
         int bottom = dy - top;
 
-        auto ps_resized = spectrum.resize(newX, newY, FILTER_BILINEAR);
+        auto ps_resized = spectrum.resize(glm::ivec2(newX, newY),
+                                          FILTER_BILINEAR);
         auto color = wavelength_rgb(lambda);
         ps_resized.normalize(false);
         ps_resized.colorize(color);
@@ -224,7 +227,7 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
         out.add(ps_resized);
     }
 
-    out = out.resize(dims.x, dims.y, FILTER_BILINEAR);
+    out = out.resize(dims, FILTER_BILINEAR);
     out.normalize(false);
 
     return out;

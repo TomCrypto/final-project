@@ -6,7 +6,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "utils/image.hpp"
+#include "utils/image.h"
 
 class fft_engine
 {

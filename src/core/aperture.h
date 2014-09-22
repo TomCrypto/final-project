@@ -7,7 +7,7 @@
 #include <random>
 
 #include "utils/fft_engine.h"
-#include "utils/image.hpp"
+#include "utils/image.h"
 
 // allows one to generate random apertures of a given size as well as their
 // chromatic Fourier transform

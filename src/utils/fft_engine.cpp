@@ -100,7 +100,7 @@ static void unpack_image(const fftwf_complex* src, image& dst,
         {
             float re = src[y * w + x][0];
             float im = src[y * w + x][1];
-            
+
             if (channels::R & which)
                 ptr->x = op(re, im) / (w * h);
             else if (channels::G & which)
@@ -150,14 +150,14 @@ image fft_engine::psf(const image& input, const glm::ivec2& _dims)
         LOG(ERROR) << "Requested FFT larger than max dimensions.";
         throw std::logic_error("");
     }
-    
+
     if ((_dims.x < input.width()) || (_dims.y < input.height())) {
         LOG(ERROR) << "FFT dimensions smaller than image dimensions.";
         throw std::logic_error("");
     }
 
     glm::ivec2 dims = make_smooth(_dims);
-    
+
     if (m_plans.find(dims) == m_plans.end()) {
         m_plans.insert(std::make_pair(dims,
             std::unique_ptr<fftwf_plan_s, plan_free_fn>(
@@ -165,19 +165,19 @@ image fft_engine::psf(const image& input, const glm::ivec2& _dims)
                 plan_free)));
     }
 
-    auto tmp = image(dims.x, dims.y);
+    auto tmp = image(dims);
 
-    pack_image(input.enlarge(dims.x, dims.y), m_fft_buf.get(),
+    pack_image(input.enlarge(dims), m_fft_buf.get(),
                channels::R, true);
-    
+
     fftwf_execute(m_plans.at(dims).get());
 
     unpack_image(m_fft_buf.get(), tmp, channels::R,
                  [](float re, float im){return re * re + im * im;});
-    
+
     int dx = (dims.x - input.width()) / 2;
     int dy = (dims.y - input.height()) / 2;
-    
+
     return tmp.subregion(dx, dy, input.width(), input.height());
 }
 
@@ -188,10 +188,10 @@ image fft_engine::convolve_disk(const image& _input, int radius)
         glm::ivec2(_input.width(), _input.height())
       + glm::ivec2(2 * radius, 2 * radius));
 
-    image disk = utils::draw_circle(radius, true).enlarge(dims.x, dims.y);
-    image input = _input.enlarge(dims.x, dims.y);
-    image convolved(dims.x, dims.y);
-    
+    image disk = utils::draw_circle(radius, true).enlarge(dims);
+    image input = _input.enlarge(dims);
+    image convolved(dims);
+
     if (m_plans.find(dims) == m_plans.end()) {
         m_plans.insert(std::make_pair(dims,
             std::unique_ptr<fftwf_plan_s, plan_free_fn>(
@@ -203,13 +203,13 @@ image fft_engine::convolve_disk(const image& _input, int radius)
     fftwf_execute(m_plans.at(dims).get());
     memcpy(m_tmp_buf.get(), m_fft_buf.get(),
            m_max_dims.x * m_max_dims.y * sizeof(fftwf_complex));
-    
+
     for (int t = 0; t < 3; ++t) {
         channels which;
         if (t == 0) which = channels::R;
         if (t == 1) which = channels::G;
         if (t == 2) which = channels::B;
-        
+
         pack_image(input, m_fft_buf.get(), which, false);
 
         // Convolution Theorem: FFT(A) . FFT(B) = FFT(A * B)
@@ -223,7 +223,7 @@ image fft_engine::convolve_disk(const image& _input, int radius)
         unpack_image(m_fft_buf.get(), convolved, which,
         [](float re, float im){ return sqrt(re * re + im * im);});
     }
-    
+
     convolved.normalize(true);
     return convolved;
 }

@@ -10,7 +10,7 @@
 #include <vector>
 #include <string>
 
-#include "utils/image.hpp"
+#include "utils/image.h"
 
 namespace gl
 {

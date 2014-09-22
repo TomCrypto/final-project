@@ -109,7 +109,7 @@
     <ClInclude Include="..\src\gui\tweakbar.h" />
     <ClInclude Include="..\src\gui\framebuffer.h" />
     <ClInclude Include="..\src\gui\window.h" />
-    <ClInclude Include="..\src\utils\image.hpp" />
+    <ClInclude Include="..\src\utils\image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\lib\bin\win32\freeglut.dll" />
