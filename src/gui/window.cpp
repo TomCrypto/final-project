@@ -372,6 +372,7 @@ namespace gui
          * is no OpenGL context active yet.
         */
 
+        #if 0
         m_aperture = new aperture();
 
         LOG(INFO) << "Generating aperture.";
@@ -390,6 +391,7 @@ namespace gui
 
         test = m_aperture->get_flare(cfft, 16);
         test.save("convolved16.exr");
+        #endif
     }
 
     void window::on_init()
@@ -522,6 +524,7 @@ namespace gui
 
         if (m_bar->aperture_regen_btn) {
             m_bar->aperture_regen_btn = false;
+            #if 0
             LOG(INFO) << "Regenerating aperture (this may take a while)";
 
             auto ap = m_aperture->gen_aperture(glm::ivec2(1024, 1024));
@@ -543,6 +546,9 @@ namespace gui
             test.save("convolved2.exr");
 
             LOG(INFO) << "Done!";
+            #else
+            LOG(INFO) << "Disabled for now!";
+            #endif
         }
 
         if (m_keys[27 /* escape */]) {
