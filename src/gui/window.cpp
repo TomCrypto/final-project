@@ -2,8 +2,6 @@
 
 #include "gui/window.h"
 
-#include <glm/gtc/type_ptr.hpp>
-#include <GL/freeglut.h>
 #include <stdexcept>
 
 namespace gui

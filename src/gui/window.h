@@ -1,9 +1,11 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
 #include <FreeImage.h>
 #include <GL/glew.h>
+#include <GL/freeglut.h>
 #include <fftw3.h>
 #include <string>
 #include <map>
@@ -20,7 +22,7 @@
 namespace gui
 {
     // This is for deferred exception handling, because throwing exceptions in
-    // C callbacks is a nice way to destroy your stack, as well as because of
+    // C callbacks is a nice way to destroy your stack, and also because of
     // some GLUT peculiarities.
     class exception
     {

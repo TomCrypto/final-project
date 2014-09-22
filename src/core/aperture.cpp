@@ -5,6 +5,74 @@
 #include <string>
 #include <cmath>
 
+static bool is_empty_row(const image& img, int row, const glm::vec3& noise)
+{
+    const glm::vec4* ptr = img[row];
+    auto dims = img.dims();
+
+    for (int x = 0; x < dims.x; ++x)
+    {
+        if (ptr->x > noise.x)
+            return false;
+        if (ptr->y > noise.y)
+            return false;
+        if (ptr->z > noise.z)
+            return false;
+
+        ++ptr;
+    }
+
+    return true;
+}
+
+static bool is_empty_col(const image& img, int col, const glm::vec3& noise)
+{
+    auto dims = img.dims();
+
+    for (int y = 0; y < dims.y; ++y)
+    {
+        const glm::vec4* ptr = img[y] + col;
+
+        if (ptr->x > noise.x)
+            return false;
+        if (ptr->y > noise.y)
+            return false;
+        if (ptr->z > noise.z)
+            return false;
+    }
+
+    return true;
+}
+
+// this function performs the following operations:
+// 1. denoises the image by estimating the ground noise at the image
+//    edges and removing it through subtraction
+// 2. trims the image by removing any zero rows or columns
+static void trim_and_denoise(image& img)
+{
+    // TODO: better denoising? for now, just subtract 2 * 1e-7 arbitrarily
+
+    auto dims = img.dims();
+
+    glm::vec3 noise = glm::vec3(2 * 1e-7f);
+
+    // find empty rows
+    int l = 0;
+    int r = 0;
+    int t = 0;
+    int b = 0;
+
+    while (is_empty_col(img, l, noise)) ++l;
+    while (is_empty_row(img, t, noise)) ++t;
+    while (is_empty_col(img, dims.x - 1 - r, noise)) ++r;
+    while (is_empty_row(img, dims.y - 1 - b, noise)) ++b;
+
+    // TODO: NEED TO KEEP TRACK OF CENTER HERE
+
+    img = img.subregion(l, t, dims.x - 1 - r - l,
+                              dims.y - 1 - b - t);
+}
+
 aperture::aperture()
     : m_rng(m_rd()), m_fft(glm::ivec2(3072, 3072))
 {
@@ -45,7 +113,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 
     // LOW-FREQUENCY DETAILS (large noise, few of them)
 
-    const int l_noise_max = 55;
+    const int l_noise_max = 35;
     int l_noise_num = (int)(rand(m_rng) * l_noise_max);
 
     for (int t = 0; t < l_noise_num; ++t)
@@ -72,7 +140,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 
     // HIGH-FREQUENCY DETAILS (small noise, lots of them)
 
-    const int h_noise_max = 150;
+    const int h_noise_max = 450;
     int h_noise_num = (int)(rand(m_rng) * h_noise_max);
 
     for (int t = 0; t < h_noise_num; ++t)
@@ -206,23 +274,17 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
     for (int t = 0; t < samples; ++t)
     {
         float lambda = 700 - 300 * (float)t / samples;
-        float scale = 1 * lambda / 700;
+        float scale = lambda / 700;
 
         int newX = (int)(out.width() * scale);
         int newY = (int)(out.height() * scale);
-        int dx = out.width() - newX;
-        int dy = out.height() - newY;
-        int left = dx / 2;
-        int top = dy / 2;
-        int right = dx - left;
-        int bottom = dy - top;
 
         auto ps_resized = spectrum.resize(glm::ivec2(newX, newY),
                                           FILTER_BILINEAR);
         auto color = wavelength_rgb(lambda);
         ps_resized.normalize(false);
         ps_resized.colorize(color);
-        ps_resized = ps_resized.zero_pad(left, top, right, bottom);
+        ps_resized = ps_resized.enlarge(spectrum.dims());
 
         out.add(ps_resized);
     }
@@ -235,5 +297,7 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
 
 image aperture::get_flare(const image& cfft, int radius)
 {
-    return m_fft.convolve_disk(cfft, radius);
+    auto flare = m_fft.convolve_disk(cfft, radius);
+    trim_and_denoise(flare);
+    return flare;
 }

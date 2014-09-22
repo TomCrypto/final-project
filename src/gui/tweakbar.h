@@ -1,3 +1,5 @@
+// extremely simple wrapper around an AntTweakBar bar instance
+
 #ifndef GUI_TWEAKBAR_H
 #define GUI_TWEAKBAR_H
 
@@ -36,11 +38,11 @@ namespace gui
 
         float rotation;
         float exposure;
-        
+
         glm::vec3 color;
-        
+
         bool aperture_regen_btn;
-        
+
         // camera stuff
         float cam_move_speed;
         float cam_sensitivity;

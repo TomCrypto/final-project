@@ -1,3 +1,5 @@
+// manages an HDR framebuffer with tonemapping capabilities
+
 #ifndef GUI_FRAMEBUFFER_H
 #define GUI_FRAMEBUFFER_H
 
@@ -6,8 +8,6 @@
 #include <string>
 
 #include "utils/gl_utils.h"
-
-// manages an HDR framebuffer with tonemapping capabilities
 
 class framebuffer
 {

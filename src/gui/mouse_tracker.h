@@ -1,3 +1,5 @@
+// keeps track of the mouse position and outputs movement deltas
+
 #ifndef GUI_MOUSE_TRACKER_H
 #define GUI_MOUSE_TRACKER_H
 
