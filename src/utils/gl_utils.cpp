@@ -282,7 +282,7 @@ namespace gl
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                                       GL_LINEAR_MIPMAP_LINEAR);
+                                       GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                                        GL_LINEAR);
 
@@ -293,7 +293,61 @@ namespace gl
             buf.resize(w * h * 4); // 4 bytes/pixel
 
             for (int y = 0; y < h; ++y) {
-                glm::vec4* ptr = img[y];
+                const glm::vec4* ptr = img[y];
+
+                for (int x = 0; x < w; ++x) {
+                    buf[4 * (y * w + x) + 0] = saturate(ptr->x);
+                    buf[4 * (y * w + x) + 1] = saturate(ptr->y);
+                    buf[4 * (y * w + x) + 2] = saturate(ptr->z);
+                    buf[4 * (y * w + x) + 3] = 0;
+
+                    ++ptr;
+                }
+            }
+
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y,
+                         0, GL_RGBA, GL_UNSIGNED_BYTE, &buf[0]);
+        } else if (m_fmt == GL_FLOAT) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y,
+                         0, GL_RGBA, GL_FLOAT, img.data());
+        } else {
+            LOG(ERROR) << "Unsupported texture format.";
+            LOG(TRACE) << "Supported formats are:";
+            LOG(TRACE) << "* GL_UNSIGNED_BYTE";
+            LOG(TRACE) << "* GL_FLOAT";
+            throw std::logic_error("");
+        }
+    }
+
+    texture2D::texture2D(const image& img, GLenum format)
+        : m_fmt(format)
+    {
+        m_dims = glm::ivec2(img.width(),
+                            img.height());
+
+        glGenTextures(1, &m_tex);
+
+        if (m_tex == 0) {
+            LOG(ERROR) << "Failed to create texture object.";
+            throw std::runtime_error("");
+        }
+
+        glBindTexture(GL_TEXTURE_2D, m_tex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                                       GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                                       GL_LINEAR);
+
+        if (m_fmt == GL_UNSIGNED_BYTE) {
+            int w = m_dims.x, h = m_dims.y;
+
+            auto buf = std::vector<unsigned char>();
+            buf.resize(w * h * 4); // 4 bytes/pixel
+
+            for (int y = 0; y < h; ++y) {
+                const glm::vec4* ptr = img[y];
 
                 for (int x = 0; x < w; ++x) {
                     buf[4 * (y * w + x) + 0] = saturate(ptr->x);
@@ -341,7 +395,7 @@ namespace gl
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                                       GL_LINEAR_MIPMAP_LINEAR);
+                                       GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                                        GL_LINEAR);
 

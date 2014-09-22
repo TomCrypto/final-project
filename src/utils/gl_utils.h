@@ -74,6 +74,7 @@ namespace gl
     {
     public:
         texture2D(const std::string& path, GLenum format);
+        texture2D(const image& img, GLenum format);
         texture2D(const glm::ivec2& dims, GLenum format);
         ~texture2D();
 
