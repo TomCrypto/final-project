@@ -442,7 +442,7 @@ namespace gui
         delete m_bar;
         delete m_obj;
         delete m_framebuffer;
-        delete m_aperture;
+        //delete m_aperture;
     }
 
     void window::on_resize(const glm::ivec2& new_dims)
