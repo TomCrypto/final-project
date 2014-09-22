@@ -8,9 +8,9 @@
 #include <string>
 #include <map>
 
+#include "gui/mouse_tracker.h"
 #include "gui/framebuffer.h"
 #include "gui/fps_counter.h"
-#include "gui/raw_mouse.h"
 #include "gui/tweakbar.h"
 
 #include "core/model.h"
@@ -79,7 +79,7 @@ namespace gui
 
         // Our own stuff
         fps_counter m_fps;
-        raw_mouse m_mouse;
+        mouse_tracker m_mouse;
         main_bar* m_bar;
         framebuffer* m_framebuffer;
         aperture* m_aperture;
