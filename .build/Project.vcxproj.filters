@@ -75,7 +75,7 @@
     <ClCompile Include="..\src\gui\fps_counter.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gui\raw_mouse.cpp">
+    <ClCompile Include="..\src\gui\mouse_tracker.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\src\core\aperture.cpp">
@@ -110,7 +110,7 @@
     <ClInclude Include="..\src\gui\fps_counter.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gui\raw_mouse.h">
+    <ClInclude Include="..\src\gui\mouse_tracker.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="..\src\core\aperture.h">

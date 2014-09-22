@@ -89,7 +89,7 @@
     <ClCompile Include="..\src\core\camera.cpp" />
     <ClCompile Include="..\src\core\model.cpp" />
     <ClCompile Include="..\src\gui\fps_counter.cpp" />
-    <ClCompile Include="..\src\gui\raw_mouse.cpp" />
+    <ClCompile Include="..\src\gui\mouse_tracker.cpp" />
     <ClCompile Include="..\src\utils\fft_engine.cpp" />
     <ClCompile Include="..\src\utils\gl_utils.cpp" />
     <ClCompile Include="..\src\gui\tweakbar.cpp" />
@@ -103,7 +103,7 @@
     <ClInclude Include="..\src\core\camera.h" />
     <ClInclude Include="..\src\core\model.h" />
     <ClInclude Include="..\src\gui\fps_counter.h" />
-    <ClInclude Include="..\src\gui\raw_mouse.h" />
+    <ClInclude Include="..\src\gui\mouse_tracker.h" />
     <ClInclude Include="..\src\utils\fft_engine.h" />
     <ClInclude Include="..\src\utils\gl_utils.h" />
     <ClInclude Include="..\src\gui\tweakbar.h" />
