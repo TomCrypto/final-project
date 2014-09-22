@@ -167,8 +167,16 @@ namespace gl
         glUniform1i((*this)[var], value);
     }
 
-    void shader::set(const std::string& var, const int& x, const int& y) {
-        glUniform2i((*this)[var], x, y);
+    void shader::set(const std::string& var, const glm::ivec2& value) {
+        glUniform2i((*this)[var], value.x, value.y);
+    }
+
+    void shader::set(const std::string& var, const glm::ivec3& value) {
+        glUniform3i((*this)[var], value.x, value.y, value.z);
+    }
+
+    void shader::set(const std::string& var, const glm::ivec4& value) {
+        glUniform4i((*this)[var], value.x, value.y, value.z, value.w);
     }
 
     void shader::set(const std::string& var, const glm::mat3& value) {
@@ -243,101 +251,126 @@ namespace gl
         return trim(lg);
     }
 
-    static unsigned char clamp(float x)
+    /* ==================================================================== */
+    /* ==================================================================== */
+    /* ============================== TEXTURE ============================= */
+    /* ==================================================================== */
+    /* ==================================================================== */
+
+    static unsigned char saturate(float x)
     {
         if (x < 0) return 0;
         if (x > 1) return 255;
         return (int)(x * 255);
     }
 
-    texture::texture(const std::string& path, GLenum format)
+    texture2D::texture2D(const std::string& path, GLenum format)
         : m_fmt(format)
     {
         image img(path);
-        w = img.width();
-        h = img.height();
-        init_texture();
+        m_dims = glm::ivec2(img.width(),
+                            img.height());
 
-        if (m_fmt == GL_UNSIGNED_BYTE)
-        {
-            unsigned char* buf = (unsigned char *)malloc(w * h * 4);
+        glGenTextures(1, &m_tex);
 
-            for (int y = 0; y < h; ++y)
-            {
+        if (m_tex == 0) {
+            LOG(ERROR) << "Failed to create texture object.";
+            throw std::runtime_error("");
+        }
+
+        glBindTexture(GL_TEXTURE_2D, m_tex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                                       GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                                       GL_LINEAR);
+
+        if (m_fmt == GL_UNSIGNED_BYTE) {
+            int w = m_dims.x, h = m_dims.y;
+
+            auto buf = std::vector<unsigned char>();
+            buf.resize(w * h * 4); // 4 bytes/pixel
+
+            for (int y = 0; y < h; ++y) {
                 glm::vec4* ptr = img[y];
 
-                for (int x = 0; x < w; ++x)
-                {
-                    buf[y * (4 * w) + 4 * x + 0] = clamp(ptr->x);
-                    buf[y * (4 * w) + 4 * x + 1] = clamp(ptr->y);
-                    buf[y * (4 * w) + 4 * x + 2] = clamp(ptr->z);
-                    buf[y * (4 * w) + 4 * x + 3] = 0;
+                for (int x = 0; x < w; ++x) {
+                    buf[4 * (y * w + x) + 0] = saturate(ptr->x);
+                    buf[4 * (y * w + x) + 1] = saturate(ptr->y);
+                    buf[4 * (y * w + x) + 2] = saturate(ptr->z);
+                    buf[4 * (y * w + x) + 3] = 0;
 
                     ++ptr;
                 }
             }
 
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_FLOAT, buf);
-
-            free(buf);
-        }
-        else if (m_fmt == GL_FLOAT)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_FLOAT, img.data());
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y,
+                         0, GL_RGBA, GL_UNSIGNED_BYTE, &buf[0]);
+        } else if (m_fmt == GL_FLOAT) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y,
+                         0, GL_RGBA, GL_FLOAT, img.data());
         } else {
-            LOG(ERROR) << "Bad texture format";
-            throw 0;
+            LOG(ERROR) << "Unsupported texture format.";
+            LOG(TRACE) << "Supported formats are:";
+            LOG(TRACE) << "* GL_UNSIGNED_BYTE";
+            LOG(TRACE) << "* GL_FLOAT";
+            throw std::logic_error("");
         }
     }
 
-    texture::texture(int width, int height, GLenum format)
-        : w(width), h(height), m_fmt(format)
+    texture2D::texture2D(const glm::ivec2& dims, GLenum format)
+        : m_dims(dims), m_fmt(format)
     {
         if ((m_fmt != GL_UNSIGNED_BYTE) && (m_fmt != GL_FLOAT)) {
-            LOG(ERROR) << "Bad texture format";
-            throw 0;
+            LOG(ERROR) << "Unsupported texture format.";
+            LOG(TRACE) << "Supported formats are:";
+            LOG(TRACE) << "* GL_UNSIGNED_BYTE";
+            LOG(TRACE) << "* GL_FLOAT";
+            throw std::logic_error("");
         }
 
-        init_texture();
+        glGenTextures(1, &m_tex);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, m_fmt, nullptr);
+        if (m_tex == 0) {
+            LOG(ERROR) << "Failed to create texture object.";
+            throw std::runtime_error("");
+        }
+
+        glBindTexture(GL_TEXTURE_2D, m_tex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                                       GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                                       GL_LINEAR);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y, 0,
+                     GL_RGBA, m_fmt, nullptr);
     }
 
-    texture& texture::operator=(const texture& other)
-    {
-        m_tex = other.m_tex;
-        m_fmt = other.m_fmt;
-        w = other.w;
-        h = other.h;
-
-        return *this;
-    }
-
-    texture::texture(const texture& other)
-    {
-        m_tex = other.m_tex;
-        m_fmt = other.m_fmt;
-        w = other.w;
-        h = other.h;
-    }
-
-    texture::~texture()
+    texture2D::~texture2D()
     {
         glDeleteTextures(1, &m_tex);
     }
 
-    void texture::bind(int unit) const
+    void texture2D::resize(const glm::ivec2& dims)
     {
+        m_dims = dims;
+
         glBindTexture(GL_TEXTURE_2D, m_tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y, 0,
+                     GL_RGBA, m_fmt, nullptr);
     }
 
-    void texture::init_texture()
+    void texture2D::bind(int unit) const
     {
-        glGenTextures(1, &m_tex);
+        glActiveTexture(GL_TEXTURE0 + unit);
         glBindTexture(GL_TEXTURE_2D, m_tex);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    }
+    
+    GLuint texture2D::operator()() const
+    {
+        return m_tex;
     }
 }

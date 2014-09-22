@@ -42,7 +42,9 @@ namespace gl
         void set(const std::string& var, const glm::vec3& value);
         void set(const std::string& var, const glm::vec4& value);
         void set(const std::string& var, const int& value);
-        void set(const std::string& var, const int& x, const int& y);
+        void set(const std::string& var, const glm::ivec2& value);
+        void set(const std::string& var, const glm::ivec3& value);
+        void set(const std::string& var, const glm::ivec4& value);
         void set(const std::string& var, const glm::mat3& value);
         void set(const std::string& var, const glm::mat4& value);
 
@@ -63,24 +65,35 @@ namespace gl
         std::string get_link_log(GLuint program) const;
     };
 
-    class texture
+    // Simple texture2D class, mainly designed to store actual texture
+    // data and/or framebuffer data (i.e. it is not designed to hold
+    // depth data or special textures like cubemaps)
+    // It can support both 32-bit (8-bit per channel) or 128-bit float
+    // RGBA data.
+    class texture2D
     {
     public:
-        texture(const std::string& path, GLenum format);
-        texture(int width, int height, GLenum format);
-        texture& operator=(const texture& other);
-        texture(const texture& other);
-        ~texture();
+        texture2D(const std::string& path, GLenum format);
+        texture2D(const glm::ivec2& dims, GLenum format);
+        ~texture2D();
 
+        // Resizes this texture (after this operation
+        // the contents of the texture are indeterminate)
+        void resize(const glm::ivec2& dims);
+
+        // Binds this texture to a texture unit
         void bind(int unit) const;
 
+        // Returns the texture ID of the texture
+        GLuint operator()() const;
+
     private:
+        texture2D& operator=(const texture2D& other);
+        texture2D(const texture2D& other);
+
+        glm::ivec2 m_dims;
         GLuint m_tex;
         GLenum m_fmt;
-        int w;
-        int h;
-
-        void init_texture();
     };
 }
 
