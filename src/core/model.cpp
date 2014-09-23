@@ -102,7 +102,9 @@ void Model::readMTL(std::string filename) {
 					else if (t2[0] == "Ni") m.Ni = stof(t2[1]);
 					else if (t2[0] == "d") m.d = stof(t2[1]);
 					else if (t2[0] == "Tr") m.Tr = stof(t2[1]);
-					else if (t2[0] == "map_Kd");
+					else if (t2[0] == "map_Kd") {
+						m.map_Kd = new gl::texture2D(t2[1], GL_UNSIGNED_BYTE);
+					}
 					else {
 						LOG(INFO) << t2[0];
 					}
@@ -137,6 +139,9 @@ void Model::useMTL(std::string mtl) {
 	glMaterialfv(GL_FRONT, GL_AMBIENT, vec3TofloatArr(materials[mtl].Ka));
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, vec3TofloatArr(materials[mtl].Kd));
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specular(materials[mtl].Ks, materials[mtl].Ns));
+	glEnable(GL_TEXTURE_2D);
+	materials[mtl].map_Kd->bind(0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 }
 void Model::addToList(int v, int n, int u) {
 	if (uv.size()>0) glTexCoord2f(uv[u].x, uv[u].y);
@@ -151,14 +156,17 @@ void Model::CreateGLPolyGeometry() {
 	m_glGeomListPoly = glGenLists(1);
 	glNewList(m_glGeomListPoly, GL_COMPILE);
 
+	useMTL(triangles[0].materialIdx);
+	glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 	glBegin(GL_TRIANGLES); //Begin drawing triangles
 	for (Triangle t : triangles) {
-		useMTL(t.materialIdx);
 		addToList(t.v1, t.n1, t.t1);
 		addToList(t.v2, t.n2, t.t2);
 		addToList(t.v3, t.n3, t.t3);
 	}
 	glEnd();
+	glDisable(GL_BLEND);
 	glEndList();
 }
 void Model::CreateGLWireGeometry() {
