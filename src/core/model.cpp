@@ -1,3 +1,4 @@
+#include <easylogging.h>
 #include "core/model.h"
 
 Model::Model(std::string filename) {
@@ -11,10 +12,10 @@ Model::Model(std::string filename) {
 	{
 		while (getline(myfile, line))
 		{
+			if (line.size()<=1 || line[0] == '#') continue;
 			std::istringstream iss(line);
 			std::vector<std::string> t{ std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{} };
-			if (t.size() == 0 || t[0] == "#" || t[0] == "\n");
-			else if (t[0] == "v" && t.size() == 4) {
+			if (t[0] == "v" && t.size() == 4) {
 				vertices.push_back({ std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) });
 			}
 			else if (t[0] == "vt" && t.size() == 4) {
@@ -33,7 +34,7 @@ Model::Model(std::string filename) {
 					if (scan < 6) {
 						scan = sscanf(line.c_str(), "f %d/%d %d/%d %d/%d", &v1, &t1, &v2, &t2, &v3, &t3);
 						if (scan < 6) {
-							std::cout << line << "\n\n";
+							LOG(INFO) << line << "\n\n";
 							while (true);
 						}
 					}
@@ -50,21 +51,21 @@ Model::Model(std::string filename) {
 			else if (t[0] == "usemtl") {
 				mtl = t[1];
 				if (materials.find(mtl) == materials.end()) {
-					std::cout << "missing material " << mtl << "\n";
+					LOG(ERROR) << "missing material " << mtl;
 					while (true);
 				}
 			}
 			else if (t[0] == "g" || t[0] == "s") {
-				std::cout << line << "\n";
+				LOG(INFO) << line;
 			}
 			else {
-				std::cout << line << "\n\n";
+				LOG(INFO) << line;
 				while (true);
 			}
 		}
 		myfile.close();
 	}
-	std::cout << "Finished" << "\n\n";
+	LOG(INFO) << "Finished" << "\n\n";
 	printf("Number of Point %d, UV %d, Normal %d, Face %d\n", vertices.size(), uv.size(),
 		normals.size(), triangles.size());
 	//while (true);
@@ -74,7 +75,7 @@ void Model::readMTL(std::string filename) {
 	std::string line;
 	std::ifstream myfile(filename);
 	int prev = materials.size();
-	std::cout << "reading mtl file" << filename << "\n";
+	LOG(INFO) << "reading mtl file" << filename;
 	if (myfile.is_open())
 	{
 		while (getline(myfile, line)) {
@@ -99,15 +100,16 @@ void Model::readMTL(std::string filename) {
 					else if (t2[0] == "Ni") m.Ni = stof(t2[1]);
 					else if (t2[0] == "d") m.d = stof(t2[1]);
 					else if (t2[0] == "Tr") m.Tr = stof(t2[1]);
+					else if (t2[0] == "map_Kd");
 					else {
-						std::cout << t2[0] << "n";
+						LOG(INFO) << t2[0];
 					}
 				}
 				materials[t[1]] = m;
 			}
 		}
 	}
-	std::cout << "finished reading mtl file " << std::to_string(materials.size() - prev) << "\n";
+	LOG(INFO) << "finished reading mtl file " << std::to_string(materials.size() - prev);
 }
 
 void Model::display() {

@@ -373,7 +373,7 @@ namespace gui
         */
 
         LOG(INFO) << "Loading model.";
-        m_obj = new Model("Teapot.obj");
+        m_obj = new Model("teapot2.obj");
 
         #if 0
         m_aperture = new aperture();
@@ -483,8 +483,10 @@ namespace gui
         m_sky->display(m_cam);
 
 		glColor3f(m_bar->color.x, m_bar->color.y, m_bar->color.z);
+		glPushMatrix();
+		//glScalef(0.05f, 0.05f, 0.05f);
 		m_obj->display();
-
+		glPopMatrix();
         glDisable(GL_DEPTH_TEST);
 	    glDisable(GL_LIGHTING);
 	    glDisable(GL_COLOR_MATERIAL);

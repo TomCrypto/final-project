@@ -12,6 +12,7 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include "utils/gl_utils.h"
 
 #define G308_SHADE_POLYGON 0            
 #define G308_SHADE_WIREFRAME 1
@@ -45,6 +46,7 @@ struct Material {
 	glm::vec3 Ka, Kd, Ks, Ke, Tf;
 	int illum;
 	float Ni, Ns, d, Tr;
+	gl::texture2D *map_Kd;
 };
 
 class Model {
