@@ -145,6 +145,9 @@
     <None Include="..\lib\bin\win32\freeglut.dll">
       <Filter>Dependencies</Filter>
     </None>
+    <None Include="..\res\teapot2.obj.mtl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\res\apertures\noise1.png">
