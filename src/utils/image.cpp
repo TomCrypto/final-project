@@ -1,6 +1,6 @@
 #include <easylogging.h>
 
-#include "utils/image.hpp"
+#include "utils/image.h"
 
 #include <functional>
 #include <stdexcept>
@@ -146,28 +146,28 @@ static bool rgbf_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, int w, int h)
     return true;
 }
 
-image::image(int width, int height, GLuint tex)
+image::image(const glm::ivec2& dims, GLuint tex)
 {
     std::vector<glm::vec4> bits;
-    bits.resize(width * height);
+    bits.resize(dims.x * dims.y);
     glm::vec4* ptr = &bits[0];
 
     glBindTexture(GL_TEXTURE_2D, tex);
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, ptr);
 
-    this->dib = FreeImage_AllocateT(FIT_RGBAF, width, height, 128);
+    this->dib = FreeImage_AllocateT(FIT_RGBAF, dims.x * dims.y, 128);
     if (!this->dib) {
         LOG(ERROR) << "Failed to allocate memory for image.";
         throw 0;
     }
 
-    for (int y = 0; y < height; ++y)
+    for (int y = 0; y < dims.y; ++y)
     {
         glm::vec4* dst = (*this)[y];
 
-        memcpy(dst, ptr, sizeof(glm::vec4) * width);
+        memcpy(dst, ptr, sizeof(glm::vec4) * dims.x);
 
-        ptr += width;
+        ptr += dims.x;
     }
 }
 
@@ -182,11 +182,11 @@ image& image::operator=(const image &other)
     return *this;
 }
 
-image::image(int width, int height)
+image::image(const glm::ivec2& dims)
 {
-    assert(width + height > 0);
+    assert(dims.x + dims.y > 1);
 
-    this->dib = FreeImage_AllocateT(FIT_RGBAF, width, height, 128);
+    this->dib = FreeImage_AllocateT(FIT_RGBAF, dims.x, dims.y, 128);
     if (!this->dib) {
         LOG(ERROR) << "Failed to allocate memory for image.";
         throw 0;
@@ -403,8 +403,9 @@ image image::compose(const image& r, const image& g, const image& b)
     assert((g.width() == b.width()) && (g.height() == b.height()));
     assert((b.width() == r.width()) && (b.height() == r.height()));
 
-    image out(r.width(), r.height());
-    int w = r.width(), h = r.height();
+    image out(r.dims());
+    int w = r.width();
+    int h = r.height();
 
     for (int y = 0; y < h; ++y)
     {
@@ -456,11 +457,12 @@ void image::normalize(bool local, const channels& which)
     });
 }
 
-image image::resize(int newWidth, int newHeight, FREE_IMAGE_FILTER filter) const
+image image::resize(const glm::ivec2& new_dims, FREE_IMAGE_FILTER filter) const
 {
-    assert(newWidth + newHeight > 0);
+    assert(new_dims.x + new_dims.y > 1);
 
-    FIBITMAP *resized = FreeImage_Rescale(this->dib, newWidth, newHeight, filter);
+    FIBITMAP *resized = FreeImage_Rescale(this->dib, new_dims.x,
+                                                     new_dims.y, filter);
     if (!resized) {
         LOG(ERROR) << "Failed to resize image.";
         throw 0;
@@ -469,15 +471,15 @@ image image::resize(int newWidth, int newHeight, FREE_IMAGE_FILTER filter) const
     return image(resized);
 }
 
-image image::enlarge(int newWidth, int newHeight) const
+image image::enlarge(const glm::ivec2& new_dims) const
 {
-    assert((newWidth >= width()) && (newHeight >= height()));
-    assert(newWidth + newHeight > 0);
+    assert((new_dims.x >= width()) && (new_dims.y >= height()));
+    assert(new_dims.x + new_dims.y > 1);
 
-    int padL = (newWidth - width()) / 2;
-    int padR = newWidth - width() - padL;
-    int padT = (newHeight - height()) / 2;
-    int padB = newHeight - height() - padT;
+    int padL = (new_dims.x - width()) / 2;
+    int padR = new_dims.x - width() - padL;
+    int padT = (new_dims.y - height()) / 2;
+    int padB = new_dims.y - height() - padT;
 
     return zero_pad(padL, padT, padR, padB);
 }
@@ -540,14 +542,19 @@ const glm::vec4& image::operator()(int x, int y) const
     return *((*this)[y] + x);
 }
 
+const glm::vec4* image::data() const
+{
+    return (*this)[0];
+}
+
 glm::vec4* image::data()
 {
     return (*this)[0];
 }
 
-const glm::vec4* image::data() const
+glm::ivec2 image::dims() const
 {
-    return (*this)[0];
+    return glm::ivec2(width(), height());
 }
 
 int image::width() const
@@ -563,7 +570,7 @@ int image::height() const
 image utils::draw_circle(int radius, bool anti_alias, const glm::vec4& color)
 {
     if (anti_alias) radius *= 2;
-    image circle(2 * radius, 2 * radius);
+    image circle(glm::ivec2(2 * radius));
     for (int y = 0; y < 2 * radius; ++y)
     {
         glm::vec4* ptr = circle[y];
@@ -580,7 +587,8 @@ image utils::draw_circle(int radius, bool anti_alias, const glm::vec4& color)
         }
     }
 
-    if (anti_alias) circle = circle.resize(radius, radius);
+    if (anti_alias) circle = circle.resize(glm::ivec2(radius),
+                                           FILTER_BILINEAR);
 
     return circle;
 }

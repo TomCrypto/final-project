@@ -29,10 +29,10 @@ inline channels operator|(const channels& x, const channels& y)
 class image
 {
 public:
-    image(int width, int height, GLuint tex);
+    image(const glm::ivec2& dims, GLuint tex);
     image& operator=(const image &other);
-    image(int width, int height);
     image(const std::string& path);
+    image(const glm::ivec2& dims);
     image(const image &other);
     image(FIBITMAP *dib);
     ~image();
@@ -73,10 +73,10 @@ public:
     void normalize(bool local, const channels& which = channels::RGB);
 
     //<< Resizes this image to new dimensions with a given filter, and returns the result
-    image resize(int newWidth, int newHeight, FREE_IMAGE_FILTER filter = FILTER_CATMULLROM) const;
+    image resize(const glm::ivec2& new_dims, FREE_IMAGE_FILTER filter = FILTER_CATMULLROM) const;
 
     //<< Enlarges this image, centering the contents and padding with black on the sides
-    image enlarge(int newWidth, int newHeight) const;
+    image enlarge(const glm::ivec2& new_dims) const;
 
     //<< Returns the subregion of this image specified by a given rectangle
     image subregion(int rectX, int rectY, int rectW, int rectH) const;
@@ -93,10 +93,11 @@ public:
 	const glm::vec4& operator()(int x, int y) const;
 
     //<<Returns a raw pointer to the bitmap data
-    glm::vec4* data();
     const glm::vec4* data() const;
+    glm::vec4* data();
 
     //<< Accesses the width and height of the image
+    glm::ivec2 dims() const;
     int width() const;
     int height() const;
 private:

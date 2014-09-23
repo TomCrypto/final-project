@@ -1,12 +1,14 @@
-#ifndef GUI_RAW_MOUSE_H
-#define GUI_RAW_MOUSE_H
+// keeps track of the mouse position and outputs movement deltas
+
+#ifndef GUI_MOUSE_TRACKER_H
+#define GUI_MOUSE_TRACKER_H
 
 #include <glm/glm.hpp>
 
-class raw_mouse
+class mouse_tracker
 {
 public:
-    raw_mouse();
+    mouse_tracker();
 
     // get the delta between this mouse position and the
     // last one (if there is no last one, returns (0,0))
