@@ -371,7 +371,12 @@ namespace gui
          * from GL, GLU, GLUT, GLEW, or AntTweakBar functions in here as there
          * is no OpenGL context active yet.
         */
-
+		LOG(INFO) << "Loading models";
+		m_lighthouse = new Model("Lighthouse/Lighthouse.obj"); 
+		//m_outbuilding = new Model("Lighthouse/OutBuilding.obj"); 
+		//m_terrain = new Model("Lighthouse/Terrain.obj");
+		//m_tree = new Model("Lighthouse/Trees.obj");
+		LOG(INFO) << "All Models Loaded.";
         #if 0
         m_aperture = new aperture();
 
@@ -398,13 +403,6 @@ namespace gui
     {
         LOG(INFO) << "Creating tweak bar.";
 
-		LOG(INFO) << "Loading models";
-		m_lighthouse = new Model("Lighthouse/Lighthouse.obj"); 
-		//m_outbuilding = new Model("Lighthouse/OutBuilding.obj"); 
-		//m_terrain = new Model("Lighthouse/Terrain.obj");
-		//m_tree = new Model("Lighthouse/Trees.obj");
-		LOG(INFO) << "All Models Loaded.";
-
         m_bar = new main_bar("main");
         m_bar->set_title("Configuration");
 
@@ -424,12 +422,13 @@ namespace gui
 
         m_framebuffer = new framebuffer(m_dims);
 
-        LOG(INFO) << "Creating camera.";
+		LOG(INFO) << "Creating camera.";
 
         m_cam = camera(m_dims, glm::vec3(0, 3, -5), glm::vec3(0, 0, 1),
                        m_bar->cam_fov * glm::pi<float>() / 180);
-
+		LOG(INFO) << "Creating skybox.";
         m_sky = new skybox();
+		LOG(INFO) << "Finished creating stuff.";
     }
 
     void window::on_free()

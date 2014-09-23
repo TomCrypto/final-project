@@ -16,6 +16,7 @@ Model::Model(std::string filename) {
 	{
 		while (getline(myfile, line))
 		{
+			//LOG(INFO) << line;
 			if (line.size()<=1 || line[0] == '#') continue;
 			std::istringstream iss(line);
 			std::vector<std::string> t{ std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{} };
@@ -32,22 +33,41 @@ Model::Model(std::string filename) {
 				normals.push_back({ std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) });
 			}
 			else if (t[0] == "f") {
-				int scan = sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d", &v1, &t1, &n1, &v2, &t2, &n2, &v3, &t3, &n3);
-				if (scan < 9) {
-					scan = sscanf(line.c_str(), "f %d//%d %d//%d %d//%d", &v1, &n1, &v2, &n2, &v3, &n3);
-					if (scan < 6) {
-						scan = sscanf(line.c_str(), "f %d/%d %d/%d %d/%d", &v1, &t1, &v2, &t2, &v3, &t3);
+				if (t.size() == 5) {
+					int v[4];
+					int n[4];
+					int u[4];
+					for (size_t i = 1; i < t.size(); i++) {
+						//LOG(INFO) << t[i];
+						v[i-1] = std::stoi(t[i].substr(0, t[i].find_first_of('/')),nullptr);
+						u[i - 1] = std::stoi(t[i].substr(t[i].find_first_of('/') + 1, t[i].find_last_of('/') - t[i].find_first_of('/') - 1));
+						n[i - 1] = std::stoi(t[i].substr(t[i].find_last_of('/') + 1, t[i].size() - t[i].find_last_of('/') - 1));
+					}
+					if (g.size() == 0) {
+						g = "default";
+						addGroup(g);
+					}
+					groups[g].triangles.push_back({ v[0] - 1, v[1] - 1, v[3] - 1, n[0] - 1, n[1] - 1, n[3] - 1, u[0] - 1, u[1] - 1, u[3] - 1 });
+					groups[g].triangles.push_back({ v[3] - 1, v[1] - 1, v[2] - 1, n[3] - 1, n[1] - 1, n[2] - 1, u[3] - 1, u[1] - 1, u[2] - 1 });
+				}
+				else if (t[0].size()) {
+					int scan = sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d", &v1, &t1, &n1, &v2, &t2, &n2, &v3, &t3, &n3);
+					if (scan < 9) {
+						scan = sscanf(line.c_str(), "f %d//%d %d//%d %d//%d", &v1, &n1, &v2, &n2, &v3, &n3);
 						if (scan < 6) {
-							LOG(INFO) << line << "\n\n";
-							while (true);
+							scan = sscanf(line.c_str(), "f %d/%d %d/%d %d/%d", &v1, &t1, &v2, &t2, &v3, &t3);
+							if (scan < 6) {
+								LOG(INFO) << line << "\n\n";
+								while (true);
+							}
 						}
 					}
+					if (g.size() == 0) {
+						g = "default";
+						addGroup(g);
+					}
+					groups[g].triangles.push_back({ v1 - 1, v2 - 1, v3 - 1, n1 - 1, n2 - 1, n3 - 1, t1 - 1, t2 - 1, t3 - 1 });
 				}
-				if (g.size() == 0) {
-					g = "default";
-					addGroup(g);
-				}
-				groups[g].triangles.push_back({ v1 - 1, v2 - 1, v3 - 1, n1 - 1, n2 - 1, n3 - 1, t1 - 1, t2 - 1, t3 - 1});
 			}
 			else if (t[0] == "mtllib") {
 				int found = filename.find_last_of("/");
@@ -162,7 +182,7 @@ void Model::addToList(int v, int n, int u) {
 void Model::CreateGLPolyGeometry() {
 	if (m_glGeomListPoly != 0)
 		glDeleteLists(m_glGeomListPoly, 1);
-
+	LOG(INFO) << "Attempting to draw";
 	// Assign a display list; return 0 if err
 	m_glGeomListPoly = glGenLists(1);
 	glNewList(m_glGeomListPoly, GL_COMPILE);
@@ -173,6 +193,14 @@ void Model::CreateGLPolyGeometry() {
 	for (auto& g : groups) {
 		useMTL(g.second.materialIdx);
 		for (Triangle t : g.second.triangles) {
+			if (t.v1 >= vertices.size() || t.v2 >= vertices.size() || t.v3 >= vertices.size() ||
+				t.n1 >= normals.size() || t.n2 >= normals.size() || t.n3 >= normals.size() ||
+				t.t1 >= uv.size() || t.t2 >= uv.size() || t.t3 >= uv.size()) {
+				LOG(ERROR) << "Wrong param for vertice, normal or uv";
+				LOG(ERROR) << vertices.size() << " " << normals.size() << " " << uv.size();
+				LOG(ERROR) << t.v1 << " " << t.v2 << " " << t.v3 << " " << t.n1 << " " << t.n2 << " " << t.n3 << " " << t.t1 << " " << t.t2 << " " << t.t3;
+				while (true);
+			}
 			addToList(t.v1, t.n1, t.t1);
 			addToList(t.v2, t.n2, t.t2);
 			addToList(t.v3, t.n3, t.t3);
@@ -181,6 +209,7 @@ void Model::CreateGLPolyGeometry() {
 	glEnd();
 	glDisable(GL_BLEND);
 	glEndList();
+	LOG(INFO) << "Finished attempting to draw";
 }
 void Model::CreateGLWireGeometry() {
 	if (m_glGeomListWire != 0)
