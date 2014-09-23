@@ -502,6 +502,11 @@ namespace gui
             int fps = (int)(1.0 / m_fps.get_average() + 0.5);
             LOG_EVERY_N(period, INFO) << fps << " frames per second.";
         }
+
+        GLenum err = glGetError();
+        if (err != GL_NO_ERROR) {
+            LOG(WARNING) << "OpenGL: " << (char*)gluErrorString(err) << ".";
+        }
     }
 
     void window::on_mouse_move(const glm::ivec2& pos)
