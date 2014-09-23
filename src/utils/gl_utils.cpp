@@ -271,6 +271,8 @@ namespace gl
         m_dims = glm::ivec2(img.width(),
                             img.height());
 
+		LOG(INFO) << img.width() << " " << img.height();
+
         glGenTextures(1, &m_tex);
 
         if (m_tex == 0) {
