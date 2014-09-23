@@ -1,6 +1,8 @@
 #include <easylogging.h>
 #include "core/model.h"
-
+void Model::addGroup(std::string g) {
+	groups[g];
+}
 Model::Model(std::string filename) {
 	mode = G308_SHADE_POLYGON;
     m_glGeomListPoly = 0;
@@ -9,7 +11,7 @@ Model::Model(std::string filename) {
 	std::string line;
 	std::ifstream myfile(filename);
 	int v1, v2, v3, n1, n2, n3, t1, t2, t3;
-	std::string mtl;
+	std::string g;
 	if (myfile.is_open())
 	{
 		while (getline(myfile, line))
@@ -41,7 +43,11 @@ Model::Model(std::string filename) {
 						}
 					}
 				}
-				triangles.push_back({ v1 - 1, v2 - 1, v3 - 1, n1 - 1, n2 - 1, n3 - 1, t1 - 1, t2 - 1, t3 - 1, mtl });
+				if (g.size() == 0) {
+					g = "default";
+					addGroup(g);
+				}
+				groups[g].triangles.push_back({ v1 - 1, v2 - 1, v3 - 1, n1 - 1, n2 - 1, n3 - 1, t1 - 1, t2 - 1, t3 - 1});
 			}
 			else if (t[0] == "mtllib") {
 				int found = filename.find_last_of("/");
@@ -51,14 +57,26 @@ Model::Model(std::string filename) {
 				}
 			}
 			else if (t[0] == "usemtl") {
-				mtl = t[1];
-				if (materials.find(mtl) == materials.end()) {
-					LOG(ERROR) << "missing material " << mtl;
-					while (true);
+				if (g.size() == 0) {
+					g = "default";
+					addGroup(g);
+				}
+				groups[g].materialIdx = t[1];
+				if (materials.find(t[1]) == materials.end()) {
+					LOG(ERROR) << "missing material " << t[1];
+					/*std::string mat = g + ":" + t[1];
+					if (materials.find(mat) == materials.end()) {
+						LOG(INFO) << "found missing material as " << mat;
+					}
+					else */while (true);
 				}
 			}
-			else if (t[0] == "g" || t[0] == "s") {
-				LOG(INFO) << line;
+			else if (t[0] == "g") {
+				g = t[1];
+				addGroup(g);
+			}
+			else if (t[0] == "s") {
+				groups[g].s = t[1];
 			}
 			else {
 				LOG(INFO) << line;
@@ -68,8 +86,7 @@ Model::Model(std::string filename) {
 		myfile.close();
 	}
 	LOG(INFO) << "Finished" << "\n\n";
-	printf("Number of Point %d, UV %d, Normal %d, Face %d\n", vertices.size(), uv.size(),
-		normals.size(), triangles.size());
+	printf("Number of Point %d, UV %d, Normal %d\n", vertices.size(), uv.size(), normals.size());
 	//while (true);
 }
 
@@ -80,36 +97,30 @@ void Model::readMTL(std::string filename) {
 	LOG(INFO) << "reading mtl file" << filename;
 	if (myfile.is_open())
 	{
+		std::string mtl;
 		while (getline(myfile, line)) {
 			std::istringstream iss(line);
 			std::vector<std::string> t{ std::istream_iterator < std::string > {iss}, std::istream_iterator < std::string > {} };
 			if (t.size() == 0 || t[0] == "#" || t[0] == "\n");
 			else if (t[0] == "newmtl") {
-				std::string newline;
-				Material m;
-				while (getline(myfile, newline)) {
-					std::istringstream iss(newline);
-					std::vector<std::string> t2{ std::istream_iterator < std::string > {iss}, std::istream_iterator < std::string > {} };
-
-					if (t2.size() == 0) break;
-					else if (t2[0] == "illum") m.illum = stoi(t2[1]);
-					else if (t2[0] == "Ka") m.Ka = { std::stof(t2[1], nullptr), std::stof(t2[2], nullptr), std::stof(t2[3], nullptr) };
-					else if (t2[0] == "Kd") m.Kd = { std::stof(t2[1], nullptr), std::stof(t2[2], nullptr), std::stof(t2[3], nullptr) };
-					else if (t2[0] == "Ks") m.Ks = { std::stof(t2[1], nullptr), std::stof(t2[2], nullptr), std::stof(t2[3], nullptr) };
-					else if (t2[0] == "Ke") m.Ke = { std::stof(t2[1], nullptr), std::stof(t2[2], nullptr), std::stof(t2[3], nullptr) };
-					else if (t2[0] == "Tf") m.Tf = { std::stof(t2[1], nullptr), std::stof(t2[2], nullptr), std::stof(t2[3], nullptr) };
-					else if (t2[0] == "Ns") m.Ns = stof(t2[1]);
-					else if (t2[0] == "Ni") m.Ni = stof(t2[1]);
-					else if (t2[0] == "d") m.d = stof(t2[1]);
-					else if (t2[0] == "Tr") m.Tr = stof(t2[1]);
-					else if (t2[0] == "map_Kd") {
-						m.map_Kd = new gl::texture2D(t2[1], GL_UNSIGNED_BYTE);
-					}
-					else {
-						LOG(INFO) << t2[0];
-					}
-				}
-				materials[t[1]] = m;
+				mtl = t[1];
+				materials[mtl];
+			}
+			else if (t[0] == "illum") materials[mtl].illum = std::stoi(t[1]);
+			else if (t[0] == "Ka") materials[mtl].Ka = { std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) };
+			else if (t[0] == "Kd") materials[mtl].Kd = { std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) };
+			else if (t[0] == "Ks") materials[mtl].Ks = { std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) };
+			else if (t[0] == "Ke") materials[mtl].Ke = { std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) };
+			else if (t[0] == "Tf") materials[mtl].Tf = { std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) };
+			else if (t[0] == "Ns") materials[mtl].Ns = std::stof(t[1]);
+			else if (t[0] == "Ni") materials[mtl].Ni = std::stof(t[1]);
+			else if (t[0] == "d") materials[mtl].d = std::stof(t[1]);
+			else if (t[0] == "Tr") materials[mtl].Tr = std::stof(t[1]);
+			/*else if (t2[0] == "map_Kd") {
+				m.map_Kd = new gl::texture2D(t2[1], GL_UNSIGNED_BYTE);
+			}*/
+			else {
+				LOG(ERROR) << t[0];
 			}
 		}
 	}
@@ -139,9 +150,9 @@ void Model::useMTL(std::string mtl) {
 	glMaterialfv(GL_FRONT, GL_AMBIENT, vec3TofloatArr(materials[mtl].Ka));
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, vec3TofloatArr(materials[mtl].Kd));
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specular(materials[mtl].Ks, materials[mtl].Ns));
-	glEnable(GL_TEXTURE_2D);
-	materials[mtl].map_Kd->bind(0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glEnable(GL_TEXTURE_2D);
+	//materials[mtl].map_Kd->bind(0);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 }
 void Model::addToList(int v, int n, int u) {
 	if (uv.size()>0) glTexCoord2f(uv[u].x, uv[u].y);
@@ -156,14 +167,16 @@ void Model::CreateGLPolyGeometry() {
 	m_glGeomListPoly = glGenLists(1);
 	glNewList(m_glGeomListPoly, GL_COMPILE);
 
-	useMTL(triangles[0].materialIdx);
 	glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 	glBegin(GL_TRIANGLES); //Begin drawing triangles
-	for (Triangle t : triangles) {
-		addToList(t.v1, t.n1, t.t1);
-		addToList(t.v2, t.n2, t.t2);
-		addToList(t.v3, t.n3, t.t3);
+	for (auto& g : groups) {
+		useMTL(g.second.materialIdx);
+		for (Triangle t : g.second.triangles) {
+			addToList(t.v1, t.n1, t.t1);
+			addToList(t.v2, t.n2, t.t2);
+			addToList(t.v3, t.n3, t.t3);
+		}
 	}
 	glEnd();
 	glDisable(GL_BLEND);
@@ -177,12 +190,12 @@ void Model::CreateGLWireGeometry() {
 	m_glGeomListWire = glGenLists(1);
 	glNewList(m_glGeomListWire, GL_COMPILE);
 
-	for (Triangle t : triangles) {
+	/*for (Triangle t : triangles) {
 		glBegin(GL_LINE_LOOP);
 		addToList(t.v1, t.n1, t.t1);
 		addToList(t.v2, t.n2, t.t2);
 		addToList(t.v3, t.n3, t.t3);
 		glEnd();
-	}
+	}*/
 	glEndList();
 }

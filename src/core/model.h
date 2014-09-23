@@ -23,7 +23,6 @@ struct G308_Point {
 };
 typedef G308_Point G308_Normal;
 struct G308_UVcoord {
-
 	float u;
 	float v;
 };
@@ -40,13 +39,16 @@ struct Triangle {
 	/*unsigned int v[3];
 	unsigned int n[3];
 	unsigned int t[3];*/
-	std::string materialIdx;
 };
 struct Material {
 	glm::vec3 Ka, Kd, Ks, Ke, Tf;
 	int illum;
 	float Ni, Ns, d, Tr;
 	gl::texture2D *map_Kd;
+};
+struct Group {
+	std::vector<Triangle> triangles;
+	std::string materialIdx, s;
 };
 
 class Model {
@@ -59,6 +61,7 @@ private:
 	void CreateGLPolyGeometry();
 	void CreateGLWireGeometry();
 	void addToList(int v, int n, int u);
+	void addGroup(std::string g);
 
 	int m_nNumPoint;
 	int m_nNumUV;
@@ -70,7 +73,7 @@ private:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> uv;
 	std::vector<glm::vec3> normals;
-	std::vector<Triangle> triangles;
+	std::map < std::string, Group > groups;
 	std::map < std::string, Material > materials;
 
 	int m_glGeomListPoly;   // Display List for Polygon

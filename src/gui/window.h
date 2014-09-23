@@ -87,7 +87,7 @@ namespace gui
         framebuffer* m_framebuffer;
         aperture* m_aperture;
         camera m_cam;
-		Model* m_obj;
+		Model *m_lighthouse, *m_outbuilding, *m_terrain, *m_tree;
         skybox* m_sky;
     };
 }
