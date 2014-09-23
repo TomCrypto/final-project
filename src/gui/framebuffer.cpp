@@ -2,19 +2,15 @@
 
 #include "gui/framebuffer.h"
 
-#include <glm/glm.hpp>
-#include <cstdio>
 #include <cmath>
-
-#include "utils/image.hpp"
 
 framebuffer::framebuffer(const glm::ivec2& dims)
     : m_dims(dims),
+      m_tex(dims, GL_FLOAT),
+      m_tmp(dims, GL_FLOAT),
       m_shader("generic/fs_quad.vert", "tonemap/reinhard.frag"),
       m_log_shader("generic/fs_quad.vert", "tonemap/log_lum.frag")
 {
-    glGenTextures(1, &m_tex);
-    glGenTextures(1, &m_tmp);
     glGenFramebuffersEXT(1, &m_fbo);
     glGenRenderbuffersEXT(1, &m_depth);
 
@@ -23,14 +19,13 @@ framebuffer::framebuffer(const glm::ivec2& dims)
     // Attach depth buffer to FBO
     
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
-    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
+    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+                                 GL_DEPTH_ATTACHMENT_EXT,
                                  GL_RENDERBUFFER_EXT, m_depth);
 
     //Does the GPU support current FBO configuration?
     
-    GLenum status;
-    status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-    switch(status)
+    switch (glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT))
     {
         case GL_FRAMEBUFFER_COMPLETE_EXT:
             LOG(INFO) << "Framebuffer successfully initialized.";
@@ -51,13 +46,8 @@ void framebuffer::resize(const glm::ivec2& dims)
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
 
-    glBindTexture(GL_TEXTURE_2D, m_tex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y, 0,
-                 GL_RGBA, GL_FLOAT, nullptr);
-
-    glBindTexture(GL_TEXTURE_2D, m_tmp);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y, 0,
-                 GL_RGBA, GL_FLOAT, nullptr);
+    m_tex.resize(dims);
+    m_tmp.resize(dims);
 
     glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depth);
     glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24,
@@ -68,7 +58,7 @@ void framebuffer::bind()
 {
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-                              GL_TEXTURE_2D, m_tex, 0);
+                              GL_TEXTURE_2D, m_tex(), 0);
 }
 
 void framebuffer::clear(bool depth)
@@ -77,10 +67,9 @@ void framebuffer::clear(bool depth)
     glClear(GL_COLOR_BUFFER_BIT | (depth ? GL_DEPTH_BUFFER_BIT : 0));
 }
 
-static int get_mip_level(int w, int h)
+static int get_mip_level(const glm::ivec2& dims)
 {
-    int m = (w < h) ? h : w;
-
+    auto m = std::max(dims.x, dims.y);
     return (int)ceil(log(m) / log(2));
 }
 
@@ -89,7 +78,7 @@ void framebuffer::render(float exposure)
     // Get the 1x1 mip level for the current framebuffer resolutions, this
     // will be equal to the log2 of the largest dimension (width or height)
 
-    int mip_level = get_mip_level(m_dims.x, m_dims.y);
+    int mip_level = get_mip_level(m_dims);
 
     // Set up the necessary OpenGL state for doing fullscreen quad rendering
 
@@ -101,13 +90,10 @@ void framebuffer::render(float exposure)
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-                              GL_TEXTURE_2D, m_tmp, 0);
+                              GL_TEXTURE_2D, m_tmp(), 0);
 
     m_log_shader.bind();
-
-    glBindTexture(GL_TEXTURE_2D, m_tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    m_tex.bind(0);
 
     m_log_shader.fullscreen_quad();
 
@@ -115,16 +101,13 @@ void framebuffer::render(float exposure)
     // backbuffer, by unbinding the framebuffer and binding m_tmp as texture
     // (remember to mipmap m_tmp, to access the 1x1 average log-luminance)
 
-    glBindTexture(GL_TEXTURE_2D, m_tmp);
+    m_tmp.bind(0);
     glGenerateMipmapEXT(GL_TEXTURE_2D);
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
     m_shader.bind();
-
-    glBindTexture(GL_TEXTURE_2D, m_tmp);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    m_tmp.bind(0);
 
     m_shader.set("mip_level", (float)mip_level);
     m_shader.set("exposure", exposure);
@@ -140,6 +123,4 @@ framebuffer::~framebuffer()
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
     glDeleteRenderbuffersEXT(1, &m_depth);
     glDeleteFramebuffersEXT(1, &m_fbo);
-    glDeleteTextures(1, &m_tmp);
-    glDeleteTextures(1, &m_tex);
 }

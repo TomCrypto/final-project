@@ -6,7 +6,8 @@
 #include <vector>
 #include <random>
 
-#include "utils/image.hpp"
+#include "utils/fft_engine.h"
+#include "utils/image.h"
 
 // allows one to generate random apertures of a given size as well as their
 // chromatic Fourier transform
@@ -24,6 +25,8 @@ public:
     // the final output is resized to the given dimensions
     image get_cfft(const image& aperture, const glm::ivec2& dims);
 
+    image get_flare(const image& cfft, int radius);
+
 private:
     aperture& operator=(const aperture& other);
     aperture(const aperture& other);
@@ -33,6 +36,7 @@ private:
 
     std::random_device m_rd;
     std::mt19937 m_rng;
+    fft_engine m_fft;
 };
 
 #endif

@@ -1,16 +1,18 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
 #include <FreeImage.h>
 #include <GL/glew.h>
+#include <GL/freeglut.h>
 #include <fftw3.h>
 #include <string>
 #include <map>
 
+#include "gui/mouse_tracker.h"
 #include "gui/framebuffer.h"
 #include "gui/fps_counter.h"
-#include "gui/raw_mouse.h"
 #include "gui/tweakbar.h"
 
 #include "core/model.h"
@@ -20,7 +22,7 @@
 namespace gui
 {
     // This is for deferred exception handling, because throwing exceptions in
-    // C callbacks is a nice way to destroy your stack, as well as because of
+    // C callbacks is a nice way to destroy your stack, and also because of
     // some GLUT peculiarities.
     class exception
     {
@@ -79,7 +81,7 @@ namespace gui
 
         // Our own stuff
         fps_counter m_fps;
-        raw_mouse m_mouse;
+        mouse_tracker m_mouse;
         main_bar* m_bar;
         framebuffer* m_framebuffer;
         aperture* m_aperture;

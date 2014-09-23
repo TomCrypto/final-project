@@ -1,24 +1,24 @@
-#include "gui/raw_mouse.h"
+#include "gui/mouse_tracker.h"
 
-raw_mouse::raw_mouse()
+mouse_tracker::mouse_tracker()
     : m_last(glm::vec2(0, 0)),
       m_first(true)
 {
 
 }
 
-glm::vec2 raw_mouse::delta(const glm::vec2& pos)
+glm::vec2 mouse_tracker::delta(const glm::vec2& pos)
 {
     return m_first ? glm::vec2(0, 0) : pos - m_last;
 }
 
-void raw_mouse::set_pos(const glm::vec2& pos)
+void mouse_tracker::set_pos(const glm::vec2& pos)
 {
     m_first = false;
     m_last = pos;
 }
 
-glm::vec2 raw_mouse::get_pos()
+glm::vec2 mouse_tracker::get_pos()
 {
     return m_first ? glm::vec2(0, 0) : m_last;
 }
