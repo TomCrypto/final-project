@@ -480,7 +480,7 @@ namespace gui
 	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	    glShadeModel(GL_SMOOTH);
 
-        m_sky->display(m_cam);
+        //m_sky->display(m_cam);
 
 		glColor3f(m_bar->color.x, m_bar->color.y, m_bar->color.z);
 		glPushMatrix();
