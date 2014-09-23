@@ -250,7 +250,7 @@ namespace gui
 
             GLenum err = glewInit();
             if (err != GLEW_OK) {
-                LOG(ERROR) << "Failed to initialize GLEW (glewInit failed)";
+                LOG(ERROR) << "Failed to initialize GLEW (glewInit failed).";
                 LOG(TRACE) << "Error: " << (char*)glewGetErrorString(err);
 	            throw std::runtime_error("");
             }
@@ -281,7 +281,7 @@ namespace gui
                            << "TW_OPENGL_CORE (better performance).";
 
                 if (TwInit(TW_OPENGL_CORE, NULL) != 1) {
-                    LOG(ERROR) << "Failed to initialize AntTweakBar";
+                    LOG(ERROR) << "Failed to initialize AntTweakBar.";
                     throw std::runtime_error("");
                 }
             } else {
@@ -289,7 +289,7 @@ namespace gui
                            << "falling back to TW_OPENGL.";
 
                 if (TwInit(TW_OPENGL, NULL) != 1) {
-                    LOG(ERROR) << "Failed to initialize AntTweakBar";
+                    LOG(ERROR) << "Failed to initialize AntTweakBar.";
                     throw std::runtime_error("");
                 }
             }
