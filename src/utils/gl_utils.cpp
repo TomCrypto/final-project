@@ -43,16 +43,16 @@ namespace gl
 
     shader& shader::operator=(const shader& other)
     {
-        *this = other;
+        m_vars = other.m_vars;
+        m_vert = other.m_vert;
+        m_frag = other.m_frag;
+        m_prog = other.m_prog;
         return *this;
     }
 
     shader::shader(const shader& other)
     {
-        m_vars = other.m_vars;
-        m_vert = other.m_vert;
-        m_frag = other.m_frag;
-        m_prog = other.m_prog;
+        *this = other;
     }
 
     shader::shader(const std::string& vert_name,
@@ -422,7 +422,7 @@ namespace gl
         glActiveTexture(GL_TEXTURE0 + unit);
         glBindTexture(GL_TEXTURE_2D, m_tex);
     }
-    
+
     GLuint texture2D::operator()() const
     {
         return m_tex;
