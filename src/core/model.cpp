@@ -48,11 +48,11 @@ Model::Model(std::string filename) {
 				}
 			}
 			else if (t[0] == "usemtl") {
-				mtl = t[1];
+				/*mtl = t[1];
 				if (materials.find(mtl) == materials.end()) {
 					std::cout << "missing material " << mtl << "\n";
-					while (true);
-				}
+					//while (true);
+				}*/
 			}
 			else if (t[0] == "g" || t[0] == "s") {
 				std::cout << line << "\n";
@@ -149,7 +149,7 @@ void Model::CreateGLPolyGeometry() {
 
 	glBegin(GL_TRIANGLES); //Begin drawing triangles
 	for (Triangle t : triangles) {
-		useMTL(t.materialIdx);
+		//useMTL(t.materialIdx);
 		addToList(t.v1, t.n1, t.t1);
 		addToList(t.v2, t.n2, t.t2);
 		addToList(t.v3, t.n3, t.t3);

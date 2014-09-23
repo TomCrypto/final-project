@@ -373,7 +373,7 @@ namespace gui
         */
 
         LOG(INFO) << "Loading model.";
-        m_obj = new Model("Teapot.obj");
+        m_obj = new Model("teapot.obj");
 
         #if 0
         m_aperture = new aperture();
