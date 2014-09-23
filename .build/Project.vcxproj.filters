@@ -49,6 +49,9 @@
     <Filter Include="Resource Files\Lighthouse">
       <UniqueIdentifier>{756948f4-b700-40b7-9fba-b4de33fac46b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Skybox">
+      <UniqueIdentifier>{6b2da6f6-da9e-47dc-ba96-d269c45e21aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -87,6 +90,9 @@
     <ClCompile Include="..\src\utils\fft_engine.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\core\skybox.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gui\tweakbar.h">
@@ -122,6 +128,9 @@
     <ClInclude Include="..\src\utils\fft_engine.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\core\skybox.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\lib\bin\win32\FreeImage.dll">
@@ -147,6 +156,12 @@
     </None>
     <None Include="..\res\teapot2.obj.mtl">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\shaders\skybox\skybox.frag">
+      <Filter>Resource Files\Shaders\Skybox</Filter>
+    </None>
+    <None Include="..\res\shaders\skybox\skybox.vert">
+      <Filter>Resource Files\Shaders\Skybox</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
