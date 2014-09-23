@@ -10,7 +10,7 @@ void main()
     vec3 topColor = vec3(0, 0, 1);
     vec3 bottomColor = vec3(1, 1, 1);
 
-    vec3 color = mix(topColor, bottomColor, theta / 3.14159265 * 2);
+    vec3 color = mix(topColor, bottomColor, pow(theta / 3.14159265 * 1.9, 5));
 
     gl_FragColor = vec4(color, 1);
 }
