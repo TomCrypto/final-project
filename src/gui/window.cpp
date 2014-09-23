@@ -372,6 +372,9 @@ namespace gui
          * is no OpenGL context active yet.
         */
 
+        LOG(INFO) << "Loading model.";
+        m_obj = new Model("Teapot.obj");
+
         #if 0
         m_aperture = new aperture();
 
@@ -400,10 +403,6 @@ namespace gui
 
         m_bar = new main_bar("main");
         m_bar->set_title("Configuration");
-
-        LOG(INFO) << "Loading model.";
-
-        m_obj = new Model("Bunny.obj");
 
         LOG(INFO) << "Setting up fixed function pipeline.";
 
