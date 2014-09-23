@@ -205,9 +205,6 @@
     <Media Include="..\res\Bunny.obj">
       <Filter>Resource Files</Filter>
     </Media>
-    <Media Include="..\res\Teapot.obj">
-      <Filter>Resource Files</Filter>
-    </Media>
     <Media Include="..\res\lighthouse\Lighthouse.mtl">
       <Filter>Resource Files\Lighthouse</Filter>
     </Media>
@@ -231,6 +228,15 @@
     </Media>
     <Media Include="..\res\lighthouse\Trees.obj">
       <Filter>Resource Files\Lighthouse</Filter>
+    </Media>
+    <Media Include="..\res\default.mtl">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\res\default.png">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\res\teapot.obj">
+      <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>
 </Project>
