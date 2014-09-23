@@ -78,6 +78,24 @@
     <ClCompile Include="..\src\core\camera.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\core\aperture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\fft.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\fps_counter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\raw_mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scratch\aperture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scratch\fft.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gui\tweakbar.h">
@@ -100,6 +118,27 @@
     </ClInclude>
     <ClInclude Include="..\src\core\camera.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\aperture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\fft.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\fps_counter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\raw_mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scratch\aperture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scratch\fft.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scratch\optical_system.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -151,15 +190,6 @@
       <Filter>Resource Files\Apertures</Filter>
     </Image>
     <Image Include="..\res\apertures\pentagonal.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\pupil_closing.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\pupil_glare.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\pupil_open.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
     <Image Include="..\res\san-miguel\Maps\TR02lef5.tga">
@@ -930,6 +960,21 @@
     <Image Include="..\res\san-miguel\Maps\tela_sillas_1_bump.jpg">
       <Filter>Resource Files\san-miguel\Maps</Filter>
     </Image>
+    <Image Include="..\res\apertures\decagonal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\res\apertures\elliptical.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\res\apertures\hexagonal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\res\apertures\nonagonal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\res\apertures\octagonal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\res\shaders\generic\fs_quad.vert">
@@ -946,14 +991,20 @@
     <Media Include="..\res\Bunny.obj">
       <Filter>Resource Files</Filter>
     </Media>
-    <Media Include="..\res\Teapot.obj">
-      <Filter>Resource Files</Filter>
-    </Media>
     <Media Include="..\res\san-miguel\san-miguel.mtl">
       <Filter>Resource Files\san-miguel</Filter>
     </Media>
     <Media Include="..\res\san-miguel\san-miguel.obj">
       <Filter>Resource Files\san-miguel</Filter>
+    </Media>
+    <Media Include="..\res\teapot.obj">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\res\default.png">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\res\default.mtl">
+      <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>
 </Project>
