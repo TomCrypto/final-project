@@ -124,10 +124,10 @@ void Model::display() {
 	}
 }
 float *vec3TofloatArr(glm::vec3 v) {
-	return new float[] {v.x, v.y, v.z};
+	return new float[3] {v.x, v.y, v.z};
 }
 float *specular(glm::vec3 v, float ns) {
-	return new float[] {v.x, v.y, v.z, ns};
+	return new float[4] {v.x, v.y, v.z, ns};
 }
 void Model::useMTL(std::string mtl) {
 	glMaterialfv(GL_FRONT, GL_AMBIENT, vec3TofloatArr(materials[mtl].Ka));
