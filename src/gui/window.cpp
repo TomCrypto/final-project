@@ -372,9 +372,6 @@ namespace gui
          * is no OpenGL context active yet.
         */
 
-        LOG(INFO) << "Loading model.";
-        m_obj = new Model("Teapot.obj");
-
         #if 0
         m_aperture = new aperture();
 
@@ -400,6 +397,9 @@ namespace gui
     void window::on_init()
     {
         LOG(INFO) << "Creating tweak bar.";
+
+		LOG(INFO) << "Loading model.";
+		m_obj = new Model("Teapot.obj");
 
         m_bar = new main_bar("main");
         m_bar->set_title("Configuration");
@@ -484,7 +484,7 @@ namespace gui
 
 		glColor3f(m_bar->color.x, m_bar->color.y, m_bar->color.z);
 		glPushMatrix();
-		glScalef(0.05f, 0.05f, 0.05f);
+		//glScalef(0.05f, 0.05f, 0.05f);
 		m_obj->display();
 		glPopMatrix();
         glDisable(GL_DEPTH_TEST);
