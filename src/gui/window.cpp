@@ -398,8 +398,12 @@ namespace gui
     {
         LOG(INFO) << "Creating tweak bar.";
 
-		LOG(INFO) << "Loading model.";
-		m_obj = new Model("Teapot.obj");
+		LOG(INFO) << "Loading models";
+		m_lighthouse = new Model("Lighthouse/Lighthouse.obj"); 
+		//m_outbuilding = new Model("Lighthouse/OutBuilding.obj"); 
+		//m_terrain = new Model("Lighthouse/Terrain.obj");
+		//m_tree = new Model("Lighthouse/Trees.obj");
+		LOG(INFO) << "All Models Loaded.";
 
         m_bar = new main_bar("main");
         m_bar->set_title("Configuration");
@@ -440,8 +444,11 @@ namespace gui
          * our only chance to execute cleanup code within an OpenGL context.
         */
 
-        delete m_bar;
-        delete m_obj;
+		delete m_bar;
+		delete m_lighthouse;
+		//delete m_outbuilding;
+		//delete m_terrain;
+		//delete m_tree;
         delete m_framebuffer;
         delete m_sky;
         //delete m_aperture;
@@ -485,7 +492,10 @@ namespace gui
 		glColor3f(m_bar->color.x, m_bar->color.y, m_bar->color.z);
 		glPushMatrix();
 		//glScalef(0.05f, 0.05f, 0.05f);
-		m_obj->display();
+		m_lighthouse->display();
+		//m_outbuilding->display();
+		//m_terrain->display();
+		//m_tree->display();
 		glPopMatrix();
         glDisable(GL_DEPTH_TEST);
 	    glDisable(GL_LIGHTING);
