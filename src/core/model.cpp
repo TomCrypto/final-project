@@ -3,6 +3,8 @@
 
 Model::Model(std::string filename) {
 	mode = G308_SHADE_POLYGON;
+    m_glGeomListPoly = 0;
+    m_glGeomListWire = 0;
 
 	std::string line;
 	std::ifstream myfile(filename);

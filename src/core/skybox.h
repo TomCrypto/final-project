@@ -17,7 +17,6 @@ public:
 private:
     gl::shader m_shader;
     GLUquadric* quad;
-    //
 };
 
 #endif
