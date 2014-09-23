@@ -424,6 +424,8 @@ namespace gui
 
         m_cam = camera(m_dims, glm::vec3(0, 3, -5), glm::vec3(0, 0, 1),
                        m_bar->cam_fov * glm::pi<float>() / 180);
+
+        m_sky = new skybox();
     }
 
     void window::on_free()
@@ -441,6 +443,7 @@ namespace gui
         delete m_bar;
         delete m_obj;
         delete m_framebuffer;
+        delete m_sky;
         //delete m_aperture;
     }
 
@@ -476,6 +479,8 @@ namespace gui
 	    glEnable(GL_COLOR_MATERIAL);
 	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	    glShadeModel(GL_SMOOTH);
+
+        m_sky->display(m_cam);
 
 		glColor3f(m_bar->color.x, m_bar->color.y, m_bar->color.z);
 		m_obj->display();

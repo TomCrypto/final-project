@@ -18,6 +18,7 @@
 #include "core/model.h"
 #include "core/camera.h"
 #include "core/aperture.h"
+#include "core/skybox.h"
 
 namespace gui
 {
@@ -87,6 +88,7 @@ namespace gui
         aperture* m_aperture;
         camera m_cam;
 		Model* m_obj;
+        skybox* m_sky;
     };
 }
 
