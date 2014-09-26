@@ -69,7 +69,7 @@ namespace gui
         }
     }
 
-    static void keyboard_up_cb(unsigned char key, int x, int y)
+    static void keyboard_up_cb(unsigned char key, int /*x*/, int /*y*/)
     {
         if (exception::has_failed())
             glutLeaveMainLoop();
@@ -96,7 +96,7 @@ namespace gui
         }
     }
 
-    static void special_up_cb(int key, int x, int y)
+    static void special_up_cb(int key, int /*x*/, int /*y*/)
     {
         if (exception::has_failed())
             glutLeaveMainLoop();
@@ -177,7 +177,7 @@ namespace gui
     {
         LOG(WARNING) << "FreeImage error: " << msg << ".";
         const char *fmt = FreeImage_GetFormatFromFIF(fif);
-        if (fmt) LOG(TRACE) << "Context: " << fmt << ".";
+        if (fmt) LOG(TRACE) << "Details: " << fmt << ".";
     }
 
     void window::initialize()
@@ -216,12 +216,7 @@ namespace gui
     {
         try {
             on_load();
-        } catch (...) {
-            exception::fail();
-            return;
-        }
 
-        try {
             int fake_argc = 1;
             char* fake_argv[2] = { (char*)"foo", 0 };
             glutInit(&fake_argc, fake_argv); // bit of a hack...
@@ -433,13 +428,13 @@ namespace gui
 
     void window::on_free()
     {
-        /* This probably deserves some kind of explanation. The reason we call
-         * TwTerminate() here and not in the destructor, is because due to the
+        /* This probably deserves some kind of explanation. The reason we free
+         * all our stuff here and not in the destructor, is because due to the
          * way GLUT works, the OpenGL context is gone the moment the window is
          * closed, and hence will be long gone by the time the destructor gets
          * called. However graphics resources should be cleaned up before that
          * happens, thus the on_free() function is hooked up not to the window
-         * destructor but to __shutdown_cb()->glutCloseFunc which is basically
+         * destructor but to shutdown_cb()->glutCloseFunc which is essentially
          * our only chance to execute cleanup code within an OpenGL context.
         */
 
