@@ -26,7 +26,7 @@ public:
     // change the field of view (radians)
     void set_fov(float fov);
 
-    glm::mat4 view() const;
+    glm::mat4 view(bool translate = true) const;
     glm::mat4 proj() const;
 
 private:

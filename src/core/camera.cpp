@@ -44,9 +44,12 @@ void camera::set_fov(float fov)
     m_fov = fov;
 }
 
-glm::mat4 camera::view() const
+glm::mat4 camera::view(bool translate) const
 {
-    return glm::lookAt(m_pos, m_pos + m_dir, glm::vec3(0, 1, 0));
+    if (translate)
+        return glm::lookAt(m_pos, m_pos + m_dir, glm::vec3(0, 1, 0));
+    else
+        return glm::lookAt(glm::vec3(0), m_dir, glm::vec3(0, 1, 0));
 }
 
 glm::mat4 camera::proj() const
