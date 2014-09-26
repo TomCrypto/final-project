@@ -10,7 +10,7 @@ void skybox::display(const camera& cam)
 {
     m_shader.bind();
 
-    m_shader.set("view", cam.view());
+    m_shader.set("view", cam.view(false));
     m_shader.set("proj", cam.proj());
 
     //glBegin();
