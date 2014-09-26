@@ -372,10 +372,10 @@ namespace gui
          * is no OpenGL context active yet.
         */
 		LOG(INFO) << "Loading models";
-		m_lighthouse = new Model("Lighthouse/Lighthouse.obj"); 
-		//m_outbuilding = new Model("Lighthouse/OutBuilding.obj"); 
-		//m_terrain = new Model("Lighthouse/Terrain.obj");
-		//m_tree = new Model("Lighthouse/Trees.obj");
+		m_lighthouse = new Model("lighthouse/Lighthouse.obj"); 
+		//m_outbuilding = new Model("lighthouse/OutBuilding.obj"); 
+		//m_terrain = new Model("lighthouse/Terrain.obj");
+		//m_tree = new Model("lighthouse/Trees.obj");
 		LOG(INFO) << "All Models Loaded.";
         #if 0
         m_aperture = new aperture();
