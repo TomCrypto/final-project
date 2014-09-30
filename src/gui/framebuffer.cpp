@@ -7,9 +7,7 @@
 framebuffer::framebuffer(const glm::ivec2& dims)
     : m_dims(dims),
       m_tex(dims, GL_FLOAT),
-      m_tmp(dims, GL_FLOAT),
-      m_shader("generic/fs_quad.vert", "tonemap/reinhard.frag"),
-      m_log_shader("generic/fs_quad.vert", "tonemap/log_lum.frag")
+      m_shader("generic/fs_quad.vert", "tonemap/reinhard.frag")
 {
     if (!GLEW_ARB_framebuffer_object && !GLEW_EXT_framebuffer_object) {
         LOG(ERROR) << "Framebuffer requires ARB or EXT framebuffer_object"
@@ -92,7 +90,6 @@ void framebuffer::resize(const glm::ivec2& dims)
     }
 
     m_tex.resize(dims);
-    m_tmp.resize(dims);
 
     if (GLEW_ARB_framebuffer_object) {
         glBindRenderbuffer(GL_RENDERBUFFER, m_depth);
@@ -124,62 +121,22 @@ void framebuffer::clear(bool depth)
     glClear(GL_COLOR_BUFFER_BIT | (depth ? GL_DEPTH_BUFFER_BIT : 0));
 }
 
-static int get_mip_level(const glm::ivec2& dims)
-{
-    auto m = std::max(dims.x, dims.y);
-    return (int)ceil(log(m) / log(2));
-}
-
 void framebuffer::render(float exposure)
 {
-    // Get the 1x1 mip level for the current framebuffer resolutions, this
-    // will be equal to the log2 of the largest dimension (width or height)
-
-    int mip_level = get_mip_level(m_dims);
-
-    // Set up the necessary OpenGL state for doing fullscreen quad rendering
-
     glDisable(GL_DEPTH_TEST);
     glViewport(0, 0, m_dims.x, m_dims.y);
 
-    // First convert the rendered image (in m_tex) to a log-luminance texture
-    // in m_tmp, so bind m_tmp to the framebuffer and run a fullscreen shader
-
     if (GLEW_ARB_framebuffer_object) {
-        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                               GL_TEXTURE_2D, m_tmp(), 0);
-    } else if (GLEW_EXT_framebuffer_object) {
-        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
-        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-                                  GL_TEXTURE_2D, m_tmp(), 0);
-    }
-
-    m_log_shader.bind();
-    m_tex.bind(0);
-
-    m_log_shader.fullscreen_quad();
-
-    // Now that m_tmp contains the log-luminance texture, tonemap it into the
-    // backbuffer, by unbinding the framebuffer and binding m_tmp as texture
-    // (remember to mipmap m_tmp, to access the 1x1 average log-luminance)
-
-    m_tmp.bind(0);
-
-    if (GLEW_ARB_framebuffer_object) {
-        glGenerateMipmap(GL_TEXTURE_2D);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     } else if (GLEW_EXT_framebuffer_object) {
-        glGenerateMipmapEXT(GL_TEXTURE_2D);
-        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
     }
 
     m_shader.bind();
-    m_tmp.bind(0);
+    m_tex.bind(0);
 
-    m_shader.set("mip_level", (float)mip_level);
+    m_shader.set("render", 0);
     m_shader.set("exposure", exposure);
-    m_shader.set("pixel_count", (float)(m_dims.x * m_dims.y));
 
     m_shader.fullscreen_quad();
 

@@ -1,11 +1,22 @@
 #version 120
 
-uniform sampler2D log_lum;
-uniform float mip_level;
-uniform float pixel_count;
+uniform sampler2D render;
 uniform float exposure;
 
 varying vec2 uv;
+
+float A = 0.15;
+float B = 0.50;
+float C = 0.10;
+float D = 0.20;
+float E = 0.02;
+float F = 0.30;
+float W = 11.2;
+
+vec3 Uncharted2Tonemap(vec3 x)
+{
+    return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+}
 
 float luminance(vec3 color)
 {
@@ -14,13 +25,14 @@ float luminance(vec3 color)
 
 void main()
 {
-    float avg_log_lum = texture2D(log_lum, uv, mip_level).a;
-    vec3 color = texture2D(log_lum, uv).rgb;
+    vec3 texColor = texture2D(render, uv).rgb;
 
-    float avg_lum = exp(avg_log_lum / pixel_count);
-    float key = exposure / avg_lum;
+    // assume values > W map to white
 
-    vec3 final = color.rgb * (key / (1.0 + luminance(color.rgb) * key));
+    vec3 curr = Uncharted2Tonemap(exposure * texColor);
 
-    gl_FragColor = vec4(pow(final, vec3(1.0 / 2.2)), 1); // TODO: check this later
+    vec3 whiteScale = 1.0 / Uncharted2Tonemap(vec3(W));
+    vec3 color = curr * whiteScale;
+
+    gl_FragColor = vec4(pow(color, vec3(1.0 / 2.2)), 1.0);
 }

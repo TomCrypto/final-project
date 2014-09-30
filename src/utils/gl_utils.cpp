@@ -310,7 +310,7 @@ namespace gl
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y,
                          0, GL_RGBA, GL_UNSIGNED_BYTE, &buf[0]);
         } else if (m_fmt == GL_FLOAT) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y,
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_dims.x, m_dims.y,
                          0, GL_RGBA, GL_FLOAT, img.data());
         } else {
             LOG(ERROR) << "Unsupported texture format.";
@@ -364,7 +364,7 @@ namespace gl
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y,
                          0, GL_RGBA, GL_UNSIGNED_BYTE, &buf[0]);
         } else if (m_fmt == GL_FLOAT) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y,
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_dims.x, m_dims.y,
                          0, GL_RGBA, GL_FLOAT, img.data());
         } else {
             LOG(ERROR) << "Unsupported texture format.";
@@ -401,7 +401,9 @@ namespace gl
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                                        GL_LINEAR);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y, 0,
+        GLenum internal = m_fmt == GL_FLOAT ? GL_RGBA32F : GL_RGBA;
+
+        glTexImage2D(GL_TEXTURE_2D, 0, internal, m_dims.x, m_dims.y, 0,
                      GL_RGBA, m_fmt, nullptr);
     }
 
@@ -414,8 +416,10 @@ namespace gl
     {
         m_dims = dims;
 
+        GLenum internal = m_fmt == GL_FLOAT ? GL_RGBA32F : GL_RGBA;
+
         glBindTexture(GL_TEXTURE_2D, m_tex);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y, 0,
+        glTexImage2D(GL_TEXTURE_2D, 0, internal, m_dims.x, m_dims.y, 0,
                      GL_RGBA, m_fmt, nullptr);
     }
 
