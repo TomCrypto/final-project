@@ -115,8 +115,8 @@ aperture::aperture(const glm::ivec2& dims, const aperture_params& params,
 
     for (int radius : radii) {
         m_filters[radius] = get_flare(cfft, radius);
-        /*m_filters[radius].first.save("radius" + std::to_string(radius) + ".exr");
-        printf("%d => (%d, %d)\n", radius, m_filters[radius].second.x,
+        m_filters[radius].first.save("radius" + std::to_string(radius) + ".exr");
+        /*printf("%d => (%d, %d)\n", radius, m_filters[radius].second.x,
                                            m_filters[radius].second.y);*/
     }
 
