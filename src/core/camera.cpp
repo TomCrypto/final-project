@@ -44,6 +44,16 @@ void camera::set_fov(float fov)
     m_fov = fov;
 }
 
+glm::vec3 camera::pos() const
+{
+    return m_pos;
+}
+
+glm::vec3 camera::dir() const
+{
+    return m_dir;
+}
+
 glm::mat4 camera::view(bool translate) const
 {
     if (translate)

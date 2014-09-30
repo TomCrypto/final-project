@@ -26,6 +26,9 @@ public:
     // change the field of view (radians)
     void set_fov(float fov);
 
+    glm::vec3 pos() const;
+    glm::vec3 dir() const;
+
     glm::mat4 view(bool translate = true) const;
     glm::mat4 proj() const;
 
