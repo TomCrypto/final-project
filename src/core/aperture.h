@@ -9,13 +9,25 @@
 #include "utils/fft_engine.h"
 #include "utils/image.h"
 
+#include "gui/framebuffer.h"
+#include "core/camera.h"
+
+struct aperture_params
+{
+    float scale;
+};
+
 // allows one to generate random apertures of a given size as well as their
 // chromatic Fourier transform
 
 class aperture
 {
 public:
-    aperture();
+    aperture(const glm::ivec2& dims, const aperture_params& params,
+             fft_engine& fft);
+
+    // renders into/using the current framebuffer
+    void render(const camera& camera/*, lights... */);
 
     // generates a random aperture with noise
     // TODO: make noise configurable as parameters?
@@ -25,7 +37,7 @@ public:
     // the final output is resized to the given dimensions
     image get_cfft(const image& aperture, const glm::ivec2& dims);
 
-    image get_flare(const image& cfft, int radius);
+    std::pair<image, glm::ivec2> get_flare(const image& cfft, int radius);
 
 private:
     aperture& operator=(const aperture& other);
@@ -34,9 +46,11 @@ private:
     std::vector<image> m_apertures;
     std::vector<image> m_noise;
 
+    std::map<int, std::pair<image, glm::ivec2>> m_filters;
+
     std::random_device m_rd;
     std::mt19937 m_rng;
-    fft_engine m_fft;
+    fft_engine& m_fft;
 };
 
 #endif

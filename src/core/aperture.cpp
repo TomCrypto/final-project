@@ -48,7 +48,7 @@ static bool is_empty_col(const image& img, int col, const glm::vec3& noise)
 // 1. denoises the image by estimating the ground noise at the image
 //    edges and removing it through subtraction
 // 2. trims the image by removing any zero rows or columns
-static void trim_and_denoise(image& img)
+static glm::ivec2 trim_and_denoise(image& img)
 {
     // TODO: better denoising? for now, just subtract 2 * 1e-7 arbitrarily
 
@@ -71,10 +71,13 @@ static void trim_and_denoise(image& img)
 
     img = img.subregion(l, t, dims.x - 1 - r - l,
                               dims.y - 1 - b - t);
+
+    return glm::ivec2((l + dims.x - 1 - r) / 2,
+                      (t + dims.y - 1 - b) / 2);
 }
 
-aperture::aperture()
-    : m_rng(m_rd()), m_fft(glm::ivec2(3072, 3072))
+aperture::aperture(const glm::ivec2& dims, const aperture_params& params,
+         fft_engine& fft) : m_rng(m_rd()), m_fft(fft)
 {
     const std::string& base = "apertures/";
 
@@ -97,6 +100,27 @@ aperture::aperture()
     m_noise.push_back(image(base + "noise6.png"));
 
     LOG(INFO) << "All textures loaded.";
+
+    LOG(INFO) << "Generating aperture.";
+
+    image aperture = gen_aperture(dims);
+
+    image cfft = get_cfft(aperture, dims);
+
+    LOG(INFO) << "Done.";
+
+    LOG(INFO) << "Generating filters.";
+
+    const int radii[] = { 1, 2, 4, 8, 16, 32, 64, 128 };
+
+    for (int radius : radii) {
+        m_filters[radius] = get_flare(cfft, radius);
+        /*m_filters[radius].first.save("radius" + std::to_string(radius) + ".exr");
+        printf("%d => (%d, %d)\n", radius, m_filters[radius].second.x,
+                                           m_filters[radius].second.y);*/
+    }
+
+    LOG(INFO) << "Done.";
 }
 
 image aperture::gen_aperture(const glm::ivec2& dims)
@@ -295,9 +319,14 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
     return out;
 }
 
-image aperture::get_flare(const image& cfft, int radius)
+std::pair<image, glm::ivec2> aperture::get_flare(const image& cfft, int radius)
 {
     auto flare = m_fft.convolve_disk(cfft, radius);
-    trim_and_denoise(flare);
-    return flare;
+    const auto dims = trim_and_denoise(flare);
+    return std::make_pair(flare, dims);
+}
+
+void aperture::render(const camera& camera)
+{
+
 }

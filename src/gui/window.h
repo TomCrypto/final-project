@@ -86,6 +86,7 @@ namespace gui
         main_bar* m_bar;
         framebuffer* m_framebuffer;
         aperture* m_aperture;
+        fft_engine m_fft;
         camera m_cam;
 		Model *m_lighthouse, *m_outbuilding, *m_terrain, *m_tree;
         skybox* m_sky;

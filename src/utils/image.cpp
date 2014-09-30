@@ -212,9 +212,15 @@ image::image(FIBITMAP *dib)
     this->dib = dib;
 }
 
+image::image()
+{
+    this->dib = nullptr;
+}
+
 image::~image()
 {
-    FreeImage_Unload(this->dib);
+    if (this->dib != nullptr)
+        FreeImage_Unload(this->dib);
 }
 
 void image::load(const std::string& path)
