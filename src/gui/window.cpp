@@ -212,7 +212,8 @@ namespace gui
     /* ==================================================================== */
 
     window::window(const std::string& window_title, const glm::ivec2& dims)
-        : m_fps(51), m_lock_cursor(false), m_dims(dims), m_window(-1)
+        : m_fps(51), m_lock_cursor(false), m_dims(dims), m_window(-1),
+          m_fft(glm::ivec2(3072, 3072))
     {
         try {
             on_load();
@@ -367,14 +368,17 @@ namespace gui
          * is no OpenGL context active yet.
         */
 		LOG(INFO) << "Loading models";
-		m_lighthouse = new Model("lighthouse/Lighthouse.obj"); 
-		//m_outbuilding = new Model("lighthouse/OutBuilding.obj"); 
+		m_lighthouse = new Model("lighthouse/Lighthouse.obj");
+		//m_outbuilding = new Model("lighthouse/OutBuilding.obj");
 		//m_terrain = new Model("lighthouse/Terrain.obj");
 		//m_tree = new Model("lighthouse/Trees.obj");
 		LOG(INFO) << "All Models Loaded.";
-        #if 0
-        m_aperture = new aperture();
 
+        m_aperture = new aperture(glm::ivec2(1024, 1024),
+                                  aperture_params(),
+                                  m_fft);
+
+        #if 0
         LOG(INFO) << "Generating aperture.";
 
         auto ap = m_aperture->gen_aperture(glm::ivec2(1024, 1024));
@@ -494,6 +498,8 @@ namespace gui
         glDisable(GL_DEPTH_TEST);
 	    glDisable(GL_LIGHTING);
 	    glDisable(GL_COLOR_MATERIAL);
+
+        m_aperture->render(m_cam);
 
         // Step 3: render tonemapped HDR render to backbuffer
 

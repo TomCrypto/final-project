@@ -16,7 +16,7 @@ static void buf_free(fftwf_complex* buf)
 static fftwf_plan_s* plan_alloc(const glm::ivec2& dims, fftwf_complex* buf)
 {
     return fftwf_plan_dft_2d(dims.x, dims.y, buf, buf,
-                             FFTW_FORWARD, FFTW_MEASURE);
+                             FFTW_FORWARD, FFTW_ESTIMATE);
 }
 
 static void plan_free(fftwf_plan_s* plan)

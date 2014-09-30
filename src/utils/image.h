@@ -35,6 +35,7 @@ public:
     image(const glm::ivec2& dims);
     image(const image &other);
     image(FIBITMAP *dib);
+    image();
     ~image();
 
     //<< Loads a new image file, or saves this image to an EXR file
