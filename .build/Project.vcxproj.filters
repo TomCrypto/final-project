@@ -154,15 +154,6 @@
     <None Include="..\lib\bin\win32\freeglut.dll">
       <Filter>Dependencies</Filter>
     </None>
-    <None Include="..\res\teapot2.obj.mtl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\res\shaders\skybox\skybox.frag">
-      <Filter>Resource Files\Shaders\Skybox</Filter>
-    </None>
-    <None Include="..\res\shaders\skybox\skybox.vert">
-      <Filter>Resource Files\Shaders\Skybox</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\res\apertures\noise1.png">
@@ -217,6 +208,12 @@
     </Text>
     <Text Include="..\res\shaders\tonemap\log_lum.frag">
       <Filter>Resource Files\Shaders\Tonemapping</Filter>
+    </Text>
+    <Text Include="..\res\shaders\skybox\skybox.frag">
+      <Filter>Resource Files\Shaders\Skybox</Filter>
+    </Text>
+    <Text Include="..\res\shaders\skybox\skybox.vert">
+      <Filter>Resource Files\Shaders\Skybox</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
