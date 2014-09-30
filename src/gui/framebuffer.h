@@ -33,13 +33,11 @@ private:
     framebuffer(const framebuffer& other);
 
     gl::texture2D m_tex; //<< main render texture
-    gl::texture2D m_tmp; //<< temporary texture for readback
     GLuint m_depth; //<< depth texture for rendering
 
     GLuint m_fbo;   //<< FBO for rendering
 
     gl::shader m_shader;
-    gl::shader m_log_shader;
 
     glm::ivec2 m_dims;
 };
