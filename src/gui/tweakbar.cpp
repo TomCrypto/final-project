@@ -44,7 +44,10 @@ namespace gui
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
         cam_fov = 50;
-        color = glm::vec3(0.75f, 0.25f, 0.25f);
+		color1 = glm::vec3(0.75f, 0.25f, 0.25f);
+		color2 = glm::vec3(0.75f, 0.25f, 0.25f);
+		color3 = glm::vec3(0.75f, 0.25f, 0.25f);
+		color4 = glm::vec3(0.75f, 0.25f, 0.25f);
         aperture_regen_btn = false;
 
         TwAddVarRW(m_bar,
@@ -57,9 +60,18 @@ namespace gui
             " label='Exposure'"
             " min=0.01 max=3 step=0.01 help='Tonemapping exposure'");
 
-        TwAddVarRW(m_bar,
-            "color", TW_TYPE_COLOR3F, &color,
-            " label='Color' colormode=hls");
+		TwAddVarRW(m_bar,
+			"color1", TW_TYPE_COLOR3F, &color1,
+			" label='Color1' colormode=hls");
+		TwAddVarRW(m_bar,
+			"color2", TW_TYPE_COLOR3F, &color2,
+			" label='Color2' colormode=hls");
+		TwAddVarRW(m_bar,
+			"color3", TW_TYPE_COLOR3F, &color3,
+			" label='Color3' colormode=hls");
+		TwAddVarRW(m_bar,
+			"color4", TW_TYPE_COLOR3F, &color4,
+			" label='Color4' colormode=hls");
 
         TwAddButton(m_bar, "btn", btn_cb, &aperture_regen_btn,
             " label='New Aperture'");
