@@ -368,8 +368,10 @@ namespace gui
          * is no OpenGL context active yet.
         */
 		LOG(INFO) << "Loading models";
-		m_lighthouse = new Model("lighthouse/Lighthouse.obj");
+
+		//m_lighthouse = new Model("lighthouse/Lighthouse.obj");
 		//m_outbuilding = new Model("lighthouse/OutBuilding.obj");
+
 		//m_terrain = new Model("lighthouse/Terrain.obj");
 		//m_tree = new Model("lighthouse/Trees.obj");
 		LOG(INFO) << "All Models Loaded.";
@@ -443,7 +445,7 @@ namespace gui
         */
 
 		delete m_bar;
-		delete m_lighthouse;
+		//delete m_lighthouse;
 		//delete m_outbuilding;
 		//delete m_terrain;
 		//delete m_tree;
@@ -487,12 +489,16 @@ namespace gui
 
         m_sky->display(m_cam);
 
-		glColor3f(m_bar->color.x, m_bar->color.y, m_bar->color.z);
+
 		glPushMatrix();
 		//glScalef(0.05f, 0.05f, 0.05f);
-		m_lighthouse->display();
+		glColor3f(m_bar->color1.x, m_bar->color1.y, m_bar->color1.z);
+		//m_lighthouse->display();
+		glColor3f(m_bar->color2.x, m_bar->color2.y, m_bar->color2.z);
 		//m_outbuilding->display();
+		glColor3f(m_bar->color3.x, m_bar->color3.y, m_bar->color3.z);
 		//m_terrain->display();
+		glColor3f(m_bar->color4.x, m_bar->color4.y, m_bar->color4.z);
 		//m_tree->display();
 		glPopMatrix();
         glDisable(GL_DEPTH_TEST);

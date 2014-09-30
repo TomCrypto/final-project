@@ -39,7 +39,10 @@ namespace gui
         float rotation;
         float exposure;
 
-        glm::vec3 color;
+		glm::vec3 color1;
+		glm::vec3 color2;
+		glm::vec3 color3;
+		glm::vec3 color4;
 
         bool aperture_regen_btn;
 
