@@ -7,6 +7,7 @@ float ray_sphere(vec3 p, vec3 d, vec3 o, float r) {
     float c = dot(l, l) - r * r;
 
     float discr = b * b - 4 * a * c;
+    if (discr < 0.0) return 0.0;
     // assert discr >= 0
 
     return (-b + sqrt(discr)) / (2 * a);
@@ -43,18 +44,25 @@ vec3 absorb(float dist, vec3 color, float factor){
 const int step_count = 32;
 void main()
 {
+    if (pos.y < 0) {
+        gl_FragColor = vec4(0, 0, 0, 1);
+        return;
+    }
+
 	vec3 ray = -normalize(pos);
 	vec3 light_dir = normalize(gl_LightSource[0].position.xyz);
-	float dotP = dot(ray,light_dir);
+	float dotP = max(0, dot(ray,light_dir));
 	float rayleigh = phase(dotP,-0.01)*33;
 	float mie = phase(dotP,-0.875)*100;
 	float spot = smoothstep(0.0, 15.0, phase(dotP,0.9995))*1000;
-	
+
 	vec3 accumulator = vec3(0, 0, 0);
 
 	vec3 eye_pos = vec3(0, 1.8, 0);
 	float eye_atmo_dist = atmospheric_depth(eye_pos, ray);
 	float step_size = eye_atmo_dist / step_count;
+
+	vec3 eye_dir = -normalize(pos);
 
 	vec3 mie_collected = vec3(0);
 	vec3 rayleigh_collected = vec3(0);
@@ -67,26 +75,24 @@ void main()
 
 		float sample_depth = atmospheric_depth(sample_pos,light_dir);
 
-		vec3 influx = absorb(sample_depth, vec3(1.8), 28)*extinction;	
+		vec3 influx = absorb(sample_depth, vec3(1.8), 28)*extinction;
 
-		rayleigh_collected += absorb(sample_distance, Kr*influx, 139);
-		mie_collected += absorb(sample_distance, influx, 264);
+		rayleigh_collected += absorb(sample_distance, Kr*influx, 7900);
+		mie_collected += absorb(sample_distance, influx, 16400);
 	}
-
-	
 
 	float eye_extinction = 1/*horizon_extinction(eye_position, ray,surface_height - 0.3)*/;
 	rayleigh_collected = (
 		rayleigh_collected *
 		eye_extinction *
-		pow(eye_atmo_dist, 81)
+		pow(eye_atmo_dist, 1.11)
 	)/float(step_count);
 	mie_collected = (
 		mie_collected *
-		eye_extinction * 
-		pow(eye_atmo_dist, 39)
+		eye_extinction *
+		pow(eye_atmo_dist, 1.19)
 	)/float(step_count);
-	
+
 	vec3 color = vec3(
 		spot*mie_collected +
 		mie*mie_collected +
