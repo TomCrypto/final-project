@@ -31,25 +31,62 @@ float horizon_extinction(vec3 pos, vec3 dir) {
 }
 
 varying vec3 pos;
+const vec3 Kr = vec3(0.18867780436772762, 0.4978442963618773, 0.6616065586417131);
 float phase(float cosangle, float c) {
 	float a = 9/(2.0f*(c*c+2.0f))-3.0f/2.0f;
 	float b = (1.0f*cosangle*cosangle)/(pow(1.0f+c*c-2.0f*c*cosangle,1.5));
 	return a*b;
 }
-
+vec3 absorb(float dist, vec3 color, float factor){
+    return color-color*pow(Kr, vec3(factor/dist));
+}
+const int step_count = 32;
 void main()
 {
-	float dotP = dot(-normalize(pos),normalize(gl_LightSource[0].position.xyz));
+	vec3 ray = -normalize(pos);
+	vec3 light_dir = normalize(gl_LightSource[0].position.xyz);
+	float dotP = dot(ray,light_dir);
 	float rayleigh = phase(dotP,-0.01)*33;
 	float mie = phase(dotP,-0.875)*100;
 	float spot = smoothstep(0.0, 15.0, phase(dotP,0.9995))*1000;
 	
-	vec3 kr = vec3(0.18867780436772762, 0.4978442963618773, 0.6616065586417131);
+	vec3 accumulator = vec3(0, 0, 0);
 
+	vec3 eye_pos = vec3(0, 1.8, 0);
+	float eye_atmo_dist = atmospheric_depth(eye_pos, ray);
+	float step_size = eye_atmo_dist / step_count;
 
+	vec3 mie_collected = vec3(0);
+	vec3 rayleigh_collected = vec3(0);
 
-	vec3 mie_collected = vec3(0.25,0.25,0.25);
-	vec3 rayleigh_collected = kr;
+	for(int i=0;i<step_count;i++) {
+		float sample_distance = step_size*float(i);
+		vec3 sample_pos = sample_distance*ray + eye_pos;
+
+		float extinction = 1;//horizon_extinction(sample_pos,light_dir,1.8);
+
+		float sample_depth = atmospheric_depth(sample_pos,light_dir);
+
+		vec3 influx = absorb(sample_depth, vec3(1.8), 28)*extinction;	
+
+		rayleigh_collected += absorb(sample_distance, Kr*influx, 139);
+		mie_collected += absorb(sample_distance, influx, 264);
+	}
+
+	
+
+	float eye_extinction = 1/*horizon_extinction(eye_position, ray,surface_height - 0.3)*/;
+	rayleigh_collected = (
+		rayleigh_collected *
+		eye_extinction *
+		pow(eye_atmo_dist, 81)
+	)/float(step_count);
+	mie_collected = (
+		mie_collected *
+		eye_extinction * 
+		pow(eye_atmo_dist, 39)
+	)/float(step_count);
+	
 	vec3 color = vec3(
 		spot*mie_collected +
 		mie*mie_collected +
