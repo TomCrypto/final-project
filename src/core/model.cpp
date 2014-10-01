@@ -1,5 +1,9 @@
 #include <easylogging.h>
+
 #include "core/model.h"
+
+#include <stdexcept>
+
 void Model::addGroup(std::string g) {
 	groups[g];
 }
@@ -57,8 +61,8 @@ Model::Model(std::string filename) {
 						if (scan < 6) {
 							scan = sscanf(line.c_str(), "f %d/%d %d/%d %d/%d", &v1, &t1, &v2, &t2, &v3, &t3);
 							if (scan < 6) {
-								LOG(INFO) << line << "\n\n";
-								while (true);
+								LOG(ERROR) << "Failed to parse '" << line << "'.";
+								throw std::runtime_error("");
 							}
 						}
 					}
@@ -88,7 +92,7 @@ Model::Model(std::string filename) {
 					if (materials.find(mat) == materials.end()) {
 						LOG(INFO) << "found missing material as " << mat;
 					}
-					else */while (true);
+					else */throw std::runtime_error("");
 				}
 			}
 			else if (t[0] == "g") {
@@ -99,15 +103,16 @@ Model::Model(std::string filename) {
 				groups[g].s = t[1];
 			}
 			else {
-				LOG(INFO) << line;
-				while (true);
+				LOG(ERROR) << "Failed to parse '" << line << "'.";
+				throw std::runtime_error("");
 			}
 		}
 		myfile.close();
 	}
-	LOG(INFO) << "Finished" << "\n\n";
-	printf("Number of Point %d, UV %d, Normal %d\n", vertices.size(), uv.size(), normals.size());
-	//while (true);
+	LOG(INFO) << "Finished loading '" << filename << "'.";
+	LOG(TRACE) << vertices.size() << " vertices, "
+	           << uv.size() << " texcoords, "
+	           << normals.size() << " normals.";
 }
 
 void Model::readMTL(std::string filename) {
@@ -199,7 +204,7 @@ void Model::CreateGLPolyGeometry() {
 				LOG(ERROR) << "Wrong param for vertice, normal or uv";
 				LOG(ERROR) << vertices.size() << " " << normals.size() << " " << uv.size();
 				LOG(ERROR) << t.v1 << " " << t.v2 << " " << t.v3 << " " << t.n1 << " " << t.n2 << " " << t.n3 << " " << t.t1 << " " << t.t2 << " " << t.t3;
-				while (true);
+				throw std::runtime_error("");
 			}
 			addToList(t.v1, t.n1, t.t1);
 			addToList(t.v2, t.n2, t.t2);
