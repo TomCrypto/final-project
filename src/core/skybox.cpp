@@ -40,7 +40,9 @@ void skybox::display(const camera& cam, glm::vec3 skycolor)
 	glm::vec3 tmp = (glm::vec3(0 * 1 / (4 * 3.14))*glm::vec3(0 * 3 / (16 * 3.14)));
 	m_shader.set("OneOverTotalRM", glm::vec3(1.0f / tmp.x, 1.0f / tmp.y, 1.0f / tmp.z));
 	m_shader.set("phase", phase);
-	m_shader.set("SunColorIntensity", glm::vec4(0.988f,0.831f,0.251f, 0.5f)); //SunIntensity
+	glm::vec4 sunIntensity = glm::vec4(0.988f, 0.831f, 0.251f, 0);
+	sunIntensity.w = 9.2f - 550.0f * MieMult;
+	m_shader.set("SunColorIntensity", sunIntensity); //SunIntensity
 
     //glBegin();
     gluSphere(quad, 100, 32, 32);
