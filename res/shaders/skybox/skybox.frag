@@ -43,7 +43,7 @@ float phase(float alpha, float g){
 }
 
 vec3 absorb(float dist, vec3 color, float factor){
-    return color-color*pow(skycolor, vec3(factor/dist));
+    return color * pow(skycolor, vec3(factor/dist));
 }
 const int step_count = 16;
 void main()
@@ -77,7 +77,7 @@ void main()
 
 		float sample_depth = atmospheric_depth(sample_pos,light_dir);
 
-		vec3 influx = absorb(sample_depth, vec3(1.8), 6000)*extinction;
+		vec3 influx = absorb(sample_depth, vec3(1.8), 36000)*extinction;
 
 		rayleigh_collected += absorb(sqrt(sample_distance), skycolor*influx, 23900.0);
 		mie_collected += absorb(sample_distance, influx, 36400.0);
@@ -87,12 +87,12 @@ void main()
 	rayleigh_collected = (
 		rayleigh_collected *
 		eye_extinction *
-		pow(eye_atmo_dist / 2500e3, 1)
+		pow(eye_atmo_dist / 2500e3, 0)
 	)/float(step_count);
 	mie_collected = (
 		mie_collected *
 		eye_extinction *
-		pow(eye_atmo_dist / 2500e3, 1)
+		pow(eye_atmo_dist / 2500e3, 0)
 	)/float(step_count);
 
 	vec3 color = vec3(
