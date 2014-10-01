@@ -44,6 +44,7 @@ namespace gui
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
         cam_fov = 50;
+		skycolor = glm::vec3(0.18867780436772762, 0.4978442963618773, 0.6616065586417131);
 		color1 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color2 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color3 = glm::vec3(0.75f, 0.25f, 0.25f);
@@ -63,8 +64,10 @@ namespace gui
 
 		TwAddVarRW(m_bar, "LightDir", TW_TYPE_DIR3F, &LightSun,
 			" label='Light direction' opened=true help='Change the light direction.' ");
-
 		TwAddVarRW(m_bar,
+			"sky_color", TW_TYPE_COLOR3F, &skycolor,
+			" label='Sky Color' colormode=hls");
+		/*TwAddVarRW(m_bar,
 			"color1", TW_TYPE_COLOR3F, &color1,
 			" label='Color1' colormode=hls");
 		TwAddVarRW(m_bar,
@@ -75,7 +78,7 @@ namespace gui
 			" label='Color3' colormode=hls");
 		TwAddVarRW(m_bar,
 			"color4", TW_TYPE_COLOR3F, &color4,
-			" label='Color4' colormode=hls");
+			" label='Color4' colormode=hls");*/
 
         TwAddButton(m_bar, "btn", btn_cb, &aperture_regen_btn,
             " label='New Aperture'");

@@ -32,14 +32,14 @@ float horizon_extinction(vec3 pos, vec3 dir) {
 }
 
 varying vec3 pos;
-const vec3 Kr = vec3(0.18867780436772762, 0.4978442963618773, 0.6616065586417131);
+uniform vec3 skycolor;
 float phase(float cosangle, float c) {
 	float a = 9/(2.0f*(c*c+2.0f))-3.0f/2.0f;
 	float b = (1.0f*cosangle*cosangle)/(pow(1.0f+c*c-2.0f*c*cosangle,1.5));
 	return a*b;
 }
 vec3 absorb(float dist, vec3 color, float factor){
-    return color-color*pow(Kr, vec3(factor/dist));
+    return color-color*pow(skycolor, vec3(factor/dist));
 }
 const int step_count = 32;
 void main()

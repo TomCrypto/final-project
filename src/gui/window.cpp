@@ -486,18 +486,18 @@ namespace gui
 	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	    glShadeModel(GL_SMOOTH);
 
-        m_sky->display(m_cam);
+        m_sky->display(m_cam,m_bar->skycolor);
 
 
 		glPushMatrix();
 		//glScalef(0.05f, 0.05f, 0.05f);
-		glColor3f(m_bar->color1.x, m_bar->color1.y, m_bar->color1.z);
+		//glColor3f(m_bar->color1.x, m_bar->color1.y, m_bar->color1.z);
 		//m_lighthouse->display();
-		glColor3f(m_bar->color2.x, m_bar->color2.y, m_bar->color2.z);
+		//glColor3f(m_bar->color2.x, m_bar->color2.y, m_bar->color2.z);
 		//m_outbuilding->display();
-		glColor3f(m_bar->color3.x, m_bar->color3.y, m_bar->color3.z);
+		//glColor3f(m_bar->color3.x, m_bar->color3.y, m_bar->color3.z);
 		//m_terrain->display();
-		glColor3f(m_bar->color4.x, m_bar->color4.y, m_bar->color4.z);
+		//glColor3f(m_bar->color4.x, m_bar->color4.y, m_bar->color4.z);
 		//m_tree->display();
 		glPopMatrix();
         glDisable(GL_DEPTH_TEST);
