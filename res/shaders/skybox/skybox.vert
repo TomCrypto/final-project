@@ -7,6 +7,6 @@ varying vec3 pos;
 
 void main()
 {
-    pos = (view * gl_Vertex).xyz;
+    pos = gl_Vertex.xyz;
     gl_Position = proj * view * gl_Vertex;
 }
