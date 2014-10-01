@@ -7,7 +7,7 @@ varying vec3 color;
 
 void main()
 {
-    vec3 pos = (view * gl_Vertex).xyz;
+    vec3 pos = gl_Vertex.xyz;
     gl_Position = proj * view * gl_Vertex;
 
 	float phi = atan(pos.x, pos.z);
