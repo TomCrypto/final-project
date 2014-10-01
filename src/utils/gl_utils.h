@@ -52,11 +52,16 @@ namespace gl
         void fullscreen_quad();
 
     private:
+        std::string m_vert_name;
+        std::string m_frag_name;
         GLuint m_vert;
         GLuint m_frag;
         GLuint m_prog;
 
         std::vector<std::pair<std::string, GLint>> m_vars;
+        bool is_missing(const std::string& var) const;
+        void mark_missing(const std::string& var);
+        std::vector<std::string> m_missing_vars;
 
         bool has_compiled(GLuint shader) const;
         bool has_linked(GLuint program) const;

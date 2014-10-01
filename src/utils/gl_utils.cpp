@@ -43,6 +43,9 @@ namespace gl
 
     shader& shader::operator=(const shader& other)
     {
+        m_missing_vars = other.m_missing_vars;
+        m_vert_name = other.m_vert_name;
+        m_frag_name = other.m_frag_name;
         m_vars = other.m_vars;
         m_vert = other.m_vert;
         m_frag = other.m_frag;
@@ -57,6 +60,7 @@ namespace gl
 
     shader::shader(const std::string& vert_name,
                    const std::string& frag_name)
+        : m_vert_name(vert_name), m_frag_name(frag_name)
     {
         const std::string &base_path = "shaders/";
 
@@ -74,7 +78,8 @@ namespace gl
         glCompileShader(m_vert);
 
         if (!has_compiled(m_vert)) {
-            LOG(ERROR) << "Failed to compile vertex shader '" << vert_name << "':";
+            LOG(ERROR) << "Failed to compile vertex shader '"
+                       << vert_name << "':";
             LOG(TRACE) << vert_log();
             throw 0;
         }
@@ -82,7 +87,8 @@ namespace gl
         glCompileShader(m_frag);
 
         if (!has_compiled(m_frag)) {
-            LOG(ERROR) << "Failed to compile fragment shader '" << frag_name << "':";
+            LOG(ERROR) << "Failed to compile fragment shader '"
+                       << frag_name << "':";
             LOG(TRACE) << frag_log();
             throw 0;
         }
@@ -93,7 +99,9 @@ namespace gl
         glLinkProgram(m_prog);
 
         if (!has_linked(m_prog)) {
-            LOG(ERROR) << "Failed to link shader program:";
+            LOG(ERROR) << "Failed to link shader program <"
+                       << vert_name << ", " << frag_name
+                       << ">:";
             LOG(TRACE) << link_log();
             throw 0;
         }
@@ -131,8 +139,29 @@ namespace gl
         glUseProgram(0);
     }
 
+    bool shader::is_missing(const std::string& var) const
+    {
+        auto it = std::lower_bound(m_missing_vars.begin(),
+                                   m_missing_vars.end(),
+                                   var);
+
+        return (it != m_missing_vars.end()) && (*it == var);
+    }
+
+    void shader::mark_missing(const std::string& var)
+    {
+        auto it = std::lower_bound(m_missing_vars.begin(),
+                                   m_missing_vars.end(),
+                                   var);
+
+        m_missing_vars.insert(it, var);
+    }
+
     GLint shader::operator[](const std::string& variable)
     {
+        if (is_missing(variable))
+            return -1;
+
         auto it = std::lower_bound(m_vars.begin(), m_vars.end(),
                                    std::make_pair(variable, 0));
 
@@ -140,7 +169,9 @@ namespace gl
         {
             GLint loc = glGetUniformLocation(m_prog, variable.c_str());
             if (loc == -1) {
-                LOG(WARNING) << "Uniform '" << variable << "' not found.";
+                LOG(WARNING) << "Uniform '" << variable << "' not found in <"
+                             << m_vert_name << ", " << m_frag_name << ">.";
+                mark_missing(variable); /* Will not be reported again. */
             } else m_vars.insert(it, std::make_pair(variable, loc));
             return loc;
         }
