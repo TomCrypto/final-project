@@ -7,16 +7,14 @@ varying vec3 color;
 
 void main()
 {
-    vec3 pos = gl_Normal.xyz;
     gl_Position = proj * view * gl_Vertex;
 
-
-
-	float phi = atan(pos.x, pos.z);
-	float theta = acos(pos.y / length(pos));
+	vec4 viewAngle = vec4(0);
+	viewAngle.x = dot(gl_LightSource[0].position.xyz,gl_Normal);
+	viewAngle.y = (viewAngle.x*viewAngle.x)/2 + 2;
 
 	vec3 topColor = vec3(0, 0, 1);
 	vec3 bottomColor = vec3(1, 1, 1);
 
-	color = max(0.0, dot(-pos,gl_LightSource[0].position.xyz))*bottomColor;
+	color = gl_MultiTexCoord0.xyz;
 }
