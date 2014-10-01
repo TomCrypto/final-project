@@ -3,20 +3,28 @@
 uniform mat4 view;
 uniform mat4 proj;
 
+uniform vec3 totalRayleighScattering;
+uniform vec3 totalMieScattering;
+uniform vec4 altitudeDensity;
+
 varying vec3 color;
 
 void main()
 {
-    vec3 pos = gl_Normal.xyz;
+
     gl_Position = proj * view * gl_Vertex;
 
+	vec4 viewAngle = vec4(0);
+	viewAngle.x = dot(gl_LightSource[0].position.xyz,gl_Normal);
+	viewAngle.y = (viewAngle.x*viewAngle.x)/2 + 2;
+	viewAngle.z = mix(gl_MultiTexCoord0.y, altitudeDensity.z, gl_MultiTexCoord0.x);
+	viewAngle.w = mix(gl_MultiTexCoord0.y, altitudeDensity.w, gl_MultiTexCoord0.x);
+	
+	vec3 extinction = totalRayleighScattering*viewAngle.z + totalMieScattering*viewAngle.w;
+	extinction = exp(-extinction);
+
+	//calculate mie scattering term
 
 
-	float phi = atan(pos.x, pos.z);
-	float theta = acos(pos.y / length(pos));
-
-	vec3 topColor = vec3(0, 0, 1);
-	vec3 bottomColor = vec3(1, 1, 1);
-
-	color = max(0.0, dot(-pos,gl_LightSource[0].position.xyz))*bottomColor;
+	color = viewAngle.xyz;
 }
