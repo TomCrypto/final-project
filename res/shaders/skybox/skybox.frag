@@ -27,7 +27,7 @@ float atmospheric_depth(vec3 pos, vec3 dir) {
 // computes how much the given ray is occluded by the horizon (i.e. if it
 // intersects the surface of the Earth then it will not contribute at all)
 float horizon_extinction(vec3 pos, vec3 dir) {
-    return 1; // TODO: implement this
+    return 1.0; // TODO: implement this
 }
 
 varying vec3 pos;
@@ -43,7 +43,7 @@ void main()
 	float rayleigh = phase(dotP,-0.01)*33;
 	float mie = phase(dotP,-0.875)*100;
 	float spot = smoothstep(0.0, 15.0, phase(dotP,0.9995))*1000;
-	
+
 	vec3 kr = vec3(0.18867780436772762, 0.4978442963618773, 0.6616065586417131);
 
 
