@@ -1,12 +1,12 @@
 #version 120
 
-float ray_sphere(vec3 p, vec3 d, vec3 c, float r) {
-    vec3 l = c - p;
+float ray_sphere(vec3 p, vec3 d, vec3 o, float r) {
+    vec3 l = o - p;
     float a = dot(d, d);
     float b = 2 * dot(d, l);
     float c = dot(l, l) - r * r;
 
-    float discr = b * b - 4 * a * c;
+    float discr = b * b - 4 * a * o;
     // assert discr >= 0
 
     return (-b + sqrt(discr)) / (2 * a);
