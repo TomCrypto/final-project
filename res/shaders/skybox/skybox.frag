@@ -1,5 +1,29 @@
 #version 120
 
+float ray_sphere(vec3 p, vec3 d, vec3 c, float r) {
+    vec3 l = c - p;
+    float a = dot(d, d);
+    float b = 2 * dot(d, l);
+    float c = dot(l, l) - r * r;
+
+    float discr = b * b - 4 * a * c;
+    // assert discr >= 0
+
+    return (-b + sqrt(discr)) / (2 * a);
+}
+
+// computes the distance in meters from the position to the edge of the atmosphere
+// assuming the earth is at (0, -6371km, 0) and the atmosphere has height 50km
+//
+// assumes the point is between the earth's surface and atmosphere
+// dir need not be normalized
+float atmospheric_depth(vec3 pos, vec3 dir){
+    const vec3 earth_center = vec3(0, -6371e3, 0);
+    const vec3 atmo_radius = vec3(0, 6371e3 + 50e3);
+
+    return ray_sphere(pos, normalize(dir), earth_center, atmo_radius);
+}
+
 varying vec3 pos;
 float phase(float cosangle, float c) {
 	float a = 9/(2.0f*(c*c+2.0f))-3.0f/2.0f;
