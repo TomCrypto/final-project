@@ -17,11 +17,17 @@ float ray_sphere(vec3 p, vec3 d, vec3 c, float r) {
 //
 // assumes the point is between the earth's surface and atmosphere
 // dir need not be normalized
-float atmospheric_depth(vec3 pos, vec3 dir){
+float atmospheric_depth(vec3 pos, vec3 dir) {
     const vec3 earth_center = vec3(0, -6371e3, 0);
     const vec3 atmo_radius = vec3(0, 6371e3 + 50e3);
 
     return ray_sphere(pos, normalize(dir), earth_center, atmo_radius);
+}
+
+// computes how much the given ray is occluded by the horizon (i.e. if it
+// intersects the surface of the Earth then it will not contribute at all)
+float horizon_extinction(vec3 pos, vec3 dir) {
+    return 1; // TODO: implement this
 }
 
 varying vec3 pos;
