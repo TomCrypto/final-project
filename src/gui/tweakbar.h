@@ -39,6 +39,7 @@ namespace gui
         float rotation;
         float exposure;
 
+		glm::vec3 skycolor;
 		glm::vec3 color1;
 		glm::vec3 color2;
 		glm::vec3 color3;
