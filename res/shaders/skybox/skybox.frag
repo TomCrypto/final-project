@@ -6,7 +6,7 @@ float ray_sphere(vec3 p, vec3 d, vec3 o, float r) {
     float b = 2 * dot(d, l);
     float c = dot(l, l) - r * r;
 
-    float discr = b * b - 4 * a * o;
+    float discr = b * b - 4 * a * c;
     // assert discr >= 0
 
     return (-b + sqrt(discr)) / (2 * a);
@@ -19,7 +19,7 @@ float ray_sphere(vec3 p, vec3 d, vec3 o, float r) {
 // dir need not be normalized
 float atmospheric_depth(vec3 pos, vec3 dir) {
     const vec3 earth_center = vec3(0, -6371e3, 0);
-    const vec3 atmo_radius = vec3(0, 6371e3 + 50e3);
+    const float atmo_radius = 6371e3 + 50e3;
 
     return ray_sphere(pos, normalize(dir), earth_center, atmo_radius);
 }
