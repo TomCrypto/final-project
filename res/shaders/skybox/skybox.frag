@@ -33,15 +33,19 @@ float horizon_extinction(vec3 pos, vec3 dir) {
 
 varying vec3 pos;
 uniform vec3 skycolor;
-float phase(float cosangle, float c) {
-	float a = 9/(2.0f*(c*c+2.0f))-3.0f/2.0f;
-	float b = (1.0f*cosangle*cosangle)/(pow(1.0f+c*c-2.0f*c*cosangle,1.5));
-	return a*b;
+
+float phase(float alpha, float g){
+    float a = 3.0*(1.0-g*g);
+    float b = 2.0*(2.0+g*g);
+    float c = 1.0+alpha*alpha;
+    float d = pow(1.0+g*g-2.0*g*alpha, 1.5);
+    return (a/b)*(c/d);
 }
+
 vec3 absorb(float dist, vec3 color, float factor){
     return color-color*pow(skycolor, vec3(factor/dist));
 }
-const int step_count = 32;
+const int step_count = 16;
 void main()
 {
     if (pos.y < 0) {
@@ -51,16 +55,14 @@ void main()
 
 	vec3 ray = -normalize(pos);
 	vec3 light_dir = normalize(gl_LightSource[0].position.xyz);
-	float dotP = max(0, dot(ray,light_dir));
+	float dotP = dot(ray,light_dir);
 	float rayleigh = phase(dotP,-0.01)*33;
-	float mie = phase(dotP,-0.875)*100;
+	float mie = phase(dotP,-0.575)*100;
 	float spot = smoothstep(0.0, 15.0, phase(dotP,0.9995))*1000;
-
-	vec3 accumulator = vec3(0, 0, 0);
 
 	vec3 eye_pos = vec3(0, 1.8, 0);
 	float eye_atmo_dist = atmospheric_depth(eye_pos, ray);
-	float step_size = eye_atmo_dist / step_count;
+	float step_size = eye_atmo_dist / float(step_count);
 
 	vec3 eye_dir = -normalize(pos);
 
@@ -75,22 +77,22 @@ void main()
 
 		float sample_depth = atmospheric_depth(sample_pos,light_dir);
 
-		vec3 influx = absorb(sample_depth, vec3(1.8), 28)*extinction;
+		vec3 influx = absorb(sample_depth, vec3(1.8), 6000)*extinction;
 
-		rayleigh_collected += absorb(sample_distance, Kr*influx, 7900);
-		mie_collected += absorb(sample_distance, influx, 16400);
+		rayleigh_collected += absorb(sqrt(sample_distance), skycolor*influx, 23900.0);
+		mie_collected += absorb(sample_distance, influx, 36400.0);
 	}
 
 	float eye_extinction = 1/*horizon_extinction(eye_position, ray,surface_height - 0.3)*/;
 	rayleigh_collected = (
 		rayleigh_collected *
 		eye_extinction *
-		pow(eye_atmo_dist, 1.11)
+		pow(eye_atmo_dist / 2500e3, 1)
 	)/float(step_count);
 	mie_collected = (
 		mie_collected *
 		eye_extinction *
-		pow(eye_atmo_dist, 1.19)
+		pow(eye_atmo_dist / 2500e3, 1)
 	)/float(step_count);
 
 	vec3 color = vec3(
@@ -98,5 +100,5 @@ void main()
 		mie*mie_collected +
 		rayleigh*rayleigh_collected
 	);
-    gl_FragColor = vec4(color,1);
+    gl_FragColor = vec4(color * 5,1);
 }
