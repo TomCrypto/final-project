@@ -12,7 +12,7 @@ class skybox
 public:
     skybox();
 
-    void display(const camera& cam);
+	void display(const camera& cam, glm::vec3 skycolor);
 
 private:
     gl::shader m_shader;
