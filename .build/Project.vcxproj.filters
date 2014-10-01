@@ -145,12 +145,6 @@
     <None Include="..\lib\bin\win32\AntTweakBar.dll">
       <Filter>Dependencies</Filter>
     </None>
-    <None Include="..\res\priman.amc">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\res\priman.asf">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="..\lib\bin\win32\freeglut.dll">
       <Filter>Dependencies</Filter>
     </None>
@@ -217,9 +211,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\res\Bunny.obj">
-      <Filter>Resource Files</Filter>
-    </Media>
     <Media Include="..\res\lighthouse\Lighthouse.mtl">
       <Filter>Resource Files\Lighthouse</Filter>
     </Media>
@@ -243,15 +234,6 @@
     </Media>
     <Media Include="..\res\lighthouse\Trees.obj">
       <Filter>Resource Files\Lighthouse</Filter>
-    </Media>
-    <Media Include="..\res\default.mtl">
-      <Filter>Resource Files</Filter>
-    </Media>
-    <Media Include="..\res\default.png">
-      <Filter>Resource Files</Filter>
-    </Media>
-    <Media Include="..\res\teapot.obj">
-      <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>
 </Project>

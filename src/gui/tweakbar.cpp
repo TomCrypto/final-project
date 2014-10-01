@@ -48,6 +48,7 @@ namespace gui
 		color2 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color3 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color4 = glm::vec3(0.75f, 0.25f, 0.25f);
+		LightSun = glm::vec3(-0.57735f, -0.57735f, -0.57735f);
         aperture_regen_btn = false;
 
         TwAddVarRW(m_bar,
@@ -59,6 +60,9 @@ namespace gui
             "exposure", TW_TYPE_FLOAT, &exposure,
             " label='Exposure'"
             " min=0.01 max=3 step=0.01 help='Tonemapping exposure'");
+
+		TwAddVarRW(m_bar, "LightDir", TW_TYPE_DIR3F, &LightSun,
+			" label='Light direction' opened=true help='Change the light direction.' ");
 
 		TwAddVarRW(m_bar,
 			"color1", TW_TYPE_COLOR3F, &color1,
