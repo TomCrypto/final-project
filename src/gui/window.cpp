@@ -376,9 +376,9 @@ namespace gui
 		//m_tree = new Model("lighthouse/Trees.obj");
 		LOG(INFO) << "All Models Loaded.";
 
-        m_aperture = new aperture(glm::ivec2(1024, 1024),
-                                  aperture_params(),
-                                  m_fft);
+        //m_aperture = new aperture(glm::ivec2(1024, 1024),
+        //                          aperture_params(),
+        //                          m_fft);
 
         #if 0
         LOG(INFO) << "Generating aperture.";
@@ -408,16 +408,6 @@ namespace gui
         m_bar->set_title("Configuration");
 
         LOG(INFO) << "Setting up fixed function pipeline.";
-
-        float direction[] = { 1.0f, 1.0f, 1.0f, 0.0f };
-	    float diffintensity[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	    float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-
-	    glLightfv(GL_LIGHT0, GL_POSITION, direction);
-	    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffintensity);
-	    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-
-	    glEnable(GL_LIGHT0);
 
 	    LOG(INFO) << "Creating framebuffer.";
 
@@ -483,6 +473,15 @@ namespace gui
 
         glEnable(GL_DEPTH_TEST);
 	    glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		float v[4];
+		v[0] = v[1] = v[2] = 0.5f*0.4f; v[3] = 1.0f;
+		glLightfv(GL_LIGHT0, GL_AMBIENT, v);
+		v[0] = v[1] = v[2] = 3*0.8f; v[3] = 1.0f;
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, v);
+		v[0] = m_bar->LightSun.x; v[1] = m_bar->LightSun.y; v[2] = m_bar->LightSun.z; v[3] = 0.0f;
+		glLightfv(GL_LIGHT0, GL_POSITION, v);
 	    glEnable(GL_COLOR_MATERIAL);
 	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	    glShadeModel(GL_SMOOTH);

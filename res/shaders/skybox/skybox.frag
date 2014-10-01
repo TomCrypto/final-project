@@ -1,20 +1,24 @@
 #version 120
 
 varying vec3 pos;
-
+float phase(float cosangle, float c) {
+	float a = 9/(2.0f*(c*c+2.0f))-3.0f/2.0f;
+	float b = (1.0f*cosangle*cosangle)/(pow(1.0f+c*c-2.0f*c*cosangle,1.5));
+	return a*b;
+}
 void main()
 {
-	float dotP = dot(normalize(gl_LightSource[0].position.xyz),normalize(pos));
-
+	float dotP = dot(-normalize(pos),normalize(gl_LightSource[0].position.xyz));
+	float rayleigh = phase(dotP,-0.01)*33;
+	float mie = phase(dotP,-0.01)*33;
 	vec4 sun = vec4(0,0,0,0);
-	if(dotP>0.9875) {
-		float start = 1;
-		float finish = 0;
+	if(dotP>0.99375) {
+		vec3 topColor1 = vec3(1, 0, 0);
+		vec3 bottomColor1 = vec3(1, 1, 0);
 
-		float grad = 80*(dotP-0.9875);
+		float grad = 160*(dotP-0.99375);
 
-		float alpha = mix(start, finish, grad);
-		sun = vec4(1,1,1,alpha);
+		sun = vec4(mix(topColor1, bottomColor1, grad),0.25);
 	}
 
     float phi = atan(pos.x, pos.z);

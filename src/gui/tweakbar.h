@@ -44,6 +44,8 @@ namespace gui
 		glm::vec3 color3;
 		glm::vec3 color4;
 
+		glm::vec3 LightSun;
+
         bool aperture_regen_btn;
 
         // camera stuff
