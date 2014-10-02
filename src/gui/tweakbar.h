@@ -6,6 +6,7 @@
 #include <AntTweakBar.h>
 #include <glm/glm.hpp>
 #include <string>
+#include "core/skybox.h"
 
 namespace gui
 {
@@ -38,6 +39,8 @@ namespace gui
 
         float rotation;
         float exposure;
+
+		atmos Atmos;
 
 		glm::vec3 skycolor;
 		glm::vec3 color1;

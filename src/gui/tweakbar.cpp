@@ -52,10 +52,33 @@ namespace gui
 		LightSun = glm::vec3(-0.57735f, -0.57735f, -0.57735f);
         aperture_regen_btn = false;
 
-        TwAddVarRW(m_bar,
+		Atmos.ray = glm::vec3(0);
+		Atmos.mie = glm::vec3(0);
+		Atmos.MieMult = 0.7f;
+		Atmos.RayMult = 1000.0f;
+		Atmos.InMult = 0.6f;
+
+
+		TwAddVarRW(m_bar,
+			"ray", TW_TYPE_DIR3F, &Atmos.ray,
+			" label='Rayleigh Scattering' group='Atmos'");
+		TwAddVarRW(m_bar,
+			"rayM", TW_TYPE_FLOAT, &Atmos.RayMult,
+			" label='Rayleigh Mult' group='Atmos'");
+		TwAddVarRW(m_bar,
+			"mie", TW_TYPE_DIR3F, &Atmos.mie,
+			" label='Mie Scattering' group='Atmos'");
+		TwAddVarRW(m_bar,
+			"mieM", TW_TYPE_FLOAT, &Atmos.MieMult,
+			" label='Mie Mult' group='Atmos'");
+		TwAddVarRW(m_bar,
+			"inM", TW_TYPE_FLOAT, &Atmos.InMult,
+			" label='Inscattering Mult' group='Atmos'");
+
+        /*TwAddVarRW(m_bar,
             "rotation", TW_TYPE_FLOAT, &rotation,
             " label='Rotation'"
-            " min=0 max=360 step=1.0 help='Rotate the skeleton'");
+            " min=0 max=360 step=1.0 help='Rotate the skeleton'");*/
 
         TwAddVarRW(m_bar,
             "exposure", TW_TYPE_FLOAT, &exposure,
@@ -64,9 +87,9 @@ namespace gui
 
 		TwAddVarRW(m_bar, "LightDir", TW_TYPE_DIR3F, &LightSun,
 			" label='Light direction' opened=true help='Change the light direction.' ");
-		TwAddVarRW(m_bar,
+		/*TwAddVarRW(m_bar,
 			"sky_color", TW_TYPE_COLOR3F, &skycolor,
-			" label='Sky Color' colormode=hls");
+			" label='Sky Color' colormode=hls");*/
 		/*TwAddVarRW(m_bar,
 			"color1", TW_TYPE_COLOR3F, &color1,
 			" label='Color1' colormode=hls");
@@ -80,8 +103,8 @@ namespace gui
 			"color4", TW_TYPE_COLOR3F, &color4,
 			" label='Color4' colormode=hls");*/
 
-        TwAddButton(m_bar, "btn", btn_cb, &aperture_regen_btn,
-            " label='New Aperture'");
+        /*TwAddButton(m_bar, "btn", btn_cb, &aperture_regen_btn,
+            " label='New Aperture'");*/
 
         TwAddVarRW(m_bar,
             "cam_move_speed", TW_TYPE_FLOAT, &cam_move_speed,
