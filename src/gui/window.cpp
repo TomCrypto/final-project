@@ -486,7 +486,7 @@ namespace gui
 	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	    glShadeModel(GL_SMOOTH);
 
-        m_sky->display(m_cam,m_bar->skycolor);
+        m_sky->display(m_cam,m_bar->Atmos);
 
 
 		glPushMatrix();

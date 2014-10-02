@@ -7,12 +7,17 @@
 #include "utils/gl_utils.h"
 #include "core/camera.h"
 
+struct atmos {
+	glm::vec3 ray, mie;
+	float RayMult, MieMult, InMult;
+};
+
 class skybox
 {
 public:
     skybox();
 
-	void display(const camera& cam, glm::vec3 skycolor);
+	void display(const camera& cam, atmos vars);
 
 private:
     gl::shader m_shader;

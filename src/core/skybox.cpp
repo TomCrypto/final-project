@@ -9,11 +9,11 @@ skybox::skybox()
 	gluQuadricNormals(quad, GLU_SMOOTH);
 }
 
-void skybox::display(const camera& cam, glm::vec3 skycolor)
+void skybox::display(const camera& cam, atmos vars)
 {
-	float RayMult = 0; //Rayleigh scattering multipliers
-	float MieMult = 0; //Mie scattering multipliers
-	float InMult = 0; //Inscattering multipliers
+	float RayMult = vars.RayMult; //Rayleigh scattering multipliers
+	float MieMult = vars.MieMult; //Mie scattering multipliers
+	float InMult = vars.InMult; //Inscattering multipliers
     m_shader.bind();
 
     m_shader.set("view", cam.view(false));
@@ -33,11 +33,13 @@ void skybox::display(const camera& cam, glm::vec3 skycolor)
 	glm::vec4 phase = glm::vec4(1-g*g,1+g*g,2*g,InMult);
 
 	m_shader.set("altitudeDensity", altitude);
-	m_shader.set("totalRayleighScattering", glm::vec3(0));
-	m_shader.set("totalRayleighScatteringMult", glm::vec3(0 * 3 / (16 * 3.14))); //above * 3/16pi
-	m_shader.set("totalMieScattering", glm::vec3(0));
-	m_shader.set("totalMieScatteringMult", glm::vec3(0 * 1 / (4 * 3.14))); //above * 1/4pi
-	glm::vec3 tmp = (glm::vec3(0 * 1 / (4 * 3.14))*glm::vec3(0 * 3 / (16 * 3.14)));
+	glm::vec3 ray = vars.ray;
+	m_shader.set("totalRayleighScattering", ray);
+	m_shader.set("totalRayleighScatteringMult", ray * glm::vec3(3 / (16 * 3.14159265359))); //above * 3/16pi
+	glm::vec3 mie = vars.mie;
+	m_shader.set("totalMieScattering", mie);
+	m_shader.set("totalMieScatteringMult", mie * glm::vec3(1 / (4 * 3.14159265359))); //above * 1/4pi
+	glm::vec3 tmp = glm::vec3(3 / (64 * 3.14159265359))*mie*ray;
 	m_shader.set("OneOverTotalRM", glm::vec3(1.0f / tmp.x, 1.0f / tmp.y, 1.0f / tmp.z));
 	m_shader.set("phase", phase);
 	glm::vec4 sunIntensity = glm::vec4(0.988f, 0.831f, 0.251f, 0);
