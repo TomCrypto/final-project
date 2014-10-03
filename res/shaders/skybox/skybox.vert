@@ -3,10 +3,10 @@
 uniform mat4 view;
 uniform mat4 proj;
 
-varying vec3 pos;
+varying vec3 norm;
 
 void main()
 {
-pos = (view * gl_Vertex).xyz;
+norm = gl_Normal;
 gl_Position = proj * view * gl_Vertex;
 }

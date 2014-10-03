@@ -49,7 +49,7 @@ namespace gui
 		color2 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color3 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color4 = glm::vec3(0.75f, 0.25f, 0.25f);
-		LightSun = glm::vec3(-0.57735f, -0.57735f, -0.57735f);
+		Atmos.light = glm::vec3(-0.57735f, -0.57735f, -0.57735f);
         aperture_regen_btn = false;
 
 		Atmos.ray = glm::vec3(0);
@@ -58,7 +58,8 @@ namespace gui
 		Atmos.RayMult = 1000.0f;
 		Atmos.InMult = 0.6f;
 
-
+		TwAddVarRW(m_bar, "LightDir", TW_TYPE_DIR3F, &Atmos.light,
+			" label='Light direction' group='Atmos' opened=true help='Change the light direction.' ");
 		TwAddVarRW(m_bar,
 			"ray", TW_TYPE_DIR3F, &Atmos.ray,
 			" label='Rayleigh Scattering' group='Atmos'");
@@ -85,8 +86,7 @@ namespace gui
             " label='Exposure'"
             " min=0.01 max=3 step=0.01 help='Tonemapping exposure'");
 
-		TwAddVarRW(m_bar, "LightDir", TW_TYPE_DIR3F, &LightSun,
-			" label='Light direction' opened=true help='Change the light direction.' ");
+		
 		/*TwAddVarRW(m_bar,
 			"sky_color", TW_TYPE_COLOR3F, &skycolor,
 			" label='Sky Color' colormode=hls");*/

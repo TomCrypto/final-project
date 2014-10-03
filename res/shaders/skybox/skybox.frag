@@ -30,7 +30,8 @@ float horizon_extinction(vec3 pos, vec3 dir) {
 return 1.0; // TODO: implement this
 }
 
-varying vec3 pos;
+varying vec3 norm;
+uniform vec3 light;
 float phase(float cosangle, float c) {
 float a = 9/(2.0f*(c*c+2.0f))-3.0f/2.0f;
 float b = (1.0f*cosangle*cosangle)/(pow(1.0f+c*c-2.0f*c*cosangle,1.5));
@@ -39,11 +40,19 @@ return a*b;
 
 void main()
 {
-if (pos.y < 0) {
+if (norm.y < 0) {
         gl_FragColor = vec4(0, 0, 0, 1);
         return;
     }
-float dotP = dot(-normalize(pos),normalize(gl_LightSource[0].position.xyz));
+//gl_FragColor = vec4(normalize(norm)/2 + vec3(0.5), 1);
+gl_FragColor = vec4(vec3(dot(normalize(norm),normalize(light))),1);
+return;
+
+if (norm.y < 0) {
+        gl_FragColor = vec4(0, 0, 0, 1);
+        return;
+    }
+float dotP = dot(-normalize(norm),normalize(gl_LightSource[0].position.xyz));
 float rayleigh = phase(dotP,-0.01)*33;
 float mie = phase(dotP,-0.875)*100;
 float spot = smoothstep(0.0, 15.0, phase(dotP,0.9995))*1000;

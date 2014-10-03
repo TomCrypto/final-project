@@ -16,6 +16,8 @@ void skybox::display(const camera& cam, atmos vars)
     m_shader.set("view", cam.view(false));
 	m_shader.set("proj", cam.proj());
 
+	m_shader.set("light", vars.light);
+
     //glBegin();
     gluSphere(quad, 100, 32, 32);
     //glEnd();
