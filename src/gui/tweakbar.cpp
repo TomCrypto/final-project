@@ -49,7 +49,7 @@ namespace gui
 		color2 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color3 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color4 = glm::vec3(0.75f, 0.25f, 0.25f);
-		Atmos.light = glm::vec3(-0.57735f, -0.57735f, -0.57735f);
+		Atmos.light = glm::vec3(0,-1,0);
         aperture_regen_btn = false;
 
 		Atmos.ray = glm::vec3(0);
