@@ -54,12 +54,9 @@ namespace gui
 
 		Atmos.ray = glm::vec3(0);
 		Atmos.mie = glm::vec3(0);
-		Atmos.MieMult = 0.7f;
-		Atmos.RayMult = 1000.0f;
-		Atmos.InMult = 0.6f;
-
-		TwAddVarRW(m_bar, "LightDir", TW_TYPE_DIR3F, &Atmos.light,
-			" label='Light direction' group='Atmos' opened=true help='Change the light direction.' ");
+		Atmos.MieMult = 0.1f;
+		Atmos.RayMult = 0.1f;
+		Atmos.InMult = 0.1f;
 
         TwAddVarRW(m_bar,
             "inclination", TW_TYPE_FLOAT, &Atmos.inclination,
@@ -70,14 +67,8 @@ namespace gui
             " label='Sun Latitude' group='Atmos' min=-90 max=90 step=0.1");
 
 		TwAddVarRW(m_bar,
-			"ray", TW_TYPE_DIR3F, &Atmos.ray,
-			" label='Rayleigh Scattering' group='Atmos'");
-		TwAddVarRW(m_bar,
 			"rayM", TW_TYPE_FLOAT, &Atmos.RayMult,
 			" label='Rayleigh Mult' group='Atmos'");
-		TwAddVarRW(m_bar,
-			"mie", TW_TYPE_DIR3F, &Atmos.mie,
-			" label='Mie Scattering' group='Atmos'");
 		TwAddVarRW(m_bar,
 			"mieM", TW_TYPE_FLOAT, &Atmos.MieMult,
 			" label='Mie Mult' group='Atmos'");
