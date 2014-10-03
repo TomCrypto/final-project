@@ -25,7 +25,7 @@ float luminance(vec3 color)
 
 void main()
 {
-    vec3 texColor = texture2D(render, uv).rgb;
+    vec3 texColor = max(texture2D(render, uv).rgb, vec3(0.0));
 
     // assume values > W map to white
 
