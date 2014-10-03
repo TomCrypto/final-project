@@ -25,16 +25,24 @@ Model::Model(std::string filename) {
 			std::istringstream iss(line);
 			std::vector<std::string> t{ std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{} };
 			if (t[0] == "v" && t.size() == 4) {
-				vertices.push_back({ std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) });
+				vertices.push_back(glm::vec3(std::stof(t[1]),
+                                             std::stof(t[2]),
+                                             std::stof(t[3])));
 			}
 			else if (t[0] == "vt" && t.size() == 4) {
-				uv.push_back({ std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) });
+				uv.push_back(glm::vec3(std::stof(t[1]),
+                                       std::stof(t[2]),
+                                       std::stof(t[3])));
 			}
 			else if (t[0] == "vt" && t.size() == 3) {
-				uv.push_back({ std::stof(t[1], nullptr), std::stof(t[2], nullptr), 0 });
+				uv.push_back(glm::vec3(std::stof(t[1]),
+                                       std::stof(t[2]),
+                                       0));
 			}
 			else if (t[0] == "vn" && t.size() == 4) {
-				normals.push_back({ std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) });
+				normals.push_back(glm::vec3(std::stof(t[1]),
+                                            std::stof(t[2]),
+                                            std::stof(t[3])));
 			}
 			else if (t[0] == "f") {
 				if (t.size() == 5) {
@@ -51,8 +59,12 @@ Model::Model(std::string filename) {
 						g = "default";
 						addGroup(g);
 					}
-					groups[g].triangles.push_back({ v[0] - 1, v[1] - 1, v[3] - 1, n[0] - 1, n[1] - 1, n[3] - 1, u[0] - 1, u[1] - 1, u[3] - 1 });
-					groups[g].triangles.push_back({ v[3] - 1, v[1] - 1, v[2] - 1, n[3] - 1, n[1] - 1, n[2] - 1, u[3] - 1, u[1] - 1, u[2] - 1 });
+					groups[g].triangles.push_back(Triangle(glm::ivec3(v[0] - 1, v[1] - 1, v[3] - 1),
+                                                           glm::ivec3(n[0] - 1, n[1] - 1, n[3] - 1),
+                                                           glm::ivec3(u[0] - 1, u[1] - 1, u[3] - 1)));
+					groups[g].triangles.push_back(Triangle(glm::ivec3(v[3] - 1, v[1] - 1, v[2] - 1),
+                                                           glm::ivec3(n[3] - 1, n[1] - 1, n[2] - 1),
+                                                           glm::ivec3(u[3] - 1, u[1] - 1, u[2] - 1)));
 				}
 				else if (t[0].size()) {
 					int scan = sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d", &v1, &t1, &n1, &v2, &t2, &n2, &v3, &t3, &n3);
@@ -70,11 +82,13 @@ Model::Model(std::string filename) {
 						g = "default";
 						addGroup(g);
 					}
-					groups[g].triangles.push_back({ v1 - 1, v2 - 1, v3 - 1, n1 - 1, n2 - 1, n3 - 1, t1 - 1, t2 - 1, t3 - 1 });
+					groups[g].triangles.push_back(Triangle(glm::ivec3(v1 - 1, v2 - 1, v3 - 1),
+                                                           glm::ivec3(n1 - 1, n2 - 1, n3 - 1),
+                                                           glm::ivec3(t1 - 1, t2 - 1, t3 - 1)));
 				}
 			}
 			else if (t[0] == "mtllib") {
-				int found = filename.find_last_of("/");
+				size_t found = filename.find_last_of("/");
 				if (found == std::string::npos) readMTL(t[1]);
 				else {
 					readMTL(filename.substr(0, found + 1) + t[1]);
@@ -132,11 +146,11 @@ void Model::readMTL(std::string filename) {
 				materials[mtl];
 			}
 			else if (t[0] == "illum") materials[mtl].illum = std::stoi(t[1]);
-			else if (t[0] == "Ka") materials[mtl].Ka = { std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) };
-			else if (t[0] == "Kd") materials[mtl].Kd = { std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) };
-			else if (t[0] == "Ks") materials[mtl].Ks = { std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) };
-			else if (t[0] == "Ke") materials[mtl].Ke = { std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) };
-			else if (t[0] == "Tf") materials[mtl].Tf = { std::stof(t[1], nullptr), std::stof(t[2], nullptr), std::stof(t[3], nullptr) };
+			else if (t[0] == "Ka") materials[mtl].Ka = { std::stof(t[1]), std::stof(t[2]), std::stof(t[3]) };
+			else if (t[0] == "Kd") materials[mtl].Kd = { std::stof(t[1]), std::stof(t[2]), std::stof(t[3]) };
+			else if (t[0] == "Ks") materials[mtl].Ks = { std::stof(t[1]), std::stof(t[2]), std::stof(t[3]) };
+			else if (t[0] == "Ke") materials[mtl].Ke = { std::stof(t[1]), std::stof(t[2]), std::stof(t[3]) };
+			else if (t[0] == "Tf") materials[mtl].Tf = { std::stof(t[1]), std::stof(t[2]), std::stof(t[3]) };
 			else if (t[0] == "Ns") materials[mtl].Ns = std::stof(t[1]);
 			else if (t[0] == "Ni") materials[mtl].Ni = std::stof(t[1]);
 			else if (t[0] == "d") materials[mtl].d = std::stof(t[1]);
@@ -198,17 +212,9 @@ void Model::CreateGLPolyGeometry() {
 	for (auto& g : groups) {
 		useMTL(g.second.materialIdx);
 		for (Triangle t : g.second.triangles) {
-			if (t.v1 >= vertices.size() || t.v2 >= vertices.size() || t.v3 >= vertices.size() ||
-				t.n1 >= normals.size() || t.n2 >= normals.size() || t.n3 >= normals.size() ||
-				t.t1 >= uv.size() || t.t2 >= uv.size() || t.t3 >= uv.size()) {
-				LOG(ERROR) << "Wrong param for vertice, normal or uv";
-				LOG(ERROR) << vertices.size() << " " << normals.size() << " " << uv.size();
-				LOG(ERROR) << t.v1 << " " << t.v2 << " " << t.v3 << " " << t.n1 << " " << t.n2 << " " << t.n3 << " " << t.t1 << " " << t.t2 << " " << t.t3;
-				throw std::runtime_error("");
-			}
-			addToList(t.v1, t.n1, t.t1);
-			addToList(t.v2, t.n2, t.t2);
-			addToList(t.v3, t.n3, t.t3);
+			addToList(t.v[0], t.n[0], t.t[0]);
+			addToList(t.v[1], t.n[1], t.t[1]);
+			addToList(t.v[2], t.n[2], t.t[2]);
 		}
 	}
 	glEnd();
