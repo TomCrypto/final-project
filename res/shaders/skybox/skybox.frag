@@ -17,11 +17,15 @@ return (-b + sqrt(discr)) / (2 * a);
 //
 // assumes the point is between the earth's surface and atmosphere
 // dir need not be normalized
-float atmospheric_depth(vec3 pos, vec3 dir) {
-const vec3 earth_center = vec3(0, -6371e3, 0);
-const float atmo_radius = 6371e3 + 50e3;
-
-return ray_sphere(pos, normalize(dir), earth_center, atmo_radius);
+float atmospheric_depth(vec3 position, vec3 dir) {
+float a = dot(dir, dir);
+    float b = 2.0*dot(dir, position);
+    float c = dot(position, position)-1.0;
+    float det = b*b-4.0*a*c;
+    float detSqrt = sqrt(det);
+    float q = (-b - detSqrt)/2.0;
+    float t1 = c/q;
+    return t1;
 }
 
 // computes how much the given ray is occluded by the horizon (i.e. if it
@@ -31,7 +35,9 @@ return 1.0; // TODO: implement this
 }
 
 varying vec3 norm;
-//uniform vec3 light;
+uniform float scatter_strength;
+uniform float rayleigh_strength;
+uniform float mie_strength;
 uniform float light_incl;
 uniform float light_lat;
 float phase(float cosangle, float c) {
@@ -50,10 +56,10 @@ vec3 absorb(float dist, vec3 color, float factor){
 
 void main()
 {
-if (norm.y < 0) {
+/*if (norm.y < 0) {
         gl_FragColor = vec4(0, 0, 0, 1);
         return;
-    }
+    }*/
 
 vec3 light = normalize(vec3(-cos(radians(-light_incl)),
                             sin(radians(-light_incl)),
@@ -70,17 +76,14 @@ vec3 kr = vec3(0.18867780436772762, 0.4978442963618773, 0.6616065586417131);
 vec3 mie_collected = vec3(0);
 vec3 rayleigh_collected = vec3(0);
 
-float total_length = atmospheric_depth(vec3(1000.5), normalize(norm));
+float total_length = atmospheric_depth(vec3(0.01), normalize(norm));
 float step_length = total_length / 16.0;
 
 float intensity = 0.8;
-float scatter_strength = 20000;
-float rayleigh_strength = 20000;
-float mie_strength = 40000;
 
 for(int i=0; i<16; i++){
     float sample_distance = step_length*float(i);
-    vec3 position = vec3(1000.5) + normalize(norm)*sample_distance;
+    vec3 position = vec3(0.01) + normalize(norm)*sample_distance;
     float extinction = 1.0;
     float sample_depth = atmospheric_depth(position, light);
 
