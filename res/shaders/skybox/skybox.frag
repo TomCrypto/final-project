@@ -40,6 +40,14 @@ float b = (1.0f*cosangle*cosangle)/(pow(1.0f+c*c-2.0f*c*cosangle,1.5));
 return a*b;
 }
 
+vec3 Kr = vec3(
+    0.18867780436772762, 0.4978442963618773, 0.6616065586417131
+);
+
+vec3 absorb(float dist, vec3 color, float factor){
+    return color-color*pow(Kr, vec3(factor/dist));
+}
+
 void main()
 {
 if (norm.y < 0) {
@@ -47,20 +55,41 @@ if (norm.y < 0) {
         return;
     }
 
-vec3 light = vec3(-cos(radians(-light_incl)),
-                  sin(radians(-light_incl)),
-                  light_lat / 90);
+vec3 light = normalize(vec3(-cos(radians(-light_incl)),
+                            sin(radians(-light_incl)),
+                            light_lat / 90));
 
 float dotP = dot(normalize(norm),normalize(light));
 float rayleigh = phase(dotP,-0.01)*33;
-float mie = phase(dotP,-0.175)*10;
+float mie = phase(dotP,-0.875)*10;
 float spot = smoothstep(0.0, 15.0, phase(-dotP,0.9995))*1000;
 
 vec3 kr = vec3(0.18867780436772762, 0.4978442963618773, 0.6616065586417131);
 
 
-vec3 mie_collected = vec3(0.25,0.25,0.25);
-vec3 rayleigh_collected = kr;
+vec3 mie_collected = vec3(0);
+vec3 rayleigh_collected = vec3(0);
+
+float total_length = atmospheric_depth(vec3(1000.5), normalize(norm));
+float step_length = total_length / 16.0;
+
+float intensity = 0.8;
+float scatter_strength = 20000;
+float rayleigh_strength = 20000;
+float mie_strength = 40000;
+
+for(int i=0; i<16; i++){
+    float sample_distance = step_length*float(i);
+    vec3 position = vec3(1000.5) + normalize(norm)*sample_distance;
+    float extinction = 1.0;
+    float sample_depth = atmospheric_depth(position, light);
+
+    vec3 influx = absorb(sample_depth, vec3(intensity), scatter_strength)*extinction;
+
+    rayleigh_collected += influx * absorb(sample_distance, Kr, rayleigh_strength);
+    mie_collected += influx * absorb(sample_distance, Kr, mie_strength);
+}
+
 vec3 color = vec3(
 spot*mie_collected +
 mie*mie_collected +
