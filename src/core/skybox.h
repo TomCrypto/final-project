@@ -10,6 +10,7 @@
 struct atmos {
 	glm::vec3 ray, mie;
 	float RayMult, MieMult, InMult;
+	glm::vec3 light;
 };
 
 class skybox
