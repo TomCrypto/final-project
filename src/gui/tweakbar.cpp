@@ -60,6 +60,15 @@ namespace gui
 
 		TwAddVarRW(m_bar, "LightDir", TW_TYPE_DIR3F, &Atmos.light,
 			" label='Light direction' group='Atmos' opened=true help='Change the light direction.' ");
+
+        TwAddVarRW(m_bar,
+            "inclination", TW_TYPE_FLOAT, &Atmos.inclination,
+            " label='Sun Inclination' group='Atmos' min=0 max=180 step=0.1");
+
+        TwAddVarRW(m_bar,
+            "latitude", TW_TYPE_FLOAT, &Atmos.latitude,
+            " label='Sun Latitude' group='Atmos' min=-90 max=90 step=0.1");
+
 		TwAddVarRW(m_bar,
 			"ray", TW_TYPE_DIR3F, &Atmos.ray,
 			" label='Rayleigh Scattering' group='Atmos'");
@@ -86,7 +95,7 @@ namespace gui
             " label='Exposure'"
             " min=0.01 max=3 step=0.01 help='Tonemapping exposure'");
 
-		
+
 		/*TwAddVarRW(m_bar,
 			"sky_color", TW_TYPE_COLOR3F, &skycolor,
 			" label='Sky Color' colormode=hls");*/

@@ -31,7 +31,9 @@ return 1.0; // TODO: implement this
 }
 
 varying vec3 norm;
-uniform vec3 light;
+//uniform vec3 light;
+uniform float light_incl;
+uniform float light_lat;
 float phase(float cosangle, float c) {
 float a = (3.0*(1.0-c*c))/(2.0*(2.0+c*c));
 float b = (1.0f*cosangle*cosangle)/(pow(1.0f+c*c-2.0f*c*cosangle,1.5));
@@ -40,23 +42,27 @@ return a*b;
 
 void main()
 {
-/*if (norm.y < 0) {
+if (norm.y < 0) {
         gl_FragColor = vec4(0, 0, 0, 1);
         return;
-    }*/
+    }
+
+vec3 light = vec3(-cos(radians(-light_incl)),
+                  sin(radians(-light_incl)),
+                  light_lat / 90);
+
 float dotP = dot(normalize(norm),normalize(light));
 float rayleigh = phase(dotP,-0.01)*33;
-float mie = phase(dotP,-0.875)*100;
-//float spot = smoothstep(0.0, 15.0, phase(dotP,0.9995))*1000;
+float mie = phase(dotP,-0.175)*10;
+float spot = smoothstep(0.0, 15.0, phase(-dotP,0.9995))*1000;
 
 vec3 kr = vec3(0.18867780436772762, 0.4978442963618773, 0.6616065586417131);
-
 
 
 vec3 mie_collected = vec3(0.25,0.25,0.25);
 vec3 rayleigh_collected = kr;
 vec3 color = vec3(
-/*spot*mie_collected +*/
+spot*mie_collected +
 mie*mie_collected +
 rayleigh*rayleigh_collected
 );
