@@ -43,6 +43,7 @@ namespace gui
         /* === overlay === */
         
         int density;
+        float reflectivity;
         bool overlay_enabled;
         
         /* === */

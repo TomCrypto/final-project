@@ -3,6 +3,42 @@
 #include "core/overlay.h"
 
 #include <cstdio>
+#include <cmath>
+
+static bool has_space(const glm::vec2& point,
+                      const std::vector<glm::vec2>& points,
+                      float min_dt) {
+    for (auto p : points) {
+        if (glm::length(point - p) < min_dt) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/* Generates n random points in [-1, 1] spaced roughly min_dt apart. */
+static std::vector<glm::vec2> gen_points(size_t n, float min_dt) {
+    std::vector<glm::vec2> points;
+
+    while (n > 0) {
+        auto point = glm::vec2((float)rand() / RAND_MAX * 2 - 1,
+                               (float)rand() / RAND_MAX * 2 - 1);
+
+        if (has_space(point, points, min_dt)) {
+            points.push_back(point);
+            --n;
+        }
+    }
+
+    return points;
+}
+
+/* Returns a randomly selected disk radius with good distribution. */
+static float disk_radius() {
+    float u = (float)rand() / RAND_MAX;
+    return 0.005f + sqrt(u) * 0.045f;
+}
 
 overlay::overlay(int density)
     : m_shader("overlay/overlay.vert", "overlay/overlay.frag")
@@ -10,24 +46,21 @@ overlay::overlay(int density)
     regenerate_film(density);
 }
 
-void overlay::regenerate_film(int density)
-{
-    // this is awful-fix it later!!
-    srand(42);
-
+void overlay::regenerate_film(int density) {
     m_film.clear();
     
-    for (int t = 0; t < density; ++t) {
-        m_film.push_back(std::make_pair(
-            glm::vec2((float)rand() / RAND_MAX * 2 - 1,
-                      (float)rand() / RAND_MAX * 2 - 1),
-            0.005f + 0.045f * (float)rand() / RAND_MAX));
+    srand(42);
+    auto points = gen_points(density, 0.1f);
+    srand(42);
+    
+    for (auto point : points) {
+        m_film.push_back(std::make_pair(point, disk_radius()));
     }
 }
 
 void overlay::render(const std::vector<light>& lights,
-                     const camera& camera)
-{
+                     const camera& camera,
+                     float reflectivity) {
     if (lights.size() > 8) {
         LOG(WARNING) << "Maximum 8 lights! Extra lights ignored by overlay.";
     }
@@ -41,8 +74,10 @@ void overlay::render(const std::vector<light>& lights,
     
     m_shader.set("viewproj", camera.proj() * camera.view());
     m_shader.set("view_dir", glm::normalize(camera.dir()));
+    m_shader.set("view_pos", camera.pos());
     m_shader.set("light_count", std::min((int)lights.size(), 8));
     m_shader.set("inv_ratio", 1.0f / camera.aspect_ratio());
+    m_shader.set("reflectivity", reflectivity);
     
     for (int t = 0; t < std::min((int)lights.size(), 8); ++t) {
         m_shader.set("lights[" + std::to_string(t) + "].pos",
@@ -58,13 +93,13 @@ void overlay::render(const std::vector<light>& lights,
         float radius = m_film[t].second;
     
         glTexCoord2f(0, 1);
-        glVertex3f(pos.x - radius, pos.y + radius, 1);
+        glVertex3f(pos.x * camera.aspect_ratio() - radius, pos.y + radius, 1);
         glTexCoord2f(1, 1);
-        glVertex3f(pos.x + radius, pos.y + radius, 1);
+        glVertex3f(pos.x * camera.aspect_ratio() + radius, pos.y + radius, 1);
         glTexCoord2f(1, 0);
-        glVertex3f(pos.x + radius, pos.y - radius, 1);
+        glVertex3f(pos.x * camera.aspect_ratio() + radius, pos.y - radius, 1);
         glTexCoord2f(0, 0);
-        glVertex3f(pos.x - radius, pos.y - radius, 1);
+        glVertex3f(pos.x * camera.aspect_ratio() - radius, pos.y - radius, 1);
     }
 
     glEnd();
