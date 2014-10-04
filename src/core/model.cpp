@@ -1,8 +1,25 @@
 #include <easylogging.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include "core/model.h"
 
 #include <stdexcept>
+
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
+}
+
+std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, elems);
+    return elems;
+}
 
 void Model::addGroup(std::string g) {
 	groups[g];
@@ -22,8 +39,7 @@ Model::Model(std::string filename) {
 		{
 			//LOG(INFO) << line;
 			if (line.size()<=1 || line[0] == '#') continue;
-			std::istringstream iss(line);
-			std::vector<std::string> t{ std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{} };
+			std::vector<std::string> t = split(line, ' ');
 			if (t[0] == "v" && t.size() == 4) {
 				vertices.push_back(glm::vec3(std::stof(t[1]),
                                              std::stof(t[2]),
@@ -102,11 +118,7 @@ Model::Model(std::string filename) {
 				groups[g].materialIdx = t[1];
 				if (materials.find(t[1]) == materials.end()) {
 					LOG(ERROR) << "missing material " << t[1];
-					/*std::string mat = g + ":" + t[1];
-					if (materials.find(mat) == materials.end()) {
-						LOG(INFO) << "found missing material as " << mat;
-					}
-					else */throw std::runtime_error("");
+					throw std::runtime_error("");
 				}
 			}
 			else if (t[0] == "g") {
@@ -138,19 +150,18 @@ void Model::readMTL(std::string filename) {
 	{
 		std::string mtl;
 		while (getline(myfile, line)) {
-			std::istringstream iss(line);
-			std::vector<std::string> t{ std::istream_iterator < std::string > {iss}, std::istream_iterator < std::string > {} };
+			std::vector<std::string> t = split(line, ' ');
 			if (t.size() == 0 || t[0] == "#" || t[0] == "\n");
 			else if (t[0] == "newmtl") {
 				mtl = t[1];
 				materials[mtl];
 			}
 			else if (t[0] == "illum") materials[mtl].illum = std::stoi(t[1]);
-			else if (t[0] == "Ka") materials[mtl].Ka = { std::stof(t[1]), std::stof(t[2]), std::stof(t[3]) };
-			else if (t[0] == "Kd") materials[mtl].Kd = { std::stof(t[1]), std::stof(t[2]), std::stof(t[3]) };
-			else if (t[0] == "Ks") materials[mtl].Ks = { std::stof(t[1]), std::stof(t[2]), std::stof(t[3]) };
-			else if (t[0] == "Ke") materials[mtl].Ke = { std::stof(t[1]), std::stof(t[2]), std::stof(t[3]) };
-			else if (t[0] == "Tf") materials[mtl].Tf = { std::stof(t[1]), std::stof(t[2]), std::stof(t[3]) };
+			else if (t[0] == "Ka") materials[mtl].Ka = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			else if (t[0] == "Kd") materials[mtl].Kd = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			else if (t[0] == "Ks") materials[mtl].Ks = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			else if (t[0] == "Ke") materials[mtl].Ke = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			else if (t[0] == "Tf") materials[mtl].Tf = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
 			else if (t[0] == "Ns") materials[mtl].Ns = std::stof(t[1]);
 			else if (t[0] == "Ni") materials[mtl].Ni = std::stof(t[1]);
 			else if (t[0] == "d") materials[mtl].d = std::stof(t[1]);
@@ -179,16 +190,11 @@ void Model::display() {
 		printf("Warning: Wrong Shading Mode. \n");
 	}
 }
-float *vec3TofloatArr(glm::vec3 v) {
-	return new float[3] {v.x, v.y, v.z};
-}
-float *specular(glm::vec3 v, float ns) {
-	return new float[4] {v.x, v.y, v.z, ns};
-}
+
 void Model::useMTL(std::string mtl) {
-	glMaterialfv(GL_FRONT, GL_AMBIENT, vec3TofloatArr(materials[mtl].Ka));
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, vec3TofloatArr(materials[mtl].Kd));
-	glMaterialfv(GL_FRONT, GL_SPECULAR, specular(materials[mtl].Ks, materials[mtl].Ns));
+	glMaterialfv(GL_FRONT, GL_AMBIENT, glm::value_ptr(materials[mtl].Ka));
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, glm::value_ptr(materials[mtl].Kd));
+	glMaterialfv(GL_FRONT, GL_SPECULAR, glm::value_ptr(glm::vec4(materials[mtl].Ks, materials[mtl].Ns)));
 	//glEnable(GL_TEXTURE_2D);
 	//materials[mtl].map_Kd->bind(0);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -229,13 +235,5 @@ void Model::CreateGLWireGeometry() {
 	// Assign a display list; return 0 if err
 	m_glGeomListWire = glGenLists(1);
 	glNewList(m_glGeomListWire, GL_COMPILE);
-
-	/*for (Triangle t : triangles) {
-		glBegin(GL_LINE_LOOP);
-		addToList(t.v1, t.n1, t.t1);
-		addToList(t.v2, t.n2, t.t2);
-		addToList(t.v3, t.n3, t.t3);
-		glEnd();
-	}*/
 	glEndList();
 }
