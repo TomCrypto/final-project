@@ -56,8 +56,8 @@ namespace gui
 		color4 = glm::vec3(0.75f, 0.25f, 0.25f);
 		Atmos.light = glm::vec3(0,-1,0);
         aperture_regen_btn = false;
-		Atmos.theta = 0.0f;
-		Atmos.phi = 0.0f;
+		Atmos.theta = 90.0f;
+		Atmos.phi = 90.0f;
 
         TwAddVarRW(m_bar,
             "theta", TW_TYPE_FLOAT, &Atmos.theta,
