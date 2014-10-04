@@ -43,6 +43,7 @@ namespace gui
         exposure = 0.18f;
         
         overlay_enabled = true;
+        reflectivity = 0.35f;
         density = 70;
         
         cam_move_speed = 3.5f;
@@ -80,11 +81,6 @@ namespace gui
 			"inM", TW_TYPE_FLOAT, &Atmos.InMult,
 			" label='Inscattering Mult' group='Atmos'");
 
-        /*TwAddVarRW(m_bar,
-            "rotation", TW_TYPE_FLOAT, &rotation,
-            " label='Rotation'"
-            " min=0 max=360 step=1.0 help='Rotate the skeleton'");*/
-
         TwAddVarRW(m_bar,
             "exposure", TW_TYPE_FLOAT, &exposure,
             " label='Exposure'"
@@ -94,6 +90,11 @@ namespace gui
             "density", TW_TYPE_INT32, &density,
             " label='Imperfections' group='Filmic Overlay'"
             " min=0 max=200 help='Number of imperfections on film'");
+
+        TwAddVarRW(m_bar,
+            "reflectivity", TW_TYPE_FLOAT, &reflectivity,
+            " label='Reflectivity' group='Filmic Overlay'"
+            " min=0 max=1 step=0.01 help='How reflective the film is'");
 
         TwAddVarRW(m_bar,
             "overlay_enabled", TW_TYPE_BOOLCPP, &overlay_enabled,
