@@ -52,6 +52,9 @@
     <Filter Include="Resource Files\Shaders\Skybox">
       <UniqueIdentifier>{6b2da6f6-da9e-47dc-ba96-d269c45e21aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Overlay">
+      <UniqueIdentifier>{189a5172-1eff-45e5-aac4-767795591bcc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -85,6 +88,9 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\src\core\aperture.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\overlay.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\src\utils\fft_engine.cpp">
@@ -123,6 +129,12 @@
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="..\src\core\aperture.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\overlay.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\light.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\src\utils\fft_engine.h">
@@ -200,14 +212,17 @@
     <Text Include="..\res\shaders\tonemap\reinhard.frag">
       <Filter>Resource Files\Shaders\Tonemapping</Filter>
     </Text>
-    <Text Include="..\res\shaders\tonemap\log_lum.frag">
-      <Filter>Resource Files\Shaders\Tonemapping</Filter>
-    </Text>
     <Text Include="..\res\shaders\skybox\skybox.frag">
       <Filter>Resource Files\Shaders\Skybox</Filter>
     </Text>
     <Text Include="..\res\shaders\skybox\skybox.vert">
       <Filter>Resource Files\Shaders\Skybox</Filter>
+    </Text>
+    <Text Include="..\res\shaders\overlay\overlay.frag">
+      <Filter>Resource Files\Shaders\Overlay</Filter>
+    </Text>
+    <Text Include="..\res\shaders\overlay\overlay.vert">
+      <Filter>Resource Files\Shaders\Overlay</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

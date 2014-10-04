@@ -86,6 +86,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\core\aperture.cpp" />
+    <ClCompile Include="..\src\core\overlay.cpp" />
     <ClCompile Include="..\src\core\camera.cpp" />
     <ClCompile Include="..\src\core\model.cpp" />
     <ClCompile Include="..\src\core\skybox.cpp" />
@@ -101,6 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\core\aperture.h" />
+    <ClInclude Include="..\src\core\overlay.h" />
+    <ClInclude Include="..\src\core\light.h" />
     <ClInclude Include="..\src\core\camera.h" />
     <ClInclude Include="..\src\core\model.h" />
     <ClInclude Include="..\src\core\skybox.h" />
@@ -149,6 +152,16 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Text>
+    <Text Include="..\res\shaders\overlay\overlay.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="..\res\shaders\overlay\overlay.vert">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </Text>
     <Text Include="..\res\shaders\generic\fs_quad.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
@@ -157,13 +170,6 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </Text>
     <Text Include="..\res\shaders\tonemap\reinhard.frag">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-    </Text>
-    <Text Include="..\res\shaders\tonemap\log_lum.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
