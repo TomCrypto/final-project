@@ -24,8 +24,8 @@ void skybox::display(const camera& cam, atmos vars)
 	float pn = 0.035f; //depolarization factor for air
 	glm::vec3 lambda = glm::vec3(1 / 650e-9f, 1 / 570e-9f, 1 / 475e-9f); // red, green & blue. Note: 650e-9 m = 650nm.
 	float tmp = ((6 + 3 * pn) / (6 - 7 * pn)) * ((pi*pi*std::powf((n*n) - 1.0f, 2)) / 2 * N);
-	//glm::vec3 rayleighMultipier = tmp / (lambda*lambda*lambda*lambda);
-	glm::vec3 betaRayleigh = (tmp / (lambda*lambda*lambda*lambda)) * glm::vec3(16 * pi / 3); //total BetaR
+	glm::vec3 rayleighTheta = tmp / (lambda*lambda*lambda*lambda);
+	glm::vec3 betaRayleigh = rayleighTheta * glm::vec3(16 * pi / 3); //total BetaR
 	/*std::cout << glm::to_string(rayleighMultipier) << "\n";
 	std::cout << glm::to_string(betaRayleigh) << "\n";
 	std::cout << glm::to_string(lambda) << "\n";
@@ -39,27 +39,31 @@ void skybox::display(const camera& cam, atmos vars)
 	float v = 4; //Junge's exponent = 4 for the sky model
 
 	glm::vec3 K = glm::vec3(0.685f, 0.679f, 0.670f);
-	tmp = 0.434f*c*pi*(2 * pi)*(2 * pi);
-	//glm::vec3 mieMultiplier = glm::vec3(0.5f)*tmp*lambda*lambda;
-	glm::vec3 betaMie = tmp*K*lambda*lambda;
+	float Temp = 0.434*c*(2 * pi)*(2 * pi)*0.5f;
+	glm::vec3 mieTheta = Temp*lambda*lambda;
+	Temp = 0.434f*c*pi*(2 * pi)*(2 * pi);;
+	glm::vec3 betaMie = Temp*K*lambda*lambda;
 
 	//Rayleigh + Mie
 	glm::vec3 betaRM = betaRayleigh+betaMie;
 	glm::vec3 oneOverBetaRM = glm::vec3(1) / betaRM;
 
 	float g = 0.8f; //Henyey Greensteins's G value
-	glm::vec3 HG = glm::vec3(1 - g*g, 1 + g, 2 * g);
+	glm::vec3 HG = glm::vec3((1 - g)*(1 - g), 1 + g*g, 2 * g);
 
 
 
 	m_shader.set("betaRay", betaRayleigh);
+	m_shader.set("rayleighTheta", rayleighTheta);
 	m_shader.set("betaMie", betaMie);
+	m_shader.set("mieTheta", mieTheta);
 	m_shader.set("betaRM", betaRM);
 	m_shader.set("oneOverBetaRM", oneOverBetaRM);
 	m_shader.set("gHG", HG);
 
 	//sunDir
 	glm::vec3 sunDir = glm::vec3(glm::cos(glm::radians(vars.theta)), glm::sin(glm::radians(vars.theta))*glm::cos(glm::radians(vars.phi)), glm::sin(glm::radians(vars.theta))*glm::sin(glm::radians(vars.phi)));
+	m_shader.set("sunDir",sunDir);
 	//calculate colour
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
 	float m = 1.0f / (glm::cos(vars.theta) + 0.5f*glm::pow(93.885f - vars.theta / pi*180.0f, -1.253f));
@@ -70,7 +74,8 @@ void skybox::display(const camera& cam, atmos vars)
 	float fTauAx = glm::exp(-m*fBeta*glm::pow(lam.x, -1.3f));
 	float fTauAy = glm::exp(-m*fBeta*glm::pow(lam.y, -1.3f));
 	float fTauAz = glm::exp(-m*fBeta*glm::pow(lam.z, -1.3f));
-	glm::vec4 sunColorAndIntensity = glm::vec4(fTauRx*fTauAx, fTauRy*fTauAy, fTauRz*fTauAz, .0f);
+	glm::vec4 sunColorAndIntensity = glm::vec4(fTauRx*fTauAx, fTauRy*fTauAy, fTauRz*fTauAz, 1.0f);
+	m_shader.set("Esun", sunColorAndIntensity);
 	/*
 	
 	uniform float Esun;
