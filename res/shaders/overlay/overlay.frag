@@ -75,15 +75,17 @@ float snoise(vec2 v)
 
 struct light
 {
-    vec3 pos;
+    vec4 pos;
     vec3 strength;
 };
 
 uniform mat4 viewproj;
 uniform vec3 view_dir;
-
+uniform vec3 view_pos;
 uniform light lights[8];
 uniform int light_count;
+
+uniform float reflectivity;
 
 varying vec2 frag_pos;
 varying vec2 uv;
@@ -94,15 +96,21 @@ void main()
         vec3 radiance = vec3(0.0);
         
         for (int t = 0; t < light_count; ++t) {
-            // amount of radiation falling on the film
-            vec3 irradiance = lights[t].strength * pow(max(0.0, dot(normalize(lights[t].pos), view_dir)), 32);
+            vec3 light_pos = lights[t].pos.xyz - view_pos * lights[t].pos.w;
+        
+            // amount of radiation falling on the film (Lambert's cosine law)
+            vec3 irradiance = lights[t].strength * max(0.0, dot(normalize(light_pos), view_dir));
             
-            vec4 clip_space_pos = viewproj * vec4(lights[t].pos, 0.0f);
+            vec4 clip_space_pos = viewproj * lights[t].pos;
             vec2 screen_space_pos = clip_space_pos.xy / clip_space_pos.w;
 
             // weighted by the on-screen distance
-            irradiance *= pow(max(0.0, 0.9 - min(length(screen_space_pos - frag_pos), 3.0) / 3.0), 14);
+            irradiance *= pow(max(0.0, 0.9 - min(length(screen_space_pos - frag_pos), 3.0) / 3.0), 10.0 + 20.0 * (1.0 - reflectivity));
             
+            // and of course taking into account light falloff
+            irradiance /= pow(length(light_pos), 2);
+            
+            // integrate radiance over lights
             radiance += irradiance;
         }
     
