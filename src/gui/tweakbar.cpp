@@ -41,6 +41,10 @@ namespace gui
     {
         rotation = 0;
         exposure = 0.18f;
+        
+        overlay_enabled = true;
+        density = 70;
+        
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
         cam_fov = 50;
@@ -86,6 +90,14 @@ namespace gui
             " label='Exposure'"
             " min=0.01 max=3 step=0.01 help='Tonemapping exposure'");
 
+        TwAddVarRW(m_bar,
+            "density", TW_TYPE_INT32, &density,
+            " label='Imperfections' group='Filmic Overlay'"
+            " min=0 max=200 help='Number of imperfections on film'");
+
+        TwAddVarRW(m_bar,
+            "overlay_enabled", TW_TYPE_BOOLCPP, &overlay_enabled,
+            " label='Enabled' group='Filmic Overlay'");
 
 		/*TwAddVarRW(m_bar,
 			"sky_color", TW_TYPE_COLOR3F, &skycolor,

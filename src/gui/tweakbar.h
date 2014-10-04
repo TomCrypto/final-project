@@ -40,6 +40,13 @@ namespace gui
         float rotation;
         float exposure;
 
+        /* === overlay === */
+        
+        int density;
+        bool overlay_enabled;
+        
+        /* === */
+
 		atmos Atmos;
 
 		glm::vec3 skycolor;

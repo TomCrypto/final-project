@@ -419,6 +419,10 @@ namespace gui
                        m_bar->cam_fov * glm::pi<float>() / 180);
 		LOG(INFO) << "Creating skybox.";
         m_sky = new skybox();
+        
+        LOG(INFO) << "Creating overlay.";
+        m_overlay = new overlay(m_bar->density);
+        
 		LOG(INFO) << "Finished creating stuff.";
     }
 
@@ -442,6 +446,7 @@ namespace gui
         delete m_framebuffer;
         delete m_sky;
         //delete m_aperture;
+        delete m_overlay;
     }
 
     void window::on_resize(const glm::ivec2& new_dims)
@@ -504,7 +509,27 @@ namespace gui
 	    glDisable(GL_LIGHTING);
 	    glDisable(GL_COLOR_MATERIAL);
 
+        #if 0
         m_aperture->render(m_cam);
+        #endif
+        
+        /* TEMPORARY: recalculate sun position here to pass to overlay.
+         * later this could be done by e.g. asking m_sky for it. */
+
+        glm::vec3 sun_pos = -glm::vec3(-cos(glm::radians(-m_bar->Atmos.inclination)),
+                                       sin(glm::radians(-m_bar->Atmos.inclination)),
+                                       m_bar->Atmos.latitude / 90);
+
+        glm::vec3 sun_strength = glm::vec3(1000, 1000, 1000);
+        
+        float sun_radius = 0; // ?
+
+        std::vector<light> lights;
+        lights.push_back(light(sun_pos, sun_strength, sun_radius));
+
+        if (m_bar->overlay_enabled) {
+            m_overlay->render(lights, m_cam);
+        }
 
         // Step 3: render tonemapped HDR render to backbuffer
 
@@ -575,6 +600,10 @@ namespace gui
             #else
             LOG(INFO) << "Disabled for now!";
             #endif
+        }
+
+        if (m_overlay->get_density() != m_bar->density) {
+            m_overlay->regenerate_film(m_bar->density);
         }
 
         if (m_keys[27 /* escape */]) {
