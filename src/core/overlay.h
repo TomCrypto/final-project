@@ -22,7 +22,8 @@ class overlay
         void regenerate_film(int density);
         
         void render(const std::vector<light>& lights,
-                    const camera& camera);
+                    const camera& camera,
+                    float reflectivity);
 
         int get_density() const {
             return m_film.size();

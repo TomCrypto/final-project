@@ -516,9 +516,10 @@ namespace gui
         /* TEMPORARY: recalculate sun position here to pass to overlay.
          * later this could be done by e.g. asking m_sky for it. */
 
-        glm::vec3 sun_pos = -glm::vec3(-cos(glm::radians(-90.0f)),
-                                       sin(glm::radians(-90.0f)),
-                                       180.0f / 90.0f);
+        glm::vec4 sun_pos = -glm::vec4(-cos(glm::radians(-m_bar->Atmos.inclination)),
+                                       sin(glm::radians(-m_bar->Atmos.inclination)),
+                                       m_bar->Atmos.latitude / 90,
+                                       0.0f);
 
         glm::vec3 sun_strength = glm::vec3(1000, 1000, 1000);
         
@@ -528,7 +529,7 @@ namespace gui
         lights.push_back(light(sun_pos, sun_strength, sun_radius));
 
         if (m_bar->overlay_enabled) {
-            m_overlay->render(lights, m_cam);
+            m_overlay->render(lights, m_cam, m_bar->reflectivity);
         }
 
         // Step 3: render tonemapped HDR render to backbuffer
