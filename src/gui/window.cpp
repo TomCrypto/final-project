@@ -516,9 +516,9 @@ namespace gui
         /* TEMPORARY: recalculate sun position here to pass to overlay.
          * later this could be done by e.g. asking m_sky for it. */
 
-        glm::vec3 sun_pos = -glm::vec3(-cos(glm::radians(-m_bar->Atmos.inclination)),
-                                       sin(glm::radians(-m_bar->Atmos.inclination)),
-                                       m_bar->Atmos.latitude / 90);
+        glm::vec3 sun_pos = -glm::vec3(-cos(glm::radians(-90.0f)),
+                                       sin(glm::radians(-90.0f)),
+                                       180.0f / 90.0f);
 
         glm::vec3 sun_strength = glm::vec3(1000, 1000, 1000);
         

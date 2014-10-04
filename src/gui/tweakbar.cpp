@@ -55,20 +55,16 @@ namespace gui
 		color4 = glm::vec3(0.75f, 0.25f, 0.25f);
 		Atmos.light = glm::vec3(0,-1,0);
         aperture_regen_btn = false;
-
-		Atmos.ray = glm::vec3(0);
-		Atmos.mie = glm::vec3(0);
-		Atmos.MieMult = 0.1f;
-		Atmos.RayMult = 0.1f;
-		Atmos.InMult = 0.1f;
+		Atmos.theta = 0.0f;
+		Atmos.phi = 0.0f;
 
         TwAddVarRW(m_bar,
-            "inclination", TW_TYPE_FLOAT, &Atmos.inclination,
-            " label='Sun Inclination' group='Atmos' min=0 max=180 step=0.1");
+            "theta", TW_TYPE_FLOAT, &Atmos.theta,
+            " label='theta' group='Atmos' min=0 max=180 step=0.1");
 
         TwAddVarRW(m_bar,
-            "latitude", TW_TYPE_FLOAT, &Atmos.latitude,
-            " label='Sun Latitude' group='Atmos' min=-90 max=90 step=0.1");
+            "phi", TW_TYPE_FLOAT, &Atmos.phi,
+            " label='phi' group='Atmos' min=0 max=180 step=0.1");
 
 		TwAddVarRW(m_bar,
 			"rayM", TW_TYPE_FLOAT, &Atmos.RayMult,
