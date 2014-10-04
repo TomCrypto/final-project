@@ -19,6 +19,7 @@
 #include "core/camera.h"
 #include "core/aperture.h"
 #include "core/skybox.h"
+#include "core/overlay.h"
 
 namespace gui
 {
@@ -90,6 +91,7 @@ namespace gui
         camera m_cam;
 		Model *m_lighthouse, *m_outbuilding, *m_terrain, *m_tree;
         skybox* m_sky;
+        overlay* m_overlay;
     };
 }
 

@@ -26,6 +26,8 @@ public:
     // change the field of view (radians)
     void set_fov(float fov);
 
+    float aspect_ratio() const;
+
     glm::vec3 pos() const;
     glm::vec3 dir() const;
 

@@ -39,6 +39,11 @@ void camera::turn(const glm::vec2& delta)
                       sin(theta) * sin(phi));
 }
 
+float camera::aspect_ratio() const
+{
+    return (float)m_dims.x / m_dims.y;
+}
+
 void camera::set_fov(float fov)
 {
     m_fov = fov;
