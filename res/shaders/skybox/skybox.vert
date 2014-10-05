@@ -29,5 +29,5 @@ float hg = gHG.x/pow(gHG.y-gHG.z*dotP,1.5f);
 vec3 mie = mieTheta*hg;
 //tmp = tmp + mieTheta*dotP;
 //tmp = tmp * oneOverBetaRM * Esun.xyz * (1-extinction); //still need to multiply by Esun
-inscattering = ray+mie* oneOverBetaRM * (1-extinction);//(ray+mie)* oneOverBetaRM;
+inscattering = ray+mie* oneOverBetaRM * Esun.xyz * (1-extinction);//(ray+mie)* oneOverBetaRM;
 }

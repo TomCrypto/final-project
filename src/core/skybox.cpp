@@ -68,7 +68,7 @@ void skybox::display(const camera& cam, atmos vars)
 	m_shader.set("sunDir",sunDir);
 	//calculate colour
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
-	float m = 1.0f / (glm::cos(vars.theta) + 0.5f*glm::pow(93.885f - vars.theta / pi*180.0f, -1.253f));
+	float m = 1.0f / (glm::cos(glm::radians(vars.theta)) + 0.5f/glm::pow(93.885f - vars.theta, 1.253f));
 	glm::vec3 lam = glm::vec3(0.65f, 0.57f, 0.475f); //red green & blue in um
 	float fTauRx = glm::exp(-m*0.008735f*glm::pow(lam.x, -4.08f));
 	float fTauRy = glm::exp(-m*0.008735f*glm::pow(lam.y, -4.08f));
@@ -77,7 +77,12 @@ void skybox::display(const camera& cam, atmos vars)
 	float fTauAy = glm::exp(-m*fBeta*glm::pow(lam.y, -1.3f));
 	float fTauAz = glm::exp(-m*fBeta*glm::pow(lam.z, -1.3f));
 	glm::vec4 sunColorAndIntensity = glm::vec4(fTauRx*fTauAx, fTauRy*fTauAy, fTauRz*fTauAz, 1.0f);
-	std::cout << glm::to_string(sunColorAndIntensity) <<"\n";
+	/*std::cout << fTauRx << " " << fTauRy << " " << fTauRz << "\n";
+	std::cout << fTauAx << " " << fTauAy << " " << fTauAz << "\n";
+	std::cout << glm::to_string(sunColorAndIntensity) << "\n";
+	std::cout << glm::to_string(lam) << "\n";
+	std::cout << m << "\n";
+	exit(0);*/
 	m_shader.set("Esun", sunColorAndIntensity);
 	/*
 	
