@@ -120,7 +120,7 @@ void main()
         
         // and smooth out the edge of the film imperfection
         float edge_distance = abs(1.0 - length(uv * 2 - vec2(1)));
-        if (edge_distance < 0.15) radiance *= edge_distance / 0.15;
+        if (edge_distance < 0.45) radiance *= edge_distance / 0.45;
         
         gl_FragColor = vec4(vec3(radiance), 1);
     }
