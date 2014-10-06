@@ -454,10 +454,18 @@ namespace gl
                      GL_RGBA, m_fmt, nullptr);
     }
 
-    void texture2D::bind(int unit) const
+    void texture2D::bind(int unit, int min_filter,
+                                   int mag_filter,
+                                   int wrap_s,
+                                   int wrap_t) const
     {
         glActiveTexture(GL_TEXTURE0 + unit);
         glBindTexture(GL_TEXTURE_2D, m_tex);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
     }
 
     GLuint texture2D::operator()() const

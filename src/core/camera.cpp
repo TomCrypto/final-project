@@ -59,6 +59,11 @@ glm::vec3 camera::dir() const
     return m_dir;
 }
 
+glm::ivec2 camera::dims() const
+{
+    return m_dims;
+}
+
 glm::mat4 camera::view(bool translate) const
 {
     if (translate)

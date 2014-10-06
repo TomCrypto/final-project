@@ -20,6 +20,7 @@
 #include "core/aperture.h"
 #include "core/skybox.h"
 #include "core/overlay.h"
+#include "core/occlusion.h"
 
 namespace gui
 {
@@ -92,6 +93,7 @@ namespace gui
 		Model *m_lighthouse, *m_outbuilding, *m_terrain, *m_tree;
         skybox* m_sky;
         overlay* m_overlay;
+        occlusion* m_occlusion;
     };
 }
 

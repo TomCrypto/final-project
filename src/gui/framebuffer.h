@@ -19,6 +19,12 @@ public:
     //<< Setup the framebuffer for rendering
     void bind();
 
+    //<< Bind some other texture to render into
+    void bind_as(const gl::texture2D& other);
+
+    //<< Get a copy of the current framebuffer
+    const gl::texture2D& frame_copy();
+
     //<< Clears the framebuffer (depth optional)
     void clear(bool depth);
 
@@ -33,11 +39,13 @@ private:
     framebuffer(const framebuffer& other);
 
     gl::texture2D m_tex; //<< main render texture
+    gl::texture2D m_cpy; //<< render texture copy
     GLuint m_depth; //<< depth texture for rendering
 
     GLuint m_fbo;   //<< FBO for rendering
 
     gl::shader m_shader;
+    gl::shader m_cpy_shader;
 
     glm::ivec2 m_dims;
 };

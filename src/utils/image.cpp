@@ -155,7 +155,7 @@ image::image(const glm::ivec2& dims, GLuint tex)
     glBindTexture(GL_TEXTURE_2D, tex);
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, ptr);
 
-    this->dib = FreeImage_AllocateT(FIT_RGBAF, dims.x * dims.y, 128);
+    this->dib = FreeImage_AllocateT(FIT_RGBAF, dims.x, dims.y, 128);
     if (!this->dib) {
         LOG(ERROR) << "Failed to allocate memory for image.";
         throw 0;

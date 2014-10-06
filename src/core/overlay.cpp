@@ -59,6 +59,7 @@ void overlay::regenerate_film(int density) {
 }
 
 void overlay::render(const std::vector<light>& lights,
+                     const gl::texture2D& occlusion,
                      const camera& camera,
                      float reflectivity) {
     if (lights.size() > 8) {
@@ -68,7 +69,9 @@ void overlay::render(const std::vector<light>& lights,
     /* Render a set of randomly distributed points with glBlend enabled. */
     
     glEnable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
     glBlendFunc(GL_ONE, GL_ONE);
+    glViewport(0, 0, camera.dims().x, camera.dims().y);
     
     m_shader.bind();
     
@@ -78,12 +81,15 @@ void overlay::render(const std::vector<light>& lights,
     m_shader.set("light_count", std::min((int)lights.size(), 8));
     m_shader.set("inv_ratio", 1.0f / camera.aspect_ratio());
     m_shader.set("reflectivity", reflectivity);
+
+    occlusion.bind(0, GL_NEAREST, GL_NEAREST);
+    m_shader.set("occlusion", 0);
+    m_shader.set("max_lights", 8);
+    m_shader.set("resolution", 8);
     
     for (int t = 0; t < std::min((int)lights.size(), 8); ++t) {
         m_shader.set("lights[" + std::to_string(t) + "].pos",
                      lights[t].pos);
-        m_shader.set("lights[" + std::to_string(t) + "].strength",
-                     lights[t].strength);
     }
     
     glBegin(GL_QUADS);
@@ -107,4 +113,5 @@ void overlay::render(const std::vector<light>& lights,
     m_shader.unbind();
 
     glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
 }

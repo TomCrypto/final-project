@@ -22,6 +22,7 @@ class overlay
         void regenerate_film(int density);
         
         void render(const std::vector<light>& lights,
+                    const gl::texture2D& occlusion,
                     const camera& camera,
                     float reflectivity);
 

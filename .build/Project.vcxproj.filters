@@ -55,6 +55,9 @@
     <Filter Include="Resource Files\Shaders\Overlay">
       <UniqueIdentifier>{189a5172-1eff-45e5-aac4-767795591bcc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Occlusion">
+      <UniqueIdentifier>{7c8a6a42-dace-4544-b66a-ebc70f45bad6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -99,6 +102,9 @@
     <ClCompile Include="..\src\core\skybox.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\core\occlusion.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gui\tweakbar.h">
@@ -141,6 +147,9 @@
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\src\core\skybox.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\occlusion.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -223,6 +232,15 @@
     </Text>
     <Text Include="..\res\shaders\overlay\overlay.vert">
       <Filter>Resource Files\Shaders\Overlay</Filter>
+    </Text>
+    <Text Include="..\res\shaders\tonemap\copy.frag">
+      <Filter>Resource Files\Shaders\Tonemapping</Filter>
+    </Text>
+    <Text Include="..\res\shaders\occlusion\occlusion.frag">
+      <Filter>Resource Files\Shaders\Occlusion</Filter>
+    </Text>
+    <Text Include="..\res\shaders\occlusion\occlusion.vert">
+      <Filter>Resource Files\Shaders\Occlusion</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

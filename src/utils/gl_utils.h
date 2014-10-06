@@ -88,7 +88,10 @@ namespace gl
         void resize(const glm::ivec2& dims);
 
         // Binds this texture to a texture unit
-        void bind(int unit) const;
+        void bind(int unit, int min_filter = GL_LINEAR,
+                            int mag_filter = GL_LINEAR,
+                            int wrap_s = GL_REPEAT,
+                            int wrap_t = GL_REPEAT) const;
 
         // Returns the texture ID of the texture
         GLuint operator()() const;

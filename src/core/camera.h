@@ -30,6 +30,7 @@ public:
 
     glm::vec3 pos() const;
     glm::vec3 dir() const;
+    glm::ivec2 dims() const;
 
     glm::mat4 view(bool translate = true) const;
     glm::mat4 proj() const;
