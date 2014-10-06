@@ -7,7 +7,9 @@
 framebuffer::framebuffer(const glm::ivec2& dims)
     : m_dims(dims),
       m_tex(dims, GL_FLOAT),
-      m_shader("generic/fs_quad.vert", "tonemap/reinhard.frag")
+      m_cpy(dims, GL_FLOAT),
+      m_shader("generic/fs_quad.vert", "tonemap/reinhard.frag"),
+      m_cpy_shader("generic/fs_quad.vert", "tonemap/copy.frag")
 {
     if (!GLEW_ARB_framebuffer_object && !GLEW_EXT_framebuffer_object) {
         LOG(ERROR) << "Framebuffer requires ARB or EXT framebuffer_object"
@@ -90,6 +92,7 @@ void framebuffer::resize(const glm::ivec2& dims)
     }
 
     m_tex.resize(dims);
+    m_cpy.resize(dims);
 
     if (GLEW_ARB_framebuffer_object) {
         glBindRenderbuffer(GL_RENDERBUFFER, m_depth);
@@ -112,6 +115,19 @@ void framebuffer::bind()
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
         glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
                                   GL_TEXTURE_2D, m_tex(), 0);
+    }
+}
+
+void framebuffer::bind_as(const gl::texture2D& other)
+{
+    if (GLEW_ARB_framebuffer_object) {
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_2D, other(), 0);
+    } else if (GLEW_EXT_framebuffer_object) {
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+                                  GL_TEXTURE_2D, other(), 0);
     }
 }
 
@@ -141,6 +157,26 @@ void framebuffer::render(float exposure)
     m_shader.fullscreen_quad();
 
     m_shader.unbind();
+}
+
+const gl::texture2D& framebuffer::frame_copy()
+{
+    glDisable(GL_DEPTH_TEST);
+    glViewport(0, 0, m_dims.x, m_dims.y);
+
+    bind_as(m_cpy);
+
+    m_cpy_shader.bind();
+    m_tex.bind(0);
+    m_cpy_shader.set("render", 0);
+
+    m_cpy_shader.fullscreen_quad();
+    m_cpy_shader.unbind();
+
+    bind();
+    glEnable(GL_DEPTH_TEST);
+
+    return m_cpy;
 }
 
 framebuffer::~framebuffer()

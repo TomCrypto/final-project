@@ -24,7 +24,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -86,6 +86,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\core\aperture.cpp" />
+    <ClCompile Include="..\src\core\occlusion.cpp" />
     <ClCompile Include="..\src\core\overlay.cpp" />
     <ClCompile Include="..\src\core\camera.cpp" />
     <ClCompile Include="..\src\core\model.cpp" />
@@ -102,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\core\aperture.h" />
+    <ClInclude Include="..\src\core\occlusion.h" />
     <ClInclude Include="..\src\core\overlay.h" />
     <ClInclude Include="..\src\core\light.h" />
     <ClInclude Include="..\src\core\camera.h" />
@@ -142,6 +144,21 @@
     <None Include="..\lib\bin\win32\FreeImage.dll" />
     <None Include="..\lib\bin\win32\glew32.dll" />
     <None Include="..\lib\bin\win32\libfftw3f-3.dll" />
+    <Text Include="..\res\shaders\occlusion\occlusion.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="..\res\shaders\occlusion\occlusion.vert">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="..\res\shaders\tonemap\copy.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </Text>
     <Text Include="..\res\shaders\skybox\skybox.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>

@@ -422,6 +422,9 @@ namespace gui
         
         LOG(INFO) << "Creating overlay.";
         m_overlay = new overlay(m_bar->density);
+
+        LOG(INFO) << "Creating occlusion.";
+        m_occlusion = new occlusion();
         
 		LOG(INFO) << "Finished creating stuff.";
     }
@@ -447,6 +450,7 @@ namespace gui
         delete m_sky;
         //delete m_aperture;
         delete m_overlay;
+        delete m_occlusion;
     }
 
     void window::on_resize(const glm::ivec2& new_dims)
@@ -512,25 +516,49 @@ namespace gui
         #if 0
         m_aperture->render(m_cam);
         #endif
+
+        /*====================================================================
+         * 3D RENDERING STOPS HERE - SCREEN SPACE POSTPROCESSING STARTS HERE
+         *====================================================================*/
         
         /* TEMPORARY: recalculate sun position here to pass to overlay.
          * later this could be done by e.g. asking m_sky for it. */
 
-        glm::vec4 sun_pos = -glm::vec4(-cos(glm::radians(-m_bar->Atmos.theta)),
+        /*glm::vec4 sun_pos = -glm::vec4(-cos(glm::radians(-m_bar->Atmos.theta)),
                                        sin(glm::radians(-m_bar->Atmos.theta)),
                                        m_bar->Atmos.phi / 90,
+                                       0.0f);*/
+
+        glm::vec4 sun_pos = -glm::vec4(glm::cos(glm::radians(m_bar->Atmos.theta)),
+                                       glm::sin(glm::radians(m_bar->Atmos.theta))*glm::cos(glm::radians(m_bar->Atmos.phi)),
+                                       glm::sin(glm::radians(m_bar->Atmos.theta))*glm::sin(glm::radians(m_bar->Atmos.phi)),
                                        0.0f);
 
         glm::vec3 sun_strength = glm::vec3(1000, 1000, 1000);
         
-        float sun_radius = 0; // ?
+        float sun_radius = 0.20f; // experimentally determined - radius of sun as viewed by camera
 
         std::vector<light> lights;
-        //lights.push_back(light(sun_pos, sun_strength, sun_radius));
+        lights.push_back(light(sun_pos, sun_strength, sun_radius));
+
+        // OCCLUSION QUERY <<< HERE >>>
+
+        const gl::texture2D& occlusion = m_occlusion->query(lights, *m_framebuffer, m_cam);
+        //image img = image(glm::ivec2(8, 8), occlusion());
+        //img.save("test.exr");
+
+        // END OCCLUSION QUERY
+
+
+        // lens flares would go here, using lights+occlusion+m_cam (pretty much like the overlay)
 
         if (m_bar->overlay_enabled) {
-            //m_overlay->render(lights, m_cam, m_bar->reflectivity);
+            m_overlay->render(lights, occlusion, m_cam, m_bar->reflectivity);
         }
+
+        /*====================================================================
+         * POSTPROCESSING STOPS HERE - TONEMAPPING AND GUI RENDERING STARTS HERE
+         *====================================================================*/
 
         // Step 3: render tonemapped HDR render to backbuffer
 
@@ -539,6 +567,10 @@ namespace gui
         // Step 4: draw the AntTweakBar overlay on top
 
         TwDraw();
+
+        /*====================================================================
+         * RENDERING COMPLETE
+         *====================================================================*/
 
         // Step 5: present the result to the screen
 

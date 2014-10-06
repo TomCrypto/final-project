@@ -76,8 +76,11 @@ float snoise(vec2 v)
 struct light
 {
     vec4 pos;
-    vec3 strength;
 };
+
+uniform sampler2D occlusion;
+uniform int max_lights;
+uniform int resolution;
 
 uniform mat4 viewproj;
 uniform vec3 view_dir;
@@ -90,6 +93,17 @@ uniform float reflectivity;
 varying vec2 frag_pos;
 varying vec2 uv;
 
+vec3 compute_avg_occlusion(int light)
+{
+	vec3 avg = vec3(0);
+
+	for (int t = 0; t < resolution; ++t)
+		avg += texture2D(occlusion, vec2(light / float(max_lights),
+									     t / float(resolution))).rgb;
+
+	return avg;
+}
+
 void main()
 {
     if (length(uv * 2 - vec2(1)) < 1) {
@@ -99,7 +113,7 @@ void main()
             vec3 light_pos = lights[t].pos.xyz - view_pos * lights[t].pos.w;
         
             // amount of radiation falling on the film (Lambert's cosine law)
-            vec3 irradiance = lights[t].strength * max(0.0, dot(normalize(light_pos), view_dir));
+            vec3 irradiance = vec3(max(0.0, dot(normalize(light_pos), view_dir)));
             
             vec4 clip_space_pos = viewproj * lights[t].pos;
             vec2 screen_space_pos = clip_space_pos.xy / clip_space_pos.w;
@@ -110,6 +124,9 @@ void main()
             // and of course taking into account light falloff
             irradiance /= pow(length(light_pos), 2);
             
+			// and finally weighted by average occlusion
+			irradiance *= compute_avg_occlusion(t);
+
             // integrate radiance over lights
             radiance += irradiance;
         }

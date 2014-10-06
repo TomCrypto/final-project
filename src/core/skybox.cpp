@@ -98,7 +98,7 @@ void skybox::display(const camera& cam, atmos vars)
 	m_shader.set("mie_strength", vars.MieMult);*/
 
     //glBegin();
-    gluSphere(quad, 100, 32, 32);
+    gluSphere(quad, 100, 64, 64);
     //glEnd();
 
     m_shader.unbind();
