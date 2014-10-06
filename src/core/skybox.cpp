@@ -25,7 +25,7 @@ void skybox::display(const camera& cam, atmos vars)
 	float N = 2.545e25; //molecules per unit valume of air
 	float pn = 0.035f; //depolarization factor for air
 	glm::vec3 lambda = glm::vec3(1 / 650e-9f, 1 / 570e-9f, 1 / 475e-9f); // red, green & blue. Note: 650e-9 m = 650nm.
-	float tmp = ((6 + 3 * pn) / (6 - 7 * pn)) * ((pi*pi*std::powf((n*n) - 1.0f, 2)) / 2 * N);
+	float tmp = ((6 + 3 * pn) / (6 - 7 * pn)) * ((pi*pi*glm::pow((n*n) - 1.0f, 2)) / 2 * N);
 	glm::vec3 rayleighTheta = tmp / (lambda*lambda*lambda*lambda);
 	glm::vec3 betaRayleigh = rayleighTheta * glm::vec3(16 * pi / 3); //total BetaR
 	/*std::cout << glm::to_string(rayleighMultipier) << "\n";
