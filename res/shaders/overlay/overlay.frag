@@ -132,7 +132,7 @@ void main()
         }
     
         // modulate incoming radiance with a little noise for diversity
-        float noise = max(0, 0.88 + 0.24 * snoise(0.8 * (uv * 2 - vec2(1))));
+        float noise = max(0, 0.9 + 0.2 * snoise(18.0 * frag_pos));
         radiance *= vec3(noise);
         
         // and smooth out the edge of the film imperfection
