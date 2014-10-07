@@ -13,13 +13,16 @@ namespace gui
         *((bool*)user_data) = true;
     }
 
-    basic_bar::basic_bar(const std::string& name)
+    basic_bar::basic_bar(const std::string& name,
+                         const std::string& title)
     {
         if (!(m_bar = TwNewBar((m_name = name).c_str()))) {
             LOG(ERROR) << "Failed to create tweakbar.";
             LOG(TRACE) << "TwNewBar failed.";
             throw std::runtime_error("");
         }
+        
+        set_title(title);
     }
 
     basic_bar::~basic_bar()
@@ -37,7 +40,9 @@ namespace gui
         TwRefreshBar(m_bar);
     }
 
-    main_bar::main_bar(const std::string& name) : basic_bar(name)
+    main_bar::main_bar(const std::string& name,
+                       const std::string& title)
+      : basic_bar(name, title)
     {
         rotation = 0;
         exposure = 0.18f;
@@ -102,8 +107,8 @@ namespace gui
 
         // add lens flare settings
 
-        /*TwAddButton(m_bar, "btn", btn_cb, &aperture_regen_btn,
-            " label='New Aperture'");*/
+        TwAddButton(m_bar, "btn", btn_cb, &aperture_regen_btn,
+            " label='New Aperture' group='Lens'");
 
 		/*TwAddVarRW(m_bar,
 			"sky_color", TW_TYPE_COLOR3F, &skycolor,

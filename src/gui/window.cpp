@@ -25,7 +25,7 @@ namespace gui
                     std::bind(&window::on_resize, this, _1),
                     std::bind(&window::on_display, this),
                     std::bind(&window::on_update, this)),
-          m_bar("main"),
+          m_bar("main", "Configuration"),
           m_cam(m_dims, glm::vec3(0, 3, -5), glm::vec3(0, 0, 1),
                 m_bar.cam_fov * glm::pi<float>() / 180),
           m_skybox(),
@@ -239,7 +239,7 @@ namespace gui
 
         if (m_cursor_locked) {
             glutWarpPointer(m_dims.x / 2, m_dims.y / 2);
-            m_mouse.set_pos((glm::vec2)m_dims / (2.0f * m_dims.x));
+            m_mouse.set_pos((glm::vec2)(m_dims / 2) / (float)m_dims.x);
         }
     }
     

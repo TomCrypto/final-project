@@ -17,7 +17,8 @@ namespace gui
     class basic_bar
     {
     public:
-        basic_bar(const std::string& name);
+        basic_bar(const std::string& name,
+                  const std::string& title);
         ~basic_bar();
 
         void set_title(const std::string& title);
@@ -37,7 +38,8 @@ namespace gui
     class main_bar : public basic_bar
     {
     public:
-        main_bar(const std::string& name);
+        main_bar(const std::string& name,
+                 const std::string& title);
 
         float rotation;
         float exposure;
