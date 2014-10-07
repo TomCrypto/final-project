@@ -28,7 +28,7 @@ if (dotP < 0.999) {
 	inscattering = vec3(0.1, 0.3, 0.85);
 	return;
 } else {
-	extinction = vec3(10000);
+	extinction = vec3(100000);
 	inscattering = vec3(00000);
 	return;
 }

@@ -1,3 +1,18 @@
+/* Purpose:
+ *
+ *  - handles the OpenGL context creation (GLUT & GLEW) and decouples it from
+ *    the actual program logic, so that conventional C++ RAII may be used
+ *  - also handles general program initialization/finalization
+ *  - handles AntTweakBar global context initialization
+ *  - has an abort_handler() function for safe abort
+ *  - the context class takes event callbacks
+ *
+ * Note the implementation of this class is a bit convoluted because we wanted
+ * to be able to throw exceptions from our window events - doing this directly
+ * from a C callback is suicidal, so we need a level of indirection to be able
+ * to do it properly, which means having C++ wrappers for each callback.
+*/
+
 #ifndef GUI_CONTEXT_H
 #define GUI_CONTEXT_H
 

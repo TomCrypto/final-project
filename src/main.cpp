@@ -3,7 +3,6 @@ _INITIALIZE_EASYLOGGINGPP
 
 #include <cstdlib>
 #include <cstdio>
-#include <string>
 
 #if !defined(_WIN32)
 #include <unistd.h>
