@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     setup_logger(); /* config/etc. */
     LOG(INFO) << "Program starting.";
 
-    gui::initialize();
+    gui::initialize(argc, argv);
 
     try {
         gui::window window("COMP 308 - Final Project", glm::ivec2(1024, 768));

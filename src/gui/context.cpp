@@ -3,6 +3,8 @@
 
 namespace gui
 {
+    static int saved_argc;
+    static char **saved_argv;
     static bool has_failed;
     static int window_ready;
     static on_mouse_up_t   on_mouse_up;
@@ -169,9 +171,7 @@ namespace gui
             throw std::logic_error(""); // this should not happen, but check
         }
 
-        int fake_argc = 1;
-        char* fake_argv[2] = { (char*)"foo", 0 };
-        glutInit(&fake_argc, fake_argv); // bit of a hack...
+        glutInit(&saved_argc, saved_argv);
         glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
         glutInitWindowSize(window_dims.x, window_dims.y);
         glutInitWindowPosition(
@@ -292,7 +292,7 @@ namespace gui
         if (fmt) LOG(TRACE) << "Details: " << fmt << ".";
     }
 
-    void initialize()
+    void initialize(int argc, char *argv[])
     {
         LOG(INFO) << "Initializing FFTW (multithreaded, 8 threads).";
 
@@ -306,6 +306,9 @@ namespace gui
         FreeImage_SetOutputMessage(fi_error_handler);
 
         LOG(TRACE) << "FreeImage ready (" << FreeImage_GetVersion() << ").";
+
+        saved_argc = argc;
+        saved_argv = argv;
     }
 
     void finalize()
