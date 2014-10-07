@@ -29,7 +29,7 @@ public:
                                framebuffer& framebuffer,
                                const camera& camera);
 
-    static const size_t resolution = 16;
+    static const size_t resolution = 8;
     static const size_t max_lights = 8;
 
 private:

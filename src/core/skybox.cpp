@@ -77,7 +77,7 @@ void skybox::display(const camera& cam, atmos vars)
 	float fTauAy = glm::exp(-m*fBeta*glm::pow(lam.y, -1.3f));
 	float fTauAz = glm::exp(-m*fBeta*glm::pow(lam.z, -1.3f));
 	glm::vec4 sunColorAndIntensity = glm::vec4(fTauRx*fTauAx, fTauRy*fTauAy, fTauRz*fTauAz, 1.0f);
-	std::cout << glm::to_string(sunColorAndIntensity) <<"\n";
+	//std::cout << glm::to_string(sunColorAndIntensity) <<"\n";
 	m_shader.set("Esun", sunColorAndIntensity);
 	/*
 	
