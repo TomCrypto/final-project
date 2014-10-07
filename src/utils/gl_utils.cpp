@@ -294,6 +294,26 @@ namespace gl
         if (x > 1) return 255;
         return (int)(x * 255);
     }
+    
+    texture2D::texture2D()
+        : m_fmt(0), m_tex(0)
+    {
+    
+    }
+    
+    texture2D& texture2D::operator=(const texture2D& other)
+    {
+        m_fmt = other.m_fmt;
+        m_tex = other.m_tex;
+        m_dims = other.m_dims;
+    
+        return *this;
+    }
+    
+    texture2D::texture2D(const texture2D& other)
+    {
+        *this = other;
+    }
 
     texture2D::texture2D(const std::string& path, GLenum format)
         : m_fmt(format)
@@ -312,12 +332,6 @@ namespace gl
         }
 
         glBindTexture(GL_TEXTURE_2D, m_tex);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                                       GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                                       GL_LINEAR);
 
         if (m_fmt == GL_UNSIGNED_BYTE) {
             int w = m_dims.x, h = m_dims.y;
@@ -359,19 +373,13 @@ namespace gl
                             img.height());
 
         glGenTextures(1, &m_tex);
-
+        
         if (m_tex == 0) {
             LOG(ERROR) << "Failed to create texture object.";
             throw std::runtime_error("");
         }
 
         glBindTexture(GL_TEXTURE_2D, m_tex);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                                       GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                                       GL_LINEAR);
 
         if (m_fmt == GL_UNSIGNED_BYTE) {
             int w = m_dims.x, h = m_dims.y;
@@ -383,9 +391,9 @@ namespace gl
                 const glm::vec4* ptr = img[y];
 
                 for (int x = 0; x < w; ++x) {
-                    buf[4 * (y * w + x) + 0] = saturate(ptr->x);
-                    buf[4 * (y * w + x) + 1] = saturate(ptr->y);
-                    buf[4 * (y * w + x) + 2] = saturate(ptr->z);
+                    buf[4 * (y * w + x) + 0] = 255;//saturate(ptr->x);
+                    buf[4 * (y * w + x) + 1] = 0;//saturate(ptr->y);
+                    buf[4 * (y * w + x) + 2] = 255;//saturate(ptr->z);
                     buf[4 * (y * w + x) + 3] = 0;
 
                     ++ptr;
@@ -425,12 +433,6 @@ namespace gl
         }
 
         glBindTexture(GL_TEXTURE_2D, m_tex);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                                       GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                                       GL_LINEAR);
 
         GLenum internal = m_fmt == GL_FLOAT ? GL_RGBA32F : GL_RGBA;
 
@@ -440,7 +442,9 @@ namespace gl
 
     texture2D::~texture2D()
     {
-        glDeleteTextures(1, &m_tex);
+        if (m_tex != 0) {
+            glDeleteTextures(1, &m_tex);
+        }
     }
 
     void texture2D::resize(const glm::ivec2& dims)

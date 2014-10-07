@@ -23,9 +23,9 @@ gl_Position = proj * view * gl_Vertex;
 vec3 eyeDir = normalize((gl_Vertex).xyz);
 float dotP = -dot(normalize(eyeDir),normalize(sunDir));
 
-if (dotP < 0.995) {
+if (dotP < 0.999) {
 	extinction = vec3(0);
-	inscattering = vec3(0);
+	inscattering = vec3(0.1, 0.3, 0.85);
 	return;
 } else {
 	extinction = vec3(10000);
