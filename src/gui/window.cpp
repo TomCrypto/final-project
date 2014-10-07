@@ -421,10 +421,14 @@ namespace gui
         m_sky = new skybox();
         
         LOG(INFO) << "Creating overlay.";
-        m_overlay = new overlay(m_bar->density);
+        m_overlay = new overlay(m_bar->lens_density);
 
         LOG(INFO) << "Creating occlusion.";
         m_occlusion = new occlusion();
+        
+        m_aperture = new aperture(glm::ivec2(1024, 1024),
+                                  aperture_params(),
+                                  m_fft);
         
 		LOG(INFO) << "Finished creating stuff.";
     }
@@ -448,7 +452,7 @@ namespace gui
 		//delete m_tree;
         delete m_framebuffer;
         delete m_sky;
-        //delete m_aperture;
+        delete m_aperture;
         delete m_overlay;
         delete m_occlusion;
     }
@@ -549,11 +553,11 @@ namespace gui
 
         // END OCCLUSION QUERY
 
-
+        m_aperture->render(lights, occlusion, m_cam);
         // lens flares would go here, using lights+occlusion+m_cam (pretty much like the overlay)
 
-        if (m_bar->overlay_enabled) {
-            m_overlay->render(lights, occlusion, m_cam, m_bar->reflectivity);
+        if (m_bar->lens_overlay) {
+            m_overlay->render(lights, occlusion, m_cam, m_bar->lens_reflectivity);
         }
 
         /*====================================================================
@@ -635,8 +639,8 @@ namespace gui
             #endif
         }
 
-        if (m_overlay->get_density() != m_bar->density) {
-            m_overlay->regenerate_film(m_bar->density);
+        if (m_overlay->get_density() != m_bar->lens_density) {
+            m_overlay->regenerate_film(m_bar->lens_density);
         }
 
         if (m_keys[27 /* escape */]) {

@@ -37,7 +37,7 @@ static std::vector<glm::vec2> gen_points(size_t n, float min_dt) {
 /* Returns a randomly selected disk radius with good distribution. */
 static float disk_radius() {
     float u = (float)rand() / RAND_MAX;
-    return 0.005f + sqrt(u) * 0.045f;
+    return 0.005f + sqrt(u) * 0.065f;
 }
 
 overlay::overlay(int density)

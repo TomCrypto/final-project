@@ -11,6 +11,7 @@
 
 #include "gui/framebuffer.h"
 #include "core/camera.h"
+#include "core/light.h"
 
 struct aperture_params
 {
@@ -27,7 +28,9 @@ public:
              fft_engine& fft);
 
     // renders into/using the current framebuffer
-    void render(const camera& camera/*, lights... */);
+    void render(const std::vector<light>& lights,
+                const gl::texture2D& occlusion,
+                const camera& camera);
 
     // generates a random aperture with noise
     // TODO: make noise configurable as parameters?
@@ -51,6 +54,10 @@ private:
     std::random_device m_rd;
     std::mt19937 m_rng;
     fft_engine& m_fft;
+    
+    gl::texture2D* m_tex;
+    
+    gl::shader m_shader;
 };
 
 #endif

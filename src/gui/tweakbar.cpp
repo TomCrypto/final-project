@@ -42,9 +42,9 @@ namespace gui
         rotation = 0;
         exposure = 0.18f;
         
-        overlay_enabled = true;
-        reflectivity = 0.35f;
-        density = 70;
+        lens_overlay = true;
+        lens_reflectivity = 0.35f;
+        lens_density = 70;
         
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
@@ -79,22 +79,31 @@ namespace gui
 
         TwAddVarRW(m_bar,
             "exposure", TW_TYPE_FLOAT, &exposure,
-            " label='Exposure'"
-            " min=0.01 max=3 step=0.01 help='Tonemapping exposure'");
+            " label='Exposure' group='Lens'"
+            " min=0.01 max=3 step=0.01"
+            " help='Exposure used for tonemapping'");
 
         TwAddVarRW(m_bar,
-            "density", TW_TYPE_INT32, &density,
-            " label='Imperfections' group='Filmic Overlay'"
-            " min=0 max=200 help='Number of imperfections on film'");
+            "lens_density", TW_TYPE_INT32, &lens_density,
+            " label='Imperfections' group='Lens'"
+            " min=0 max=200"
+            " help='Amount of lens imperfections'");
 
         TwAddVarRW(m_bar,
-            "reflectivity", TW_TYPE_FLOAT, &reflectivity,
-            " label='Reflectivity' group='Filmic Overlay'"
-            " min=0 max=1 step=0.01 help='How reflective the film is'");
+            "lens_reflectivity", TW_TYPE_FLOAT, &lens_reflectivity,
+            " label='Reflectivity' group='Lens'"
+            " min=0 max=1 step=0.01"
+            " help='How reflective the lens coating is'");
 
         TwAddVarRW(m_bar,
-            "overlay_enabled", TW_TYPE_BOOLCPP, &overlay_enabled,
-            " label='Enabled' group='Filmic Overlay'");
+            "lens_overlay", TW_TYPE_BOOLCPP, &lens_overlay,
+            " label='Overlay' group='Lens'"
+            " help='Whether the lens dirt/imperfections are rendered'");
+
+        // add lens flare settings
+
+        /*TwAddButton(m_bar, "btn", btn_cb, &aperture_regen_btn,
+            " label='New Aperture'");*/
 
 		/*TwAddVarRW(m_bar,
 			"sky_color", TW_TYPE_COLOR3F, &skycolor,
@@ -112,23 +121,23 @@ namespace gui
 			"color4", TW_TYPE_COLOR3F, &color4,
 			" label='Color4' colormode=hls");*/
 
-        /*TwAddButton(m_bar, "btn", btn_cb, &aperture_regen_btn,
-            " label='New Aperture'");*/
-
         TwAddVarRW(m_bar,
             "cam_move_speed", TW_TYPE_FLOAT, &cam_move_speed,
-            " label='Camera Speed' group='Navigation'"
-            " min=0.1 max=5 step=0.1 help='Movement speed (WASD)'");
+            " label='Speed' group='Navigation'"
+            " min=0.1 max=5 step=0.1"
+            " help='Movement speed (WASD)'");
 
         TwAddVarRW(m_bar,
             "cam_sensitivity", TW_TYPE_FLOAT, &cam_sensitivity,
             " label='Sensitivity' group='Navigation'"
-            " min=0.01 max=2.5 step=0.01 help='Rotation sensitivity'");
+            " min=0.01 max=2.5 step=0.01"
+            " help='Rotation sensitivity'");
 
         TwAddVarRW(m_bar,
             "cam_fov", TW_TYPE_FLOAT, &cam_fov,
             " label='Field of View' group='Navigation'"
-            " min=10 max=90 step=0.1 help='Camera field of view'");
+            " min=10 max=90 step=0.1"
+            " help='Camera field of view'");
 
         TwAddVarRO(m_bar,
             "cam_locked", TW_TYPE_BOOLCPP, &cam_locked,

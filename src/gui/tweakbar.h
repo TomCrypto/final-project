@@ -42,9 +42,9 @@ namespace gui
 
         /* === overlay === */
         
-        int density;
-        float reflectivity;
-        bool overlay_enabled;
+        int lens_density;
+        float lens_reflectivity;
+        bool lens_overlay;
         
         /* === */
 

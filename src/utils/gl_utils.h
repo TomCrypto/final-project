@@ -81,6 +81,9 @@ namespace gl
         texture2D(const std::string& path, GLenum format);
         texture2D(const image& img, GLenum format);
         texture2D(const glm::ivec2& dims, GLenum format);
+        texture2D& operator=(const texture2D& other);
+        texture2D(const texture2D& other);
+        texture2D();
         ~texture2D();
 
         // Resizes this texture (after this operation
@@ -97,9 +100,6 @@ namespace gl
         GLuint operator()() const;
 
     private:
-        texture2D& operator=(const texture2D& other);
-        texture2D(const texture2D& other);
-
         glm::ivec2 m_dims;
         GLuint m_tex;
         GLenum m_fmt;
