@@ -164,6 +164,11 @@ namespace gui
                      const on_display_t&    display,
                      const on_update_t&     update)
     {
+        if (window_ready) {
+            LOG(ERROR) << "Internal logic error - double context creation.";
+            throw std::logic_error(""); // this should not happen, but check
+        }
+
         int fake_argc = 1;
         char* fake_argv[2] = { (char*)"foo", 0 };
         glutInit(&fake_argc, fake_argv); // bit of a hack...
@@ -178,23 +183,23 @@ namespace gui
         glutTimerFunc(16, update_cb, 0);
         window_ready = true;
 
-        on_mouse_up = mouse_up;
+        on_mouse_up   = mouse_up;
         on_mouse_down = mouse_down;
         on_mouse_move = mouse_move;
-        on_key_press = key_press;
-        on_key_up = key_up;
-        on_special = special;
+        on_key_press  = key_press;
+        on_key_up     = key_up;
+        on_special    = special;
         on_special_up = special_up;
-        on_resize = resize;
-        on_display = display;
-        on_update = update;
+        on_resize     = resize;
+        on_display    = display;
+        on_update     = update;
 
         TwGLUTModifiersFunc(glutGetModifiers);
-        glutKeyboardFunc(keyboard_cb);
         glutKeyboardUpFunc(keyboard_up_cb);
-        glutSpecialFunc(special_cb);
         glutSpecialUpFunc(special_up_cb);
-
+        glutKeyboardFunc(keyboard_cb);
+        glutSpecialFunc(special_cb);
+        
         glutPassiveMotionFunc(motion_cb);
         glutMotionFunc(motion_cb);
         glutMouseFunc(button_cb);
@@ -226,8 +231,6 @@ namespace gui
         LOG(INFO) << "GLSL version string: "
                   << (char*)glGetString(GL_SHADING_LANGUAGE_VERSION)
                   << ".";
-
-        LOG(INFO) << "Target framerate is 60 frames per second.";
 
         if (GLEW_VERSION_3_3) {
             LOG(TRACE) << "OpenGL version 3.3 available, using "

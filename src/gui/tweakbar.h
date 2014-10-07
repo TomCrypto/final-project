@@ -5,8 +5,10 @@
 
 #include <AntTweakBar.h>
 #include <glm/glm.hpp>
-#include <string>
+
 #include "core/skybox.h"
+
+#include <string>
 
 namespace gui
 {

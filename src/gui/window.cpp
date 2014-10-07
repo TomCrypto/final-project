@@ -178,18 +178,6 @@ namespace gui
         }
     }
 
-    void window::on_mouse_move(const glm::ivec2& pos)
-    {
-        auto mouse_pos = (glm::vec2)pos / (float)m_dims.x;
-
-        if (m_cursor_locked || m_buttons[GLUT_LEFT_BUTTON]) {
-            auto ds = m_mouse.delta(mouse_pos);
-            m_cam.turn(ds * m_bar.cam_sensitivity);
-        }
-
-        m_mouse.set_pos(mouse_pos);
-    }
-
     void window::on_update()
     {
         m_cam.set_fov(m_bar.cam_fov * glm::pi<float>() / 180);
@@ -290,5 +278,16 @@ namespace gui
             glutSetCursor(m_cursor_locked ? GLUT_CURSOR_NONE
                                           : GLUT_CURSOR_INHERIT);
         }
+    }
+    
+    void window::on_mouse_move(const glm::ivec2& pos)
+    {
+        auto mouse_pos = (glm::vec2)pos / (float)m_dims.x;
+
+        if (m_cursor_locked || m_buttons[GLUT_LEFT_BUTTON]) {
+            m_cam.turn(m_mouse.delta(mouse_pos) * m_bar.cam_sensitivity);
+        }
+
+        m_mouse.set_pos(mouse_pos);
     }
 }
