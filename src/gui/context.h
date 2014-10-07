@@ -41,8 +41,8 @@ namespace gui
     typedef std::function<void(void)>              on_display_t;
     typedef std::function<void(void)>              on_update_t;
 
+    void initialize(int argc, char *argv[]);
     void abort_handler();
-    void initialize();
     void finalize();
 
     class context
