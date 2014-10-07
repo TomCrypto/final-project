@@ -45,13 +45,17 @@ int main(int argc, char *argv[])
     setup_logger(); /* config/etc. */
     LOG(INFO) << "Program starting.";
 
-    gui::window::initialize();
+    gui::initialize();
 
-    gui::window window("COMP 308 - Final Project", glm::ivec2(1024, 768));
-    window.run(); /* Will return when the window is closed or on crash. */
+    try {
+        gui::window window("COMP 308 - Final Project", glm::ivec2(1024, 768));
+        window.run(); /* Will return when the window is closed by the user. */
+    } catch (...) {
+        LOG(ERROR) << "Aborting.";
+        gui::abort_handler();
+        return EXIT_FAILURE;
+    }
 
-    gui::window::finalize();
-
-    return gui::exception::has_failed()
-         ? EXIT_FAILURE : EXIT_SUCCESS;
+    gui::finalize();
+    return EXIT_SUCCESS;
 }

@@ -216,7 +216,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
     
     float scale = 0.2;
     
-    image img("apertures/pentagon_noise.ppm");
+    image img("apertures/pentagon_noise.png");
     img = img.resize(glm::ivec2(1024));
     
     img = img.enlarge((glm::ivec2)((glm::vec2)(img.dims()) * (1.0f / scale)));

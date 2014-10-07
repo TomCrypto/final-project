@@ -1,61 +1,45 @@
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
 #include <FreeImage.h>
-#include <GL/glew.h>
-#include <GL/freeglut.h>
 #include <fftw3.h>
+
+#include <functional>
+#include <stdexcept>
 #include <string>
 #include <map>
 
-#include "gui/mouse_tracker.h"
+#include "gui/context.h"
+#include "gui/tweakbar.h"
 #include "gui/framebuffer.h"
 #include "gui/fps_counter.h"
-#include "gui/tweakbar.h"
+#include "gui/mouse_tracker.h"
 
 #include "core/model.h"
 #include "core/camera.h"
-#include "core/aperture.h"
 #include "core/skybox.h"
 #include "core/overlay.h"
+#include "core/aperture.h"
 #include "core/occlusion.h"
 
 namespace gui
 {
-    // This is for deferred exception handling, because throwing exceptions in
-    // C callbacks is a nice way to destroy your stack, and also because of
-    // some GLUT peculiarities.
-    class exception
-    {
-    public:
-        static bool has_failed() {
-            return m_failed;
-        }
-
-        static void fail() {
-            m_failed = true;
-        }
-
-    private:
-        static bool m_failed;
-    };
-
     // This controls the main window and the program logic. There should only
     // be one instance of this class, and initialize() should be called first
     class window
     {
     public:
         window(const std::string& window_title, const glm::ivec2& dims);
-        ~window();
-
-        // Runs the window's main loop, returns on window close (or crash)
         void run();
 
-        // To be called at the start and end of the program
-        static void initialize();
-        static void finalize();
+    private:
+        window& operator=(const window& other);
+        window(const window& other);
 
         // Different window event callbacks (logic goes here)
         void on_key_press(unsigned char key);
@@ -68,32 +52,44 @@ namespace gui
         void on_resize(const glm::ivec2& new_dims);
         void on_display();
         void on_update();
-        void on_load();
-        void on_init();
-        void on_free();
-    private:
-        window& operator=(const window& other);
-        window(const window& other);
 
         // GLUT windowing/keyboard stuff
         std::map<int, bool> m_buttons;
         std::map<int, bool> m_keys;
-        bool m_lock_cursor;
+        bool m_cursor_locked;
         glm::ivec2 m_dims;
-        int m_window;
 
-        // Our own stuff
+        // >>>>>>>>>>>>>>>>>>>>>>> <<<<<<<<<<<<<<<<<<<<<<<
+        // MUST BE IN ORDER OF INITIALIZATION & DEPENDENCY
+        // >>>>>>>>>>>>>>>>>>>>>>> <<<<<<<<<<<<<<<<<<<<<<<
+
+        // Stuff that can be done without OpenGL
+
+        #if 0
+        Model m_lighthouse;
+        Model m_outbuilding;
+        Model m_terrain;
+        Model m_tree;
+        #endif
+
+        fft_engine m_fft;
         fps_counter m_fps;
         mouse_tracker m_mouse;
-        main_bar* m_bar;
-        framebuffer* m_framebuffer;
-        aperture* m_aperture;
-        fft_engine m_fft;
+
+        // We initialize OpenGL/GLEW afterwards
+
+        context m_context;
+
+        // Stuff that needs OpenGL functionality
+
+        main_bar m_bar;
         camera m_cam;
-		Model *m_lighthouse, *m_outbuilding, *m_terrain, *m_tree;
-        skybox* m_sky;
-        overlay* m_overlay;
-        occlusion* m_occlusion;
+
+        skybox m_skybox;
+        overlay m_overlay;
+        aperture m_aperture;
+        occlusion m_occlusion;
+        framebuffer m_framebuffer;
     };
 }
 
