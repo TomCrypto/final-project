@@ -91,6 +91,7 @@
     <ClCompile Include="..\src\core\camera.cpp" />
     <ClCompile Include="..\src\core\model.cpp" />
     <ClCompile Include="..\src\core\skybox.cpp" />
+    <ClCompile Include="..\src\gui\context.cpp" />
     <ClCompile Include="..\src\gui\fps_counter.cpp" />
     <ClCompile Include="..\src\gui\mouse_tracker.cpp" />
     <ClCompile Include="..\src\utils\fft_engine.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="..\src\core\camera.h" />
     <ClInclude Include="..\src\core\model.h" />
     <ClInclude Include="..\src\core\skybox.h" />
+    <ClInclude Include="..\src\gui\context.h" />
     <ClInclude Include="..\src\gui\fps_counter.h" />
     <ClInclude Include="..\src\gui\mouse_tracker.h" />
     <ClInclude Include="..\src\utils\fft_engine.h" />
@@ -144,6 +146,8 @@
     <None Include="..\lib\bin\win32\FreeImage.dll" />
     <None Include="..\lib\bin\win32\glew32.dll" />
     <None Include="..\lib\bin\win32\libfftw3f-3.dll" />
+    <None Include="..\res\shaders\aperture.frag" />
+    <None Include="..\res\shaders\aperture.vert" />
     <Text Include="..\res\shaders\occlusion\occlusion.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
@@ -212,6 +216,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\res\apertures\circle_noise.png" />
     <Image Include="..\res\apertures\circular.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
@@ -296,6 +301,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Image>
+    <Image Include="..\res\apertures\pentagon_noise.png" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\res\lighthouse\Lighthouse.obj">
