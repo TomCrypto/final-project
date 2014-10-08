@@ -200,6 +200,11 @@ image::image(const std::string& path)
 
 image::image(const image &other)
 {
+    if (other.dib == nullptr) {
+        dib = nullptr;
+        return;
+    }
+
     if (!(this->dib = FreeImage_Clone(other.dib))) {
         LOG(ERROR) << "Failed to clone image.";
         throw 0;
