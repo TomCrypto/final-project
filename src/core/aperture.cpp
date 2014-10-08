@@ -113,7 +113,7 @@ aperture::aperture(const glm::ivec2& dims, const aperture_params& params,
     LOG(INFO) << "Generating filters.";
 
     //const int radii[] = { 1, 2, 4, 8, 16, 32, 64, 128 };
-    const int radii[] = { 28 };
+    const int radii[] = { 1, 2, 4, 8, 16 };
 
     for (int radius : radii) {
         m_filters[radius] = get_flare(cfft, radius);
@@ -122,7 +122,7 @@ aperture::aperture(const glm::ivec2& dims, const aperture_params& params,
                                            m_filters[radius].second.y);*/
     }
 
-    m_tex = new gl::texture2D(m_filters[28].first, GL_FLOAT);
+    m_tex = new gl::texture2D(m_filters[16].first, GL_FLOAT);
 
     LOG(INFO) << "Done.";
 }
@@ -214,9 +214,9 @@ image aperture::gen_aperture(const glm::ivec2& dims)
     
     #endif
     
-    float scale = 0.2;
+    float scale = 0.35;
     
-    image img("apertures/circle_noise.png");
+    image img("apertures/pentagon_noise.png");
     img = img.resize(glm::ivec2(1024));
     
     img = img.enlarge((glm::ivec2)((glm::vec2)(img.dims()) * (1.0f / scale)));
@@ -309,13 +309,13 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
 
     image out(spectrum.dims());
 
-    const int samples = 40; // pass as quality parameter?
+    const int samples = 80; // pass as quality parameter?
     const float z = 0.75; // TODO: pass this as parameter later!
 
     for (int t = 0; t < samples; ++t)
     {
         float lambda = 700 - 300 * (float)t / samples;
-        float scale = z * lambda / 700;
+        float scale = lambda / 700;
 
         int newX = (int)(out.width() * scale);
         int newY = (int)(out.height() * scale);
@@ -345,7 +345,8 @@ std::pair<image, glm::ivec2> aperture::get_flare(const image& cfft, int radius)
 
 void aperture::render(const std::vector<light>& lights,
                       const gl::texture2D& occlusion,
-                      const camera& camera)
+                      const camera& camera,
+                      float w0, float i0)
 {
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
@@ -360,25 +361,31 @@ void aperture::render(const std::vector<light>& lights,
     m_shader.set("flare", 0);
     m_shader.set("occlusion", 1);
     
+    m_shader.set("intensity", i0);
+    
+    for (size_t t = 0; t < lights.size(); ++t) {
+    
     float radius = 16; // radius of flare texture (convolution)
     
     // Project light on sensor
-    glm::vec4 projected = camera.proj() * camera.view() * lights[0].pos;
+    glm::vec4 projected = camera.proj() * camera.view() * lights[t].pos;
     projected /= projected.w;
     
     float aspect = camera.aspect_ratio();
     
-    if (glm::dot(camera.dir(), glm::normalize((glm::vec3)(lights[0].pos))) > 0) {
+    if (glm::dot(camera.dir(), glm::normalize((glm::vec3)(lights[t].pos))) > 0) {
         glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
-        glVertex2f(-1.6f + projected.x, -1.6f * aspect + projected.y);
+        glVertex2f(-w0 + projected.x, -w0 * aspect + projected.y);
         glTexCoord2f(1, 0);
-        glVertex2f(+1.6f + projected.x, -1.6f * aspect + projected.y);
+        glVertex2f(+w0 + projected.x, -w0 * aspect + projected.y);
         glTexCoord2f(1, 1);
-        glVertex2f(+1.6f + projected.x, +1.6f * aspect + projected.y);
+        glVertex2f(+w0 + projected.x, +w0 * aspect + projected.y);
         glTexCoord2f(0, 1);
-        glVertex2f(-1.6f + projected.x, +1.6f * aspect + projected.y);
+        glVertex2f(-w0 + projected.x, +w0 * aspect + projected.y);
         glEnd();
+    }
+    
     }
     
     #if 0

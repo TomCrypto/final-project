@@ -49,6 +49,8 @@ namespace gui
         int lens_density;
         float lens_reflectivity;
         bool lens_overlay;
+        float lens_flare_size;
+        float lens_flare_intensity;
         
         /* === */
 

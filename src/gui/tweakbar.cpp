@@ -50,6 +50,8 @@ namespace gui
         lens_overlay = true;
         lens_reflectivity = 0.35f;
         lens_density = 70;
+        lens_flare_size = 1.6f;
+        lens_flare_intensity = 25;
         
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
@@ -66,21 +68,25 @@ namespace gui
 
         TwAddVarRW(m_bar,
             "theta", TW_TYPE_FLOAT, &Atmos.theta,
-            " label='theta' group='Atmos' min=0 max=180 step=0.1");
+            " label='theta' group='Atmospheric'"
+            " min=0 max=180 step=0.1");
 
         TwAddVarRW(m_bar,
             "phi", TW_TYPE_FLOAT, &Atmos.phi,
-            " label='phi' group='Atmos' min=0 max=180 step=0.1");
+            " label='phi' group='Atmospheric'"
+            " min=0 max=180 step=0.1");
 
 		TwAddVarRW(m_bar,
 			"rayM", TW_TYPE_FLOAT, &Atmos.RayMult,
-			" label='Rayleigh Mult' group='Atmos'");
+			" label='Rayleigh Mult' group='Atmospheric'");
+
 		TwAddVarRW(m_bar,
 			"mieM", TW_TYPE_FLOAT, &Atmos.MieMult,
-			" label='Mie Mult' group='Atmos'");
+			" label='Mie Mult' group='Atmospheric'");
+
 		TwAddVarRW(m_bar,
 			"inM", TW_TYPE_FLOAT, &Atmos.InMult,
-			" label='Inscattering Mult' group='Atmos'");
+			" label='Inscattering Mult' group='Atmospheric'");
 
         TwAddVarRW(m_bar,
             "exposure", TW_TYPE_FLOAT, &exposure,
@@ -104,6 +110,18 @@ namespace gui
             "lens_overlay", TW_TYPE_BOOLCPP, &lens_overlay,
             " label='Overlay' group='Lens'"
             " help='Whether the lens dirt/imperfections are rendered'");
+
+        TwAddVarRW(m_bar,
+            "lens_flare_size", TW_TYPE_FLOAT, &lens_flare_size,
+            " label='Flare w0' group='Lens'"
+            " min=0.5 max=2.5 step=0.01"
+            " help='Size of the lens flares'");
+
+        TwAddVarRW(m_bar,
+            "lens_flare_intensity", TW_TYPE_FLOAT, &lens_flare_intensity,
+            " label='Flare I0' group='Lens'"
+            " min=0 max=100 step=0.1"
+            " help='Intensity of the lens flares'");
 
         // add lens flare settings
 
@@ -150,5 +168,6 @@ namespace gui
             " help='Right-click to lock or unlock cursor'");
 
         TwDefine((m_name + " contained=true").c_str());
+        TwDefine((m_name + " size='220 360'").c_str());
     }
 }

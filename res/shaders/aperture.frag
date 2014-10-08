@@ -3,6 +3,8 @@
 uniform sampler2D flare;
 uniform sampler2D occlusion;
 
+uniform float intensity;
+
 varying vec2 uv;
 
 int resolution = 8;
@@ -21,5 +23,5 @@ vec3 compute_avg_occlusion(int light)
 
 void main()
 {
-    gl_FragColor = vec4(texture2D(flare, uv).rgb * compute_avg_occlusion(0), 1);
+    gl_FragColor = vec4(texture2D(flare, uv).rgb * compute_avg_occlusion(0) * intensity, 1);
 }
