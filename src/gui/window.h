@@ -59,9 +59,9 @@ namespace gui
         bool m_cursor_locked;
         glm::ivec2 m_dims;
 
-        // >>>>>>>>>>>>>>>>>>>>>>> <<<<<<<<<<<<<<<<<<<<<<<
-        // MUST BE IN ORDER OF INITIALIZATION & DEPENDENCY
-        // >>>>>>>>>>>>>>>>>>>>>>> <<<<<<<<<<<<<<<<<<<<<<<
+        // >>>>>>>>>>>>>>>>>>>>>> <<<<<<<<<<<<<<<<<<<<<<
+        // MUST BE IN ORDER OF INITIALIZATION/DEPENDENCY
+        // >>>>>>>>>>>>>>>>>>>>>> <<<<<<<<<<<<<<<<<<<<<<
 
         // Stuff that can be done without OpenGL
 

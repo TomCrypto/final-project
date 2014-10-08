@@ -15,16 +15,16 @@ namespace gui
           #endif
           m_fft(glm::ivec2(3072)),
           m_context(window_title, dims,
-                    std::bind(&window::on_mouse_up, this, _1),
+                    std::bind(&window::on_mouse_up,   this, _1),
                     std::bind(&window::on_mouse_down, this, _1),
                     std::bind(&window::on_mouse_move, this, _1),
-                    std::bind(&window::on_key_press, this, _1),
-                    std::bind(&window::on_key_up, this, _1),
-                    std::bind(&window::on_special, this, _1),
+                    std::bind(&window::on_key_press,  this, _1),
+                    std::bind(&window::on_key_up,     this, _1),
+                    std::bind(&window::on_special,    this, _1),
                     std::bind(&window::on_special_up, this, _1),
-                    std::bind(&window::on_resize, this, _1),
-                    std::bind(&window::on_display, this),
-                    std::bind(&window::on_update, this)),
+                    std::bind(&window::on_resize,     this, _1),
+                    std::bind(&window::on_display,    this),
+                    std::bind(&window::on_update,     this)),
           m_bar("main", "Configuration"),
           m_cam(m_dims, glm::vec3(0, 3, -5), glm::vec3(0, 0, 1),
                 m_bar.cam_fov * glm::pi<float>() / 180),
@@ -120,14 +120,15 @@ namespace gui
                                        m_bar.Atmos.phi / 90,
                                        0.0f);*/
 
-        glm::vec4 sun_pos = -glm::vec4(glm::cos(glm::radians(m_bar.Atmos.theta)),
-                                       glm::sin(glm::radians(m_bar.Atmos.theta))*glm::cos(glm::radians(m_bar.Atmos.phi)),
-                                       glm::sin(glm::radians(m_bar.Atmos.theta))*glm::sin(glm::radians(m_bar.Atmos.phi)),
-                                       0.0f);
+        glm::vec4 sun_pos = -glm::vec4(
+            glm::cos(glm::radians(m_bar.Atmos.theta)),
+            glm::sin(glm::radians(m_bar.Atmos.theta))*glm::cos(glm::radians(m_bar.Atmos.phi)),
+            glm::sin(glm::radians(m_bar.Atmos.theta))*glm::sin(glm::radians(m_bar.Atmos.phi)),
+            0.0f);
 
         glm::vec3 sun_strength = glm::vec3(10000, 10000, 10000);
         
-        float sun_radius = 0.12f; // experimentally determined - radius of sun as viewed by camera
+        float sun_radius = 0.06f; // experimentally determined - radius of sun as viewed by camera
 
         std::vector<light> lights;
         lights.push_back(light(sun_pos, sun_strength, sun_radius));
@@ -140,7 +141,8 @@ namespace gui
 
         // END OCCLUSION QUERY
 
-        m_aperture.render(lights, occlusion, m_cam);
+        m_aperture.render(lights, occlusion, m_cam, m_bar.lens_flare_size,
+                          m_bar.lens_flare_intensity);
 
         if (m_bar.lens_overlay) {
             m_overlay.render(lights, occlusion, m_cam, m_bar.lens_reflectivity);

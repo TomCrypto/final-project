@@ -30,7 +30,8 @@ public:
     // renders into/using the current framebuffer
     void render(const std::vector<light>& lights,
                 const gl::texture2D& occlusion,
-                const camera& camera);
+                const camera& camera,
+                float w0, float i0);
 
     // generates a random aperture with noise
     // TODO: make noise configurable as parameters?
