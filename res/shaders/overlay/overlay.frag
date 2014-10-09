@@ -96,10 +96,8 @@ varying vec2 uv;
 vec3 compute_avg_occlusion(int light)
 {
 	vec3 avg = vec3(0);
-
-	for (int t = 0; t < resolution; ++t)
-		avg += texture2D(occlusion, vec2(light / float(max_lights),
-									     t / float(resolution))).rgb;
+	
+	avg += texture2D(occlusion, vec2(light / float(max_lights), 0)).rgb;
 
 	return avg;
 }

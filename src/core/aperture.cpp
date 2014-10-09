@@ -357,7 +357,7 @@ void aperture::render(const std::vector<light>& lights,
     m_shader.bind();
     
     m_tex->bind(0);
-    occlusion.bind(1);
+    occlusion.bind(1, GL_NEAREST, GL_NEAREST);
     m_shader.set("flare", 0);
     m_shader.set("occlusion", 1);
     

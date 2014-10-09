@@ -3,7 +3,7 @@
 #include "core/occlusion.h"
 
 occlusion::occlusion()
-    : m_tex(glm::ivec2(max_lights, resolution), GL_FLOAT),
+    : m_tex(glm::ivec2(max_lights, 1), GL_FLOAT),
       m_shader("occlusion/occlusion.vert", "occlusion/occlusion.frag")
 {
 
@@ -29,7 +29,7 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
 
     // next attach our occlusion texture to the framebuffer
     framebuffer.bind_as(m_tex);
-    glViewport(0, 0, 8, 8);
+    glViewport(0, 0, 8, 1);
 
     framebuffer.clear(false);
     glDisable(GL_DEPTH_TEST);
@@ -39,11 +39,8 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
     copy.bind(0);
     m_shader.set("render", 0);
     m_shader.set("max_lights", (int)max_lights);
-    //m_shader.set("resolution", (int)resolution);
-    //m_shader.set("light_count", (int)light_count);
+    m_shader.set("view_pos", camera.pos());
     m_shader.set("viewproj", camera.proj() * camera.view());
-    //m_shader.set("view_dir", glm::normalize(camera.dir()));
-    //m_shader.set("view_pos", camera.pos());
     
     for (size_t t = 0; t < light_count; ++t) {
         m_shader.set("lights[" + std::to_string(t) + "].pos",
@@ -56,13 +53,8 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
     glBegin(GL_POINTS);
 
     for (size_t i = 0; i < light_count; ++i) {
-        for (size_t j = 0; j < resolution; ++j) {
-            glNormal3f((float)i / max_lights,
-                       (float)j / resolution,
-                       0.0f);
-            glVertex2f((float)i / max_lights * 2 - 1,
-                       (float)j / resolution * 2 - 1);
-        }
+        glVertex2f((float)i / max_lights * 2 - 1,
+                   0.0f);
     }
 
     // todo
