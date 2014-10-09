@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 
 #include "core/skybox.h"
+#include "core/aperture.h"
 
 #include <string>
 
@@ -41,17 +42,16 @@ namespace gui
         main_bar(const std::string& name,
                  const std::string& title);
 
-        float rotation;
-        float exposure;
+        /* === lens flare stuff === */
 
-        /* === overlay === */
-        
+        float lens_exposure;
         int lens_density;
         float lens_reflectivity;
         bool lens_overlay;
         float lens_flare_size;
         float lens_flare_intensity;
-        
+        transmission_function lens_aperture;
+
         /* === */
 
 		atmos Atmos;

@@ -21,7 +21,7 @@ namespace gui
             LOG(TRACE) << "TwNewBar failed.";
             throw std::runtime_error("");
         }
-        
+
         set_title(title);
     }
 
@@ -44,15 +44,14 @@ namespace gui
                        const std::string& title)
       : basic_bar(name, title)
     {
-        rotation = 0;
-        exposure = 0.18f;
-        
+        lens_exposure = 0.18f;
         lens_overlay = true;
         lens_reflectivity = 0.35f;
         lens_density = 70;
         lens_flare_size = 1.6f;
         lens_flare_intensity = 25;
-        
+        lens_aperture = PENTAGON;
+
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
         cam_fov = 50;
@@ -89,7 +88,7 @@ namespace gui
 			" label='Inscattering Mult' group='Atmospheric'");
 
         TwAddVarRW(m_bar,
-            "exposure", TW_TYPE_FLOAT, &exposure,
+            "lens_exposure", TW_TYPE_FLOAT, &lens_exposure,
             " label='Exposure' group='Lens'"
             " min=0.01 max=3 step=0.01"
             " help='Exposure used for tonemapping'");
@@ -123,10 +122,21 @@ namespace gui
             " min=0 max=100 step=0.1"
             " help='Intensity of the lens flares'");
 
-        // add lens flare settings
+        TwAddSeparator(m_bar,
+            "lens_sep",
+            " group='Lens'");
 
-        TwAddButton(m_bar, "btn", btn_cb, &aperture_regen_btn,
-            " label='New Aperture' group='Lens'");
+        auto apertureType = TwDefineEnum("Aperture", nullptr, 0);
+
+        TwAddVarRW(m_bar,
+            "lens_aperture", apertureType, &lens_aperture,
+            " label='Aperture' group='Lens'"
+            " enum='0 {Pentagon}, 1 {Circle}'"
+            " help='Lens flare aperture to use'");
+
+        TwAddButton(m_bar,
+            "aperture_regen_btn", btn_cb, &aperture_regen_btn,
+            " label='Update Aperture' group='Lens'");
 
 		/*TwAddVarRW(m_bar,
 			"sky_color", TW_TYPE_COLOR3F, &skycolor,
