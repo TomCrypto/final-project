@@ -175,12 +175,6 @@
     <None Include="..\lib\bin\win32\freeglut.dll">
       <Filter>Dependencies</Filter>
     </None>
-    <None Include="..\res\shaders\aperture.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="..\res\shaders\aperture.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\res\apertures\noise1.png">
@@ -259,6 +253,12 @@
     </Text>
     <Text Include="..\res\shaders\occlusion\occlusion.vert">
       <Filter>Resource Files\Shaders\Occlusion</Filter>
+    </Text>
+    <Text Include="..\res\shaders\aperture.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="..\res\shaders\aperture.vert">
+      <Filter>Resource Files\Shaders</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

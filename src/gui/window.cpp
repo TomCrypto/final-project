@@ -99,14 +99,17 @@ namespace gui
 		//m_terrain->display();
 		//glColor3f(m_bar.color4.x, m_bar.color4.y, m_bar.color4.z);
 		//m_tree->display();
+
+        glPushMatrix();
+        glColor3f(0, 0, 0);
+        glTranslatef(10, 10, -6);
+        gluSphere(gluNewQuadric(), 2.5f, 16, 16);
+        glPopMatrix();
+
 		glPopMatrix();
         glDisable(GL_DEPTH_TEST);
 	    glDisable(GL_LIGHTING);
 	    glDisable(GL_COLOR_MATERIAL);
-
-        #if 0
-        m_aperture->render(m_cam);
-        #endif
 
         /*====================================================================
          * 3D RENDERING STOPS HERE - SCREEN SPACE POSTPROCESSING STARTS HERE
@@ -115,23 +118,18 @@ namespace gui
         /* TEMPORARY: recalculate sun position here to pass to overlay.
          * later this could be done by e.g. asking m_sky for it. */
 
-        /*glm::vec4 sun_pos = -glm::vec4(-cos(glm::radians(-m_bar.Atmos.theta)),
-                                       sin(glm::radians(-m_bar.Atmos.theta)),
-                                       m_bar.Atmos.phi / 90,
-                                       0.0f);*/
-
         glm::vec4 sun_pos = -glm::vec4(
             glm::cos(glm::radians(m_bar.Atmos.theta)),
             glm::sin(glm::radians(m_bar.Atmos.theta))*glm::cos(glm::radians(m_bar.Atmos.phi)),
             glm::sin(glm::radians(m_bar.Atmos.theta))*glm::sin(glm::radians(m_bar.Atmos.phi)),
             0.0f);
 
-        glm::vec3 sun_strength = glm::vec3(10000, 10000, 10000);
-        
         float sun_radius = 0.06f; // experimentally determined - radius of sun as viewed by camera
 
         std::vector<light> lights;
-        lights.push_back(light(sun_pos, sun_strength, sun_radius));
+        lights.push_back(light(sun_pos, glm::vec3(0), sun_radius));
+
+        //lights.push_back(light(glm::vec4(10, 0, 5, 1), glm::vec3(0), 0.5f));
 
         // OCCLUSION QUERY <<< HERE >>>
 
@@ -143,6 +141,13 @@ namespace gui
 
         m_aperture.render(lights, occlusion, m_cam, m_bar.lens_flare_size,
                           m_bar.lens_flare_intensity);
+
+        glEnable(GL_DEPTH_TEST);
+        glPushMatrix();
+        glColor3f(0, 0, 0);
+        glTranslatef(10, 10, -6);
+        gluSphere(gluNewQuadric(), 2.5f, 16, 16);
+        glPopMatrix();
 
         if (m_bar.lens_overlay) {
             m_overlay.render(lights, occlusion, m_cam, m_bar.lens_reflectivity);
