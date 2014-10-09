@@ -211,16 +211,16 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 
     out = out.resize(dims);
     return out;
-    
+
     #endif
-    
+
     float scale = 0.35;
-    
+
     image img("apertures/circle_noise.png");
     img = img.resize(glm::ivec2(1024));
-    
+
     img = img.enlarge((glm::ivec2)((glm::vec2)(img.dims()) * (1.0f / scale)));
-    
+
     return img.resize(dims);
 }
 
@@ -355,18 +355,17 @@ void aperture::render(const std::vector<light>& lights,
     glViewport(0, 0, camera.dims().x, camera.dims().y);
 
     m_shader.bind();
-    
+
     m_tex->bind(0);
     occlusion.bind(1, GL_NEAREST, GL_NEAREST);
     m_shader.set("flare", 0);
     m_shader.set("occlusion", 1);
-    m_shader.set("render", 2);
-    
+
     m_shader.set("intensity", i0);
     m_shader.set("max_lights", 8);
     m_shader.set("viewproj", camera.proj() * camera.view());
     m_shader.set("view_pos", camera.pos());
-    
+
     for (size_t t = 0; t < lights.size(); ++t) {
         m_shader.set("lights[" + std::to_string(t) + "].pos",
                      lights[t].pos);
@@ -378,15 +377,15 @@ void aperture::render(const std::vector<light>& lights,
         float radius = 16; // radius of flare texture (convolution)
 
         float uv_mult = 0.55; // by how much to scale?
-    
+
         // Project light on sensor
         bool forward_facing = glm::dot(glm::normalize((glm::vec3)lights[t].pos - camera.pos() * lights[t].pos.w),
                                        glm::normalize(camera.dir())) > 0;
         glm::vec4 projected = camera.proj() * camera.view() * lights[t].pos;
         projected /= projected.w;
-    
+
         float aspect = camera.aspect_ratio();
-    
+
         if (forward_facing) {
             glBegin(GL_QUADS);
             glTexCoord3f(0.5f - 0.5f * uv_mult, 0.5f - 0.5f * uv_mult, (float)t);
@@ -400,9 +399,9 @@ void aperture::render(const std::vector<light>& lights,
             glEnd();
         }
     }
-    
+
     m_shader.unbind();
-    
+
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
 }

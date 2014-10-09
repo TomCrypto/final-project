@@ -41,7 +41,7 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
     m_shader.set("max_lights", (int)max_lights);
     m_shader.set("view_pos", camera.pos());
     m_shader.set("viewproj", camera.proj() * camera.view());
-    
+
     for (size_t t = 0; t < light_count; ++t) {
         m_shader.set("lights[" + std::to_string(t) + "].pos",
                      lights[t].pos);
@@ -50,14 +50,15 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
     }
 
     // finally render a bunch of points, one for every light + radius
-    glBegin(GL_POINTS);
+    glBegin(GL_QUADS);
 
     for (size_t i = 0; i < light_count; ++i) {
-        glVertex2f((float)i / max_lights * 2 - 1,
-                   0.0f);
+        glVertex2f((float)i / max_lights * 2 - 1, 0.0f);
+        glVertex2f((float)i / max_lights * 2 - 1, 1.0f);
+        glVertex2f((float)(i + 1) / max_lights * 2 - 1, 1.0f);
+        glVertex2f((float)(i + 1) / max_lights * 2 - 1, 0.0f);
     }
 
-    // todo
     glEnd();
 
     m_shader.unbind();
