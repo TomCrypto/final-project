@@ -141,18 +141,6 @@ namespace gui
         }
     }
 
-    static void shutdown_cb()
-    {
-        if (has_failed) {
-            glutLeaveMainLoop();
-        } else try {
-            /* nothing */
-        } catch (...) {
-            has_failed = true;
-            glutLeaveMainLoop();
-        }
-    }
-
     context::context(const std::string& window_title,
                      const glm::ivec2&  window_dims,
                      const on_mouse_up_t&   mouse_up,
@@ -199,15 +187,14 @@ namespace gui
         glutSpecialUpFunc(special_up_cb);
         glutKeyboardFunc(keyboard_cb);
         glutSpecialFunc(special_cb);
-        
+
         glutPassiveMotionFunc(motion_cb);
         glutMotionFunc(motion_cb);
         glutMouseFunc(button_cb);
 
         glutDisplayFunc(display_cb);
         glutReshapeFunc(resize_cb);
-        glutCloseFunc(shutdown_cb);
-        
+
         GLenum err = glewInit();
         if (err != GLEW_OK) {
             LOG(ERROR) << "Failed to initialize GLEW (glewInit failed).";
@@ -284,7 +271,7 @@ namespace gui
             glutMainLoop();
         }
     }
-    
+
     static void fi_error_handler(FREE_IMAGE_FORMAT fif, const char *msg)
     {
         LOG(WARNING) << "FreeImage error: " << msg << ".";
