@@ -29,16 +29,13 @@ void main()
 
     int lod = compute_lod(lights[lid].pos, lights[lid].radius);
 
-    int x_res = lod;
-    int y_res = lod;
-
     vec3 total = vec3(0.0);
 
-    for (int y = 0; y < y_res; ++y) {
-        float theta = y / float(y_res) * 3.14159265;
+    for (int y = 0; y < lod; ++y) {
+        float theta = y / float(lod) * 3.14159265;
 
-        for (int x = 0; x < x_res; ++x) {
-            float phi = x / float(x_res) * 3.14159265 * 2.0;
+        for (int x = 0; x < lod; ++x) {
+            float phi = x / float(lod) * 3.14159265 * 2.0;
 
             vec4 pos = lights[lid].pos + vec4(sin(theta) * cos(phi),
                                               cos(theta),
@@ -57,5 +54,6 @@ void main()
         }
     }
 
-	total_occlusion = total / (x_res * y_res * 2.0);
+    // About 50% of samples will be back-facing
+	total_occlusion = total / (lod * lod * 2.0);
 }
