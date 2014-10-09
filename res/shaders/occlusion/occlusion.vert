@@ -7,71 +7,68 @@ struct light
 	float radius;
 };
 
-//uniform int resolution;
-uniform int max_lights;
-
 uniform mat4 viewproj;
-//uniform vec3 view_dir;
-//uniform vec3 view_pos;
+uniform vec3 view_pos;
 
+uniform int max_lights;
 uniform light lights[8];
-uniform int light_count;
 
 uniform sampler2D render;
 
 varying vec3 total_occlusion;
 
+int compute_lod(vec4 light_pos, float light_radius)
+{
+    // work out distance from light to camera
+    vec3 lpos = light_pos.xyz - view_pos * light_pos.w;
+    float dist = length(lpos);
+    
+    // then lod is given by C * radius / distance
+    // where C is an arbitrary quality constant
+    // (here we set C = 400)
+    
+    float lod = 400 * light_radius / dist;
+    
+    // clamp lod between 1 and 64 for performance
+    
+    return int(clamp(lod, 1.0, 64.0));
+}
+
 void main()
 {
 	gl_Position = gl_Vertex;
 
-    /* The light that is being sampled now. */
-	int light = int(gl_Normal.x * max_lights);
+	int light = int((gl_Vertex.x + 1.0) / 2.0 * max_lights);
 
-	/* Radial sample band. */
-	float band = gl_Normal.y;
+    int lod = compute_lod(lights[light].pos, lights[light].radius);
 
-	// work out the apparent size of the light from the camera
-	vec4 center_clip_space = viewproj * lights[light].pos;
-	vec4 edgepx_clip_space = viewproj * (lights[light].pos + vec4(+1, 0, 0, 0) * lights[light].radius);
-	vec4 edgenx_clip_space = viewproj * (lights[light].pos + vec4(-1, 0, 0, 0) * lights[light].radius);
-	vec4 edgepy_clip_space = viewproj * (lights[light].pos + vec4(0, +1, 0, 0) * lights[light].radius);
-	vec4 edgeny_clip_space = viewproj * (lights[light].pos + vec4(0, -1, 0, 0) * lights[light].radius);
-	vec4 edgepz_clip_space = viewproj * (lights[light].pos + vec4(0, 0, +1, 0) * lights[light].radius);
-	vec4 edgenz_clip_space = viewproj * (lights[light].pos + vec4(0, 0, -1, 0) * lights[light].radius);
-	vec2 center = center_clip_space.xy / center_clip_space.w;
-	vec2 edgepx = edgepx_clip_space.xy / edgepx_clip_space.w;
-	vec2 edgenx = edgenx_clip_space.xy / edgenx_clip_space.w;
-	vec2 edgepy = edgepy_clip_space.xy / edgepy_clip_space.w;
-	vec2 edgeny = edgeny_clip_space.xy / edgeny_clip_space.w;
-	vec2 edgepz = edgepz_clip_space.xy / edgepz_clip_space.w;
-	vec2 edgenz = edgenz_clip_space.xy / edgenz_clip_space.w;
+    int x_res = lod;
+    int y_res = lod;
+    
+    vec3 total = vec3(0.0);
+    
+    for (int y = 0; y < y_res; ++y) {
+        float theta = y / float(y_res) * 3.14159265;
+    
+        for (int x = 0; x < x_res; ++x) {
+            float phi = x / float(x_res) * 3.14159265 * 2.0;
 
-	float dist = 0;
-	dist = max(dist, length(center - edgepx));
-	dist = max(dist, length(center - edgenx));
-	dist = max(dist, length(center - edgepy));
-	dist = max(dist, length(center - edgeny));
-	dist = max(dist, length(center - edgepz));
-	dist = max(dist, length(center - edgenz));
+            vec4 pos = lights[light].pos + vec4(sin(theta) * cos(phi),
+                                                cos(theta),
+                                                sin(theta) * sin(phi),
+                                                0.0) * lights[light].radius;
 
-	vec3 total = vec3(0.0);
+            vec4 projected = viewproj * pos;
+            projected.xy /= projected.w;
+            
+            vec2 sample_pos = (projected.xy + 1.0) / 2.0;
+            
+            if ((sample_pos.x >= 0) && (sample_pos.y >= 0)
+		     && (sample_pos.x <= 1) && (sample_pos.y <= 1)) {
+			    total += texture2D(render, sample_pos).rgb;
+		    }
+        }
+    }
 
-	// finally, sample the radial band accordingly
-	const int samples = 16;
-
-	for (int t = 0; t < samples; ++t) {
-		vec2 sample_pos = vec2(cos(2 * 3.14159265 * t / float(samples)),
-							   sin(2 * 3.14159265 * t / float(samples))) * dist * band
-						+ center;
-
-		sample_pos = sample_pos * 0.5 + vec2(0.5);
-
-		if ((sample_pos.x >= 0) && (sample_pos.y >= 0)
-		 && (sample_pos.x <= 1) && (sample_pos.y <= 1)) {
-			total += texture2D(render, sample_pos).rgb;
-		}
-	}
-
-	total_occlusion = total / samples;
+	total_occlusion = total / (x_res * y_res * 2.0);
 }
