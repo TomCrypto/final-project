@@ -48,11 +48,11 @@ overlay::overlay(int density)
 
 void overlay::regenerate_film(int density) {
     m_film.clear();
-    
+
     srand(42);
     auto points = gen_points(density, 0.1f);
     srand(42);
-    
+
     for (auto point : points) {
         m_film.push_back(std::make_pair(point, disk_radius()));
     }
@@ -67,14 +67,14 @@ void overlay::render(const std::vector<light>& lights,
     }
 
     /* Render a set of randomly distributed points with glBlend enabled. */
-    
+
     glEnable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
     glBlendFunc(GL_ONE, GL_ONE);
     glViewport(0, 0, camera.dims().x, camera.dims().y);
-    
+
     m_shader.bind();
-    
+
     m_shader.set("viewproj", camera.proj() * camera.view());
     m_shader.set("view_dir", glm::normalize(camera.dir()));
     m_shader.set("view_pos", camera.pos());
@@ -85,19 +85,18 @@ void overlay::render(const std::vector<light>& lights,
     occlusion.bind(0, GL_NEAREST, GL_NEAREST);
     m_shader.set("occlusion", 0);
     m_shader.set("max_lights", 8);
-    m_shader.set("resolution", 8);
-    
+
     for (int t = 0; t < std::min((int)lights.size(), 8); ++t) {
         m_shader.set("lights[" + std::to_string(t) + "].pos",
                      lights[t].pos);
     }
-    
+
     glBegin(GL_QUADS);
-    
+
     for (size_t t = 0; t < m_film.size(); ++t) {
         glm::vec2 pos = m_film[t].first;
         float radius = m_film[t].second;
-    
+
         glTexCoord2f(0, 1);
         glVertex3f(pos.x * camera.aspect_ratio() - radius, pos.y + radius, 1);
         glTexCoord2f(1, 1);

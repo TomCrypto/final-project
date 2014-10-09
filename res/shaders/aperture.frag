@@ -6,8 +6,8 @@ struct light
 	float radius;
 };
 
-uniform mat4 viewproj;
-uniform vec3 view_pos;
+//uniform mat4 viewproj;
+//uniform vec3 view_pos;
 
 uniform int max_lights;
 uniform light lights[8];
@@ -20,14 +20,15 @@ uniform float intensity;
 varying vec2 uv;
 varying float light_f;
 
-vec3 get_occlusion(int light)
+vec3 get_occlusion(int light_id)
 {
-	return texture2D(occlusion, vec2(light / float(max_lights), 0)).rgb;
+    float coord = float(light_id) / float(max_lights);
+    return texture2D(occlusion, vec2(coord, 0.0)).rgb;
 }
 
 void main()
 {
-	int light = int(light_f);
+	int lid = int(light_f);
 
-	gl_FragColor = vec4(texture2D(flare, uv).rgb * get_occlusion(light) * intensity, 1);
+	gl_FragColor = vec4(texture2D(flare, uv).rgb * get_occlusion(lid) * intensity, 1);
 }

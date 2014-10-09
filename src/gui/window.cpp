@@ -36,7 +36,7 @@ namespace gui
           m_occlusion(),
           m_framebuffer(m_dims)
     {
-        
+
     }
 
     void window::run()
@@ -114,7 +114,7 @@ namespace gui
         /*====================================================================
          * 3D RENDERING STOPS HERE - SCREEN SPACE POSTPROCESSING STARTS HERE
          *====================================================================*/
-        
+
         /* TEMPORARY: recalculate sun position here to pass to overlay.
          * later this could be done by e.g. asking m_sky for it. */
 
@@ -134,8 +134,8 @@ namespace gui
         // OCCLUSION QUERY <<< HERE >>>
 
         const gl::texture2D& occlusion = m_occlusion.query(lights, m_framebuffer, m_cam);
-        //image img = image(glm::ivec2(8, 8), occlusion());
-        //img.save("test.exr");
+        //image img = image(glm::ivec2(8, 1), occlusion());
+        //img.save("occlusion.exr");
 
         // END OCCLUSION QUERY
 
@@ -249,7 +249,7 @@ namespace gui
             m_mouse.set_pos((glm::vec2)(m_dims / 2) / (float)m_dims.x);
         }
     }
-    
+
     void window::on_key_up(unsigned char key)
     {
         m_keys[key] = false;
@@ -286,7 +286,7 @@ namespace gui
                                           : GLUT_CURSOR_INHERIT);
         }
     }
-    
+
     void window::on_mouse_move(const glm::ivec2& pos)
     {
         auto mouse_pos = (glm::vec2)pos / (float)m_dims.x;

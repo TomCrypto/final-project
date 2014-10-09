@@ -8,7 +8,7 @@
 //     License : Copyright (C) 2011 Ashima Arts. All rights reserved.
 //               Distributed under the MIT License. See LICENSE file.
 //               https://github.com/ashima/webgl-noise
-// 
+//
 
 vec3 mod289(vec3 x) {
   return x - floor(x * (1.0 / 289.0)) * 289.0;
@@ -93,50 +93,47 @@ uniform float reflectivity;
 varying vec2 frag_pos;
 varying vec2 uv;
 
-vec3 compute_avg_occlusion(int light)
+vec3 get_occlusion(int light_id)
 {
-	vec3 avg = vec3(0);
-	
-	avg += texture2D(occlusion, vec2(light / float(max_lights), 0)).rgb;
-
-	return avg;
+    float coord = float(light_id) / float(max_lights);
+	return texture2D(occlusion, vec2(coord, 0.0)).rgb;
 }
 
 void main()
 {
     if (length(uv * 2 - vec2(1)) < 1) {
         vec3 radiance = vec3(0.0);
-        
+
         for (int t = 0; t < light_count; ++t) {
             vec3 light_pos = lights[t].pos.xyz - view_pos * lights[t].pos.w;
-        
+
             // amount of radiation falling on the film (Lambert's cosine law)
             vec3 irradiance = vec3(max(0.0, dot(normalize(light_pos), view_dir)));
-            
+
             vec4 clip_space_pos = viewproj * lights[t].pos;
             vec2 screen_space_pos = clip_space_pos.xy / clip_space_pos.w;
 
             // weighted by the on-screen distance
             irradiance *= pow(max(0.0, 0.9 - min(length(screen_space_pos - frag_pos), 3.0) / 3.0), 10.0 + 20.0 * (1.0 - reflectivity));
-            
+
             // and of course taking into account light falloff
             irradiance /= pow(length(light_pos), 2);
-            
-			// and finally weighted by average occlusion
-			irradiance *= compute_avg_occlusion(t);
+
+			// and finally weighted by occlusion
+			irradiance *= get_occlusion(t);
 
             // integrate radiance over lights
             radiance += irradiance;
         }
-    
+
         // modulate incoming radiance with a little noise for diversity
         float noise = max(0, 0.9 + 0.2 * snoise(18.0 * frag_pos));
         radiance *= vec3(noise);
-        
+
         // and smooth out the edge of the film imperfection
         float edge_distance = abs(1.0 - length(uv * 2 - vec2(1)));
         if (edge_distance < 0.45) radiance *= edge_distance / 0.45;
-        
+
         gl_FragColor = vec4(vec3(radiance), 1);
     }
     else
