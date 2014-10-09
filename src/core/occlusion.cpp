@@ -29,7 +29,7 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
 
     // next attach our occlusion texture to the framebuffer
     framebuffer.bind_as(m_tex);
-    glViewport(0, 0, 8, 1);
+    glViewport(0, 0, max_lights, 1);
 
     framebuffer.clear(false);
     glDisable(GL_DEPTH_TEST);

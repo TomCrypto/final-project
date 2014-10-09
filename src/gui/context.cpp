@@ -234,7 +234,7 @@ namespace gui
 
         if (GLEW_VERSION_3_3) {
             LOG(TRACE) << "OpenGL version 3.3 available, using "
-                       << "TW_OPENGL_CORE (better performance).";
+                       << "TW_OPENGL_CORE.";
 
             if (TwInit(TW_OPENGL_CORE, NULL) != 1) {
                 LOG(ERROR) << "Failed to initialize AntTweakBar.";

@@ -3,7 +3,6 @@
 struct light
 {
     vec4 pos;
-    //vec3 strength;
 	float radius;
 };
 
