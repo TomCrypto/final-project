@@ -18,19 +18,7 @@ varying vec3 total_occlusion;
 
 int compute_lod(vec4 light_pos, float light_radius)
 {
-    // work out distance from light to camera
-    vec3 lpos = light_pos.xyz - view_pos * light_pos.w;
-    float dist = length(lpos);
-
-    // then lod is given by C * radius / distance
-    // where C is an arbitrary quality constant
-    // (here we set C = 400)
-
-    float lod = 400 * light_radius / dist;
-
-    // clamp lod between 1 and 64 for performance
-
-    return int(clamp(lod, 1.0, 64.0));
+    return 32;
 }
 
 void main()
