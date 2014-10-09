@@ -69,8 +69,6 @@ namespace gui
         glMatrixMode(GL_MODELVIEW);
         glLoadMatrixf(glm::value_ptr(m_cam.view()));
 
-        glRotatef(m_bar.rotation, 0, 1, 0);
-
         glEnable(GL_DEPTH_TEST);
 	    glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHTING);
@@ -159,7 +157,7 @@ namespace gui
 
         // Step 3: render tonemapped HDR render to backbuffer
 
-        m_framebuffer.render(m_bar.exposure);
+        m_framebuffer.render(m_bar.lens_exposure);
 
         // Step 4: draw the AntTweakBar overlay on top
 

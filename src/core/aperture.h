@@ -13,6 +13,12 @@
 #include "core/camera.h"
 #include "core/light.h"
 
+enum transmission_function
+{
+    PENTAGON        = 0,
+    CIRCLE          = 1,
+};
+
 struct aperture_params
 {
     float scale;
@@ -55,9 +61,9 @@ private:
     std::random_device m_rd;
     std::mt19937 m_rng;
     fft_engine& m_fft;
-    
+
     gl::texture2D* m_tex;
-    
+
     gl::shader m_shader;
 };
 

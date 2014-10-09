@@ -110,11 +110,13 @@ void main()
             // amount of radiation falling on the film (Lambert's cosine law)
             vec3 irradiance = vec3(max(0.0, dot(normalize(light_pos), view_dir)));
 
+            // project light position onto the screen (with perspective divide)
             vec4 clip_space_pos = viewproj * lights[t].pos;
             vec2 screen_space_pos = clip_space_pos.xy / clip_space_pos.w;
 
             // weighted by the on-screen distance
-            irradiance *= pow(max(0.0, 0.9 - min(length(screen_space_pos - frag_pos), 3.0) / 3.0), 10.0 + 20.0 * (1.0 - reflectivity));
+            float dist = max(0.0, 0.9 - min(length(screen_space_pos - frag_pos), 3.0) / 3.0);
+            irradiance *= pow(dist, 10.0 + 20.0 * (1.0 - reflectivity));
 
             // and of course taking into account light falloff
             irradiance /= pow(length(light_pos), 2);
@@ -136,6 +138,5 @@ void main()
 
         gl_FragColor = vec4(vec3(radiance), 1);
     }
-    else
-        gl_FragColor = vec4(0, 0, 0, 1);
+    else gl_FragColor = vec4(0, 0, 0, 1);
 }
