@@ -20,24 +20,12 @@ uniform vec3 gHG; //glm::vec3((1 - g)*(1 - g), 1 + g*g, 2 * g)
 void main()
 {
 gl_Position = proj * view * gl_Vertex;
-vec3 eyeDir = normalize((gl_Vertex).xyz);
-float dotP = -dot(normalize(eyeDir),normalize(sunDir));
+vec3 eyeDir = normalize((view * gl_Position).xyz);
+float dotP = dot(normalize(eyeDir),normalize(sunDir));
 
-if (dotP < 0.999) {
-	extinction = vec3(0);
-	inscattering = vec3(0.1, 0.3, 0.85);
-	return;
-} else {
-	extinction = vec3(100000);
-	inscattering = vec3(00000);
-	return;
-}
-
-extinction = (dotP/2.0f + 0.5f)*vec3(1.0f);//exp(-betaRM*gl_Position.z);
 vec3 ray = rayleighTheta*(1+dotP*dotP);
-float hg = gHG.x/pow(gHG.y-gHG.z*dotP,1.5f);
+float hg = gHG.x/pow(gHG.y-gHG.z*dotP,1.5);
 vec3 mie = mieTheta*hg;
-//tmp = tmp + mieTheta*dotP;
-//tmp = tmp * oneOverBetaRM * Esun.xyz * (1-extinction); //still need to multiply by Esun
-inscattering = ray+mie* oneOverBetaRM * (1-extinction);//(ray+mie)* oneOverBetaRM;
+
+inscattering = (ray / betaRay + mie / betaMie) * Esun.xyz;
 }
