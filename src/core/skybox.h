@@ -23,6 +23,7 @@ public:
 
 private:
     gl::shader m_shader;
+    gl::shader m_sun;
     GLUquadric* quad;
 };
 

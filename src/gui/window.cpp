@@ -63,6 +63,8 @@ namespace gui
 
         glViewport(0, 0, m_dims.x, m_dims.y);
 
+        m_skybox.display(m_cam,m_bar.Atmos);
+
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(glm::value_ptr(m_cam.proj()));
 
@@ -83,9 +85,6 @@ namespace gui
 	    glEnable(GL_COLOR_MATERIAL);
 	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	    glShadeModel(GL_SMOOTH);
-
-        m_skybox.display(m_cam,m_bar.Atmos);
-
 
 		glPushMatrix();
 		//glScalef(0.05f, 0.05f, 0.05f);
@@ -116,13 +115,13 @@ namespace gui
         /* TEMPORARY: recalculate sun position here to pass to overlay.
          * later this could be done by e.g. asking m_sky for it. */
 
-        glm::vec4 sun_pos = -glm::vec4(
-            glm::cos(glm::radians(m_bar.Atmos.theta)),
+        glm::vec4 sun_pos = glm::vec4(
             glm::sin(glm::radians(m_bar.Atmos.theta))*glm::cos(glm::radians(m_bar.Atmos.phi)),
+            glm::cos(glm::radians(m_bar.Atmos.theta)),
             glm::sin(glm::radians(m_bar.Atmos.theta))*glm::sin(glm::radians(m_bar.Atmos.phi)),
             0.0f);
 
-        float sun_radius = 0.06f; // experimentally determined - radius of sun as viewed by camera
+        float sun_radius = 0.02f; // experimentally determined - radius of sun as viewed by camera
 
         std::vector<light> lights;
         lights.push_back(light(sun_pos, glm::vec3(0), sun_radius));
