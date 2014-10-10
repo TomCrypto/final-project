@@ -49,7 +49,7 @@ void main()
 
             if ((sample_pos.x >= 0) && (sample_pos.y >= 0)
 		     && (sample_pos.x <= 1) && (sample_pos.y <= 1)) {
-			    total += texture2D(render, sample_pos).rgb;
+			    total += max(vec3(0.0), texture2D(render, sample_pos).rgb - vec3(1e1));
 		    }
         }
     }

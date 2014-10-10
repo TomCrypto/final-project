@@ -65,11 +65,6 @@ namespace gui
 
         // Stuff that can be done without OpenGL
 
-        Model m_lighthouse;
-        Model m_outbuilding;
-        Model m_terrain;
-        Model m_tree;
-
         fft_engine m_fft;
         fps_counter m_fps;
         mouse_tracker m_mouse;
@@ -82,6 +77,11 @@ namespace gui
 
         main_bar m_bar;
         camera m_cam;
+
+        Model m_lighthouse;
+        Model m_outbuilding;
+        Model m_terrain;
+        Model m_tree;
 
         skybox m_skybox;
         overlay m_overlay;

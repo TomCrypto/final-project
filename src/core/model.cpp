@@ -24,7 +24,8 @@ std::vector<std::string> split(const std::string &s, char delim) {
 void Model::addGroup(std::string g) {
 	groups[g];
 }
-Model::Model(std::string filename) {
+Model::Model(std::string filename)
+    : m_shader("model/model.vert", "model/model.frag") {
 	mode = G308_SHADE_POLYGON;
     m_glGeomListPoly = 0;
     m_glGeomListWire = 0;
@@ -177,10 +178,31 @@ void Model::readMTL(std::string filename) {
 	LOG(INFO) << "finished reading mtl file " << std::to_string(materials.size() - prev);
 }
 
-void Model::display() {
+void Model::display(const camera& camera, const std::vector<light>& lights) {
 	if (mode == G308_SHADE_POLYGON) {
-		if (m_glGeomListPoly == 0) CreateGLPolyGeometry();
+		if (m_glGeomListPoly == 0) {
+            CreateGLPolyGeometry();
+        }
+        m_shader.bind();
+        m_shader.set("view", camera.view());
+        m_shader.set("proj", camera.proj());
+
+        m_shader.set("camera_pos", camera.pos());
+        m_shader.set("light_count", (int)lights.size());
+
+        for (size_t t = 0; t < lights.size(); ++t) {
+            m_shader.set("lights[" + std::to_string(t) + "].pos", lights[t].pos);
+           // m_shader.set("lights[" + std::to_string(t) + "].falloff", lights[t].falloff);
+           // m_shader.set("lights[" + std::to_string(t) + "].intensity", lights[t].intensity);
+        }
+
+        m_shader.set("ks", glm::vec3(0.9, 0.9, 0.9));
+        m_shader.set("kd", glm::vec3(0.4, 0.3, 0.2));
+        m_shader.set("ka", glm::vec3(0.1, 0.1, 0.1));
+        m_shader.set("shininess", 32.0f);
+
 		glCallList(m_glGeomListPoly);
+        m_shader.unbind();
 	}
 	else if (mode == G308_SHADE_WIREFRAME) {
 		if (m_glGeomListWire == 0) CreateGLWireGeometry();

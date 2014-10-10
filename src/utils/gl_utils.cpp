@@ -294,22 +294,22 @@ namespace gl
         if (x > 1) return 255;
         return (int)(x * 255);
     }
-    
+
     texture2D::texture2D()
         : m_fmt(0), m_tex(0)
     {
-    
+
     }
-    
+
     texture2D& texture2D::operator=(const texture2D& other)
     {
         m_fmt = other.m_fmt;
         m_tex = other.m_tex;
         m_dims = other.m_dims;
-    
+
         return *this;
     }
-    
+
     texture2D::texture2D(const texture2D& other)
     {
         *this = other;
@@ -373,7 +373,7 @@ namespace gl
                             img.height());
 
         glGenTextures(1, &m_tex);
-        
+
         if (m_tex == 0) {
             LOG(ERROR) << "Failed to create texture object.";
             throw std::runtime_error("");

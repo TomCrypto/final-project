@@ -11,15 +11,13 @@ struct light
 {
     public:
         light(const glm::vec4& pos,
-              const glm::vec3& strength,
               const float& radius)
-            : pos(pos), strength(strength), radius(radius)
+            : pos(pos), radius(radius)
         {
-        
+
         }
 
         const glm::vec4& pos; // world coordinates
-        const glm::vec3& strength; // non-negative
         const float& radius; // in world space, approximate extent of light source
 };
 
