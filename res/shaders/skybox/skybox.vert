@@ -25,7 +25,7 @@ float dotP = dot(normalize(eyeDir),normalize(sunDir));
 
 vec3 ray = rayleighTheta*(1+dotP*dotP);
 float hg = gHG.x/pow(gHG.y-gHG.z*dotP,1.5);
-vec3 mie = mieTheta*hg;
+vec3 mie = mieTheta;// * hg;
 
-inscattering = (ray / betaRay + mie / betaMie) * Esun.xyz;
+inscattering = (ray + mie) / (betaRay + betaMie) * Esun.xyz * Esun.w;
 }

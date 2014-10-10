@@ -113,7 +113,7 @@ aperture::aperture(const glm::ivec2& dims, const aperture_params& params,
     LOG(INFO) << "Generating filters.";
 
     //const int radii[] = { 1, 2, 4, 8, 16, 32, 64, 128 };
-    const int radii[] = { 16 };
+    const int radii[] = { 6 };
 
     for (int radius : radii) {
         m_filters[radius] = get_flare(cfft, radius);
@@ -122,7 +122,7 @@ aperture::aperture(const glm::ivec2& dims, const aperture_params& params,
                                            m_filters[radius].second.y);*/
     }
 
-    m_tex = new gl::texture2D(m_filters[16].first, GL_FLOAT);
+    m_tex = new gl::texture2D(m_filters[6].first, GL_FLOAT);
 
     LOG(INFO) << "Done.";
 }
@@ -131,7 +131,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 {
     float scale = 0.35;
 
-    image img("apertures/pentagon_noise.png");
+    image img("apertures/circle_noise.png");
     img = img.resize(glm::ivec2(1024));
 
     img = img.enlarge((glm::ivec2)((glm::vec2)(img.dims()) * (1.0f / scale)));

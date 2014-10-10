@@ -6,7 +6,8 @@
 #include <cmath>
 
 skybox::skybox()
-    : m_shader("skybox/skybox.vert", "skybox/skybox.frag")
+    : m_shader("skybox/skybox.vert", "skybox/skybox.frag"),
+      m_sun("skybox/sun.vert", "skybox/sun.frag")
 {
     quad = gluNewQuadric();
 	gluQuadricDrawStyle(quad, GLU_FILL);
@@ -74,7 +75,6 @@ void skybox::display(const camera& cam, atmos vars)
 	//calculate colour
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
 	float m = 1.0f / (glm::cos(glm::radians(vars.theta)) + 0.5f / std::pow(93.885f - vars.theta, 1.253f));
-    printf("m = %.2f\n", m);
 	glm::vec3 lam = glm::vec3(0.65f, 0.57f, 0.475f); //red green & blue in um
 	float fTauRx = glm::exp(-m*0.008735f*std::pow(lam.x, -4.08f));
 	float fTauRy = glm::exp(-m*0.008735f*std::pow(lam.y, -4.08f));
@@ -105,5 +105,19 @@ void skybox::display(const camera& cam, atmos vars)
 
     gluSphere(quad, 100, 256, 256);
 
-    m_shader.unbind();
+    glDisable(GL_DEPTH_TEST);
+
+    m_sun.bind();
+    m_sun.set("view", cam.view(false));
+    m_sun.set("proj", cam.proj());
+    m_sun.set("sun_color", glm::vec3(11000, 10200, 10000));
+    m_sun.set("sun_pos", sunDir);
+
+    float sun_radius = 0.02f;
+
+    gluSphere(quad, sun_radius, 64, 64);
+
+    m_sun.unbind();
+
+    glEnable(GL_DEPTH_TEST);
 }
