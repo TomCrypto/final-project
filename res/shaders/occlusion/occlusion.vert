@@ -23,9 +23,9 @@ int compute_lod(vec4 light_pos, float light_radius)
 
 void main()
 {
-	gl_Position = gl_Vertex;
+	gl_Position = vec4(gl_Vertex.xy, 0.5, 1.0);
 
-	int lid = int(gl_Normal.x);
+	int lid = int(gl_Vertex.z);
 
     int lod = compute_lod(lights[lid].pos, lights[lid].radius);
 
