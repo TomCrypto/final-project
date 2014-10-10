@@ -58,10 +58,6 @@ void skybox::display(const camera& cam, atmos vars)
 	float g = 0.8f; //Henyey Greensteins's G value
 	glm::vec3 HG = glm::vec3((1 - g)*(1 - g), 1 + g*g, 2 * g);
 
-    LOG(INFO) << rayleighTheta.x << ", " << rayleighTheta.y << ", " << rayleighTheta.z;
-
-
-
 	m_shader.set("betaRay", betaRayleigh);
 	m_shader.set("rayleighTheta", rayleighTheta);
 	m_shader.set("betaMie", betaMie);
@@ -78,6 +74,7 @@ void skybox::display(const camera& cam, atmos vars)
 	//calculate colour
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
 	float m = 1.0f / (glm::cos(glm::radians(vars.theta)) + 0.5f / std::pow(93.885f - vars.theta, 1.253f));
+    printf("m = %.2f\n", m);
 	glm::vec3 lam = glm::vec3(0.65f, 0.57f, 0.475f); //red green & blue in um
 	float fTauRx = glm::exp(-m*0.008735f*std::pow(lam.x, -4.08f));
 	float fTauRy = glm::exp(-m*0.008735f*std::pow(lam.y, -4.08f));
@@ -112,7 +109,7 @@ void skybox::display(const camera& cam, atmos vars)
 	m_shader.set("mie_strength", vars.MieMult);*/
 
     //glBegin();
-    gluSphere(quad, 100, 32, 32);
+    gluSphere(quad, 100, 128, 128);
     //glEnd();
 
     m_shader.unbind();
