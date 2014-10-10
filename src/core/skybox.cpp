@@ -17,6 +17,10 @@ skybox::skybox()
 
 void skybox::display(const camera& cam, atmos vars)
 {
+    glViewport(0, 0, cam.dims().x, cam.dims().y);
+
+    glDisable(GL_DEPTH_TEST);
+
     m_shader.bind();
 
     m_shader.set("view", cam.view(false));
@@ -105,12 +109,10 @@ void skybox::display(const camera& cam, atmos vars)
 
     gluSphere(quad, 100, 256, 256);
 
-    glDisable(GL_DEPTH_TEST);
-
     m_sun.bind();
     m_sun.set("view", cam.view(false));
     m_sun.set("proj", cam.proj());
-    m_sun.set("sun_color", glm::vec3(11000, 10200, 10000));
+    m_sun.set("sun_color", 0.2f * glm::vec3(11000, 10200, 10000));
     m_sun.set("sun_pos", sunDir);
 
     float sun_radius = 0.02f;
