@@ -7,12 +7,10 @@ namespace gui
 {
     window::window(const std::string& window_title, const glm::ivec2& dims)
         : m_cursor_locked(false), m_dims(dims), m_fps(51),
-          #if 0
           m_lighthouse("lighthouse/Lighthouse.obj"),
           m_outbuilding("lighthouse/OutBuilding.obj"),
           m_terrain("lighthouse/Terrain.obj"),
           m_tree("lighthouse/Tree.obj"),
-          #endif
           m_fft(glm::ivec2(3072)),
           m_context(window_title, dims,
                     std::bind(&window::on_mouse_up,   this, _1),
@@ -63,55 +61,6 @@ namespace gui
 
         glViewport(0, 0, m_dims.x, m_dims.y);
 
-        m_skybox.display(m_cam,m_bar.Atmos);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(glm::value_ptr(m_cam.proj()));
-
-        glMatrixMode(GL_MODELVIEW);
-        glLoadMatrixf(glm::value_ptr(m_cam.view()));
-
-        glEnable(GL_DEPTH_TEST);
-	    glEnable(GL_LIGHTING);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_LIGHT0);
-		float v[4];
-		v[0] = v[1] = v[2] = 0.5f*0.4f; v[3] = 1.0f;
-		glLightfv(GL_LIGHT0, GL_AMBIENT, v);
-		v[0] = v[1] = v[2] = 3*0.8f; v[3] = 1.0f;
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, v);
-		v[0] = m_bar.LightSun.x; v[1] = m_bar.LightSun.y; v[2] = m_bar.LightSun.z; v[3] = 0.0f;
-		glLightfv(GL_LIGHT0, GL_POSITION, v);
-	    glEnable(GL_COLOR_MATERIAL);
-	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	    glShadeModel(GL_SMOOTH);
-
-		glPushMatrix();
-		//glScalef(0.05f, 0.05f, 0.05f);
-		//glColor3f(m_bar.color1.x, m_bar.color1.y, m_bar.color1.z);
-		//m_lighthouse->display();
-		//glColor3f(m_bar.color2.x, m_bar.color2.y, m_bar.color2.z);
-		//m_outbuilding->display();
-		//glColor3f(m_bar.color3.x, m_bar.color3.y, m_bar.color3.z);
-		//m_terrain->display();
-		//glColor3f(m_bar.color4.x, m_bar.color4.y, m_bar.color4.z);
-		//m_tree->display();
-
-        glPushMatrix();
-        glColor3f(0, 0, 0);
-        glTranslatef(10, 10, -6);
-        gluSphere(gluNewQuadric(), 2.5f, 16, 16);
-        glPopMatrix();
-
-		glPopMatrix();
-        glDisable(GL_DEPTH_TEST);
-	    glDisable(GL_LIGHTING);
-	    glDisable(GL_COLOR_MATERIAL);
-
-        /*====================================================================
-         * 3D RENDERING STOPS HERE - SCREEN SPACE POSTPROCESSING STARTS HERE
-         *====================================================================*/
-
         /* TEMPORARY: recalculate sun position here to pass to overlay.
          * later this could be done by e.g. asking m_sky for it. */
 
@@ -122,6 +71,61 @@ namespace gui
             0.0f);
 
         float sun_radius = 0.02f; // experimentally determined - radius of sun as viewed by camera
+
+        glDisable(GL_DEPTH_TEST);
+        m_skybox.display(m_cam,m_bar.Atmos);
+        glEnable(GL_DEPTH_TEST);
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixf(glm::value_ptr(m_cam.proj()));
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadMatrixf(glm::value_ptr(m_cam.view()));
+
+        glEnable(GL_DEPTH_TEST);
+	    glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		float v[4];
+		v[0] = v[1] = v[2] = 0.5f*0.4f; v[3] = 1.0f;
+		glLightfv(GL_LIGHT0, GL_AMBIENT, v);
+		v[0] = v[1] = v[2] = 3*0.8f; v[3] = 1.0f;
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, v);
+		//v[0] = m_bar.LightSun.x; v[1] = m_bar.LightSun.y; v[2] = m_bar.LightSun.z; v[3] = 0.0f;
+        v[0] = sun_pos.x;
+        v[1] = sun_pos.y;
+        v[2] = sun_pos.z;
+        v[3] = 0.0f;
+		glLightfv(GL_LIGHT0, GL_POSITION, v);
+	    glEnable(GL_COLOR_MATERIAL);
+	    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	    glShadeModel(GL_SMOOTH);
+
+		glPushMatrix();
+		glScalef(1.05f, 1.05f, 1.05f);
+		glColor3f(0.75f, 0.25f, 0.35f);
+		m_lighthouse.display();
+		glColor3f(0.15f, 0.25f, 0.35f);
+		m_outbuilding.display();
+		glColor3f(0.65f, 0.55f, 0.45f);
+		m_terrain.display();
+		glColor3f(0.75f, 0.95f, 0.35f);
+		m_tree.display();
+
+        /*glEnable(GL_DEPTH_TEST);
+        glPushMatrix();
+        glColor3f(0, 0, 0);
+        glTranslatef(10, 10, -6);
+        gluSphere(gluNewQuadric(), 2.5f, 16, 16);
+        glPopMatrix();*/
+
+		glPopMatrix();
+        glDisable(GL_DEPTH_TEST);
+	    glDisable(GL_LIGHTING);
+	    glDisable(GL_COLOR_MATERIAL);
+
+        /*====================================================================
+         * 3D RENDERING STOPS HERE - SCREEN SPACE POSTPROCESSING STARTS HERE
+         *====================================================================*/
 
         std::vector<light> lights;
         lights.push_back(light(sun_pos, glm::vec3(0), sun_radius));
@@ -138,13 +142,6 @@ namespace gui
 
         m_aperture.render(lights, occlusion, m_cam, m_bar.lens_flare_size,
                           m_bar.lens_flare_intensity);
-
-        glEnable(GL_DEPTH_TEST);
-        glPushMatrix();
-        glColor3f(0, 0, 0);
-        glTranslatef(10, 10, -6);
-        gluSphere(gluNewQuadric(), 2.5f, 16, 16);
-        glPopMatrix();
 
         if (m_bar.lens_overlay) {
             m_overlay.render(lights, occlusion, m_cam, m_bar.lens_reflectivity);

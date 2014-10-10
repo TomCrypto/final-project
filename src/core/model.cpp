@@ -212,7 +212,7 @@ void Model::CreateGLPolyGeometry() {
 	m_glGeomListPoly = glGenLists(1);
 	glNewList(m_glGeomListPoly, GL_COMPILE);
 
-	glEnable(GL_BLEND);
+	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 	glBegin(GL_TRIANGLES); //Begin drawing triangles
 	for (auto& g : groups) {
@@ -224,7 +224,7 @@ void Model::CreateGLPolyGeometry() {
 		}
 	}
 	glEnd();
-	glDisable(GL_BLEND);
+	//glDisable(GL_BLEND);
 	glEndList();
 	LOG(INFO) << "Finished attempting to draw";
 }

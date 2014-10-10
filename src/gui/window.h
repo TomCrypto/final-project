@@ -65,12 +65,10 @@ namespace gui
 
         // Stuff that can be done without OpenGL
 
-        #if 0
         Model m_lighthouse;
         Model m_outbuilding;
         Model m_terrain;
         Model m_tree;
-        #endif
 
         fft_engine m_fft;
         fps_counter m_fps;
