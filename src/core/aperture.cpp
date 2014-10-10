@@ -113,7 +113,7 @@ aperture::aperture(const glm::ivec2& dims, const aperture_params& params,
     LOG(INFO) << "Generating filters.";
 
     //const int radii[] = { 1, 2, 4, 8, 16, 32, 64, 128 };
-    const int radii[] = { 6 };
+    const int radii[] = { 14 };
 
     for (int radius : radii) {
         m_filters[radius] = get_flare(cfft, radius);
@@ -122,7 +122,7 @@ aperture::aperture(const glm::ivec2& dims, const aperture_params& params,
                                            m_filters[radius].second.y);*/
     }
 
-    m_tex = new gl::texture2D(m_filters[6].first, GL_FLOAT);
+    m_tex = new gl::texture2D(m_filters[14].first, GL_FLOAT);
 
     LOG(INFO) << "Done.";
 }
@@ -131,7 +131,7 @@ image aperture::gen_aperture(const glm::ivec2& dims)
 {
     float scale = 0.35;
 
-    image img("apertures/circle_noise.png");
+    image img("apertures/fingerprints.png");
     img = img.resize(glm::ivec2(1024));
 
     img = img.enlarge((glm::ivec2)((glm::vec2)(img.dims()) * (1.0f / scale)));
@@ -291,7 +291,7 @@ void aperture::render(const std::vector<light>& lights,
     for (size_t t = 0; t < lights.size(); ++t) {
         float radius = 16; // radius of flare texture (convolution)
 
-        float uv_mult = 0.55; // by how much to scale?
+        float uv_mult = 1; // by how much to scale?
 
         // Project light on sensor
         bool forward_facing = glm::dot(glm::normalize((glm::vec3)lights[t].pos - camera.pos() * lights[t].pos.w),
