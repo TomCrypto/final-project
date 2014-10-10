@@ -50,13 +50,19 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
     }
 
     // finally render a bunch of points, one for every light + radius
-    glBegin(GL_QUADS);
+    glBegin(GL_POINTS);
 
     for (size_t i = 0; i < light_count; ++i) {
-        glVertex2f((float)i / max_lights * 2 - 1, 0.0f);
-        glVertex2f((float)i / max_lights * 2 - 1, 1.0f);
-        glVertex2f((float)(i + 1) / max_lights * 2 - 1, 1.0f);
-        glVertex2f((float)(i + 1) / max_lights * 2 - 1, 0.0f);
+        /*glNormal3f(i, 0.0f, 0.0f);
+        glVertex2f((float)(i + 0) / max_lights * 2 - 1, -1.0f);
+        glNormal3f(i, 0.0f, 0.0f);
+        glVertex2f((float)(i + 0) / max_lights * 2 - 1, +1.0f);
+        glNormal3f(i, 0.0f, 0.0f);
+        glVertex2f((float)(i + 1) / max_lights * 2 - 1, +1.0f);
+        glNormal3f(i, 0.0f, 0.0f);
+        glVertex2f((float)(i + 1) / max_lights * 2 - 1, -1.0f);*/
+        glNormal3f(i, 0.0f, 0.0f);
+        glVertex2f((2 * i + 1) / (float)(2 * max_lights) * 2 - 1, 0.0f);
     }
 
     glEnd();

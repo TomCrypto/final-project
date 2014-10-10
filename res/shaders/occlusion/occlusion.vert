@@ -25,7 +25,7 @@ void main()
 {
 	gl_Position = gl_Vertex;
 
-	int lid = int((gl_Vertex.x + 1.0) / 2.0 * max_lights);
+	int lid = int(gl_Normal.x);
 
     int lod = compute_lod(lights[lid].pos, lights[lid].radius);
 
@@ -40,7 +40,7 @@ void main()
             vec4 pos = lights[lid].pos + vec4(sin(theta) * cos(phi),
                                               cos(theta),
                                               sin(theta) * sin(phi),
-                                              0.0) * lights[lid].radius;
+                                              0.0) * (lights[lid].radius * 0.99f);
 
             vec4 projected = viewproj * pos;
             projected.xy /= projected.w;
