@@ -179,38 +179,30 @@ void Model::readMTL(std::string filename) {
 }
 
 void Model::display(const camera& camera, const std::vector<light>& lights) {
-	if (mode == G308_SHADE_POLYGON) {
-		if (m_glGeomListPoly == 0) {
-            CreateGLPolyGeometry();
-        }
-        m_shader.bind();
-        m_shader.set("view", camera.view());
-        m_shader.set("proj", camera.proj());
-
-        m_shader.set("camera_pos", camera.pos());
-        m_shader.set("light_count", (int)lights.size());
-
-        for (size_t t = 0; t < lights.size(); ++t) {
-            m_shader.set("lights[" + std::to_string(t) + "].pos", lights[t].pos);
-           // m_shader.set("lights[" + std::to_string(t) + "].falloff", lights[t].falloff);
-           // m_shader.set("lights[" + std::to_string(t) + "].intensity", lights[t].intensity);
-        }
-
-        m_shader.set("ks", glm::vec3(0.9, 0.9, 0.9));
-        m_shader.set("kd", glm::vec3(0.4, 0.3, 0.2));
-        m_shader.set("ka", glm::vec3(0.1, 0.1, 0.1));
-        m_shader.set("shininess", 32.0f);
-
-		glCallList(m_glGeomListPoly);
-        m_shader.unbind();
+	if (drawLists.empty()) {
+		CreateDrawingLists();
 	}
-	else if (mode == G308_SHADE_WIREFRAME) {
-		if (m_glGeomListWire == 0) CreateGLWireGeometry();
-		glCallList(m_glGeomListWire);
-	}
-	else {
-		printf("Warning: Wrong Shading Mode. \n");
-	}
+
+    m_shader.bind();
+    m_shader.set("view", camera.view());
+    m_shader.set("proj", camera.proj());
+
+    m_shader.set("camera_pos", camera.pos());
+    m_shader.set("light_count", (int)lights.size());
+
+    for (size_t t = 0; t < lights.size(); ++t) {
+        m_shader.set("lights[" + std::to_string(t) + "].pos", lights[t].pos);
+        // m_shader.set("lights[" + std::to_string(t) + "].falloff", lights[t].falloff);
+        // m_shader.set("lights[" + std::to_string(t) + "].intensity", lights[t].intensity);
+    }
+
+    m_shader.set("ks", glm::vec3(0.9, 0.9, 0.9));
+    m_shader.set("kd", glm::vec3(0.4, 0.3, 0.2));
+    m_shader.set("ka", glm::vec3(0.1, 0.1, 0.1));
+    m_shader.set("shininess", 32.0f);
+
+    glCallList(m_glGeomListPoly);
+    m_shader.unbind();
 }
 
 void Model::useMTL(std::string mtl) {
@@ -226,36 +218,23 @@ void Model::addToList(int v, int n, int u) {
 	glNormal3f(normals[n].x, normals[n].y, normals[n].z); //Add the normal
 	glVertex3f(vertices[v].x, vertices[v].y, vertices[v].z); //Add the vertex
 }
-void Model::CreateGLPolyGeometry() {
-	if (m_glGeomListPoly != 0)
-		glDeleteLists(m_glGeomListPoly, 1);
-	LOG(INFO) << "Attempting to draw";
-	// Assign a display list; return 0 if err
-	m_glGeomListPoly = glGenLists(1);
-	glNewList(m_glGeomListPoly, GL_COMPILE);
-
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-	glBegin(GL_TRIANGLES); //Begin drawing triangles
+void Model::CreateDrawingLists() {
+	if (!drawLists.empty()) {
+		for each (std::pair<std::string,int> var in drawLists)
+		{
+			glDeleteLists(var.second, 1);
+		}
+		drawLists.clear();
+	}
 	for (auto& g : groups) {
-		useMTL(g.second.materialIdx);
+		int l = glGenLists(1);
+		glBegin(GL_TRIANGLES);
 		for (Triangle t : g.second.triangles) {
 			addToList(t.v[0], t.n[0], t.t[0]);
 			addToList(t.v[1], t.n[1], t.t[1]);
 			addToList(t.v[2], t.n[2], t.t[2]);
 		}
+		glEnd();
+		drawLists.push_back(std::pair<std::string, int>(g.second.materialIdx, l));
 	}
-	glEnd();
-	//glDisable(GL_BLEND);
-	glEndList();
-	LOG(INFO) << "Finished attempting to draw";
-}
-void Model::CreateGLWireGeometry() {
-	if (m_glGeomListWire != 0)
-		glDeleteLists(m_glGeomListWire, 1);
-
-	// Assign a display list; return 0 if err
-	m_glGeomListWire = glGenLists(1);
-	glNewList(m_glGeomListWire, GL_COMPILE);
-	glEndList();
 }
