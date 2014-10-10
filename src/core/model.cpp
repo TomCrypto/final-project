@@ -179,8 +179,6 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 	if (drawLists.empty()) {
 		CreateDrawingLists();
 	}
-<<<<<<< HEAD
-
     m_shader.bind();
     m_shader.set("view", camera.view());
     m_shader.set("proj", camera.proj());
