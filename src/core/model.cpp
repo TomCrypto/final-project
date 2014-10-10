@@ -179,6 +179,7 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 	if (drawLists.empty()) {
 		CreateDrawingLists();
 	}
+<<<<<<< HEAD
 
     m_shader.bind();
     m_shader.set("view", camera.view());
@@ -198,7 +199,7 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
     m_shader.set("ka", glm::vec3(0.1, 0.1, 0.1));
     m_shader.set("shininess", 32.0f);
 
-	for each (std::pair<std::string, int> var in drawLists)
+	for (auto var : drawLists)
 	{
         // set up material
 
@@ -223,7 +224,7 @@ void Model::addToList(int v, int n, int u) {
 }
 void Model::CreateDrawingLists() {
 	if (!drawLists.empty()) {
-		for each (std::pair<std::string,int> var in drawLists)
+		for (std::pair<std::string,int> var : drawLists)
 		{
 			glDeleteLists(var.second, 1);
 		}
