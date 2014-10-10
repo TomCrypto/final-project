@@ -55,12 +55,10 @@ namespace gui
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
         cam_fov = 50;
-		skycolor = glm::vec3(0.18867780436772762, 0.4978442963618773, 0.6616065586417131);
 		color1 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color2 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color3 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color4 = glm::vec3(0.75f, 0.25f, 0.25f);
-		Atmos.light = glm::vec3(0,-1,0);
         aperture_regen_btn = false;
 		Atmos.theta = 90.0f;
 		Atmos.phi = 90.0f;
@@ -74,18 +72,6 @@ namespace gui
             "phi", TW_TYPE_FLOAT, &Atmos.phi,
             " label='phi' group='Atmospheric'"
             " min=0 max=180 step=0.1");
-
-		TwAddVarRW(m_bar,
-			"rayM", TW_TYPE_FLOAT, &Atmos.RayMult,
-			" label='Rayleigh Mult' group='Atmospheric'");
-
-		TwAddVarRW(m_bar,
-			"mieM", TW_TYPE_FLOAT, &Atmos.MieMult,
-			" label='Mie Mult' group='Atmospheric'");
-
-		TwAddVarRW(m_bar,
-			"inM", TW_TYPE_FLOAT, &Atmos.InMult,
-			" label='Inscattering Mult' group='Atmospheric'");
 
         TwAddVarRW(m_bar,
             "lens_exposure", TW_TYPE_FLOAT, &lens_exposure,
