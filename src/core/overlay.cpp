@@ -41,7 +41,7 @@ static float disk_radius() {
 }
 
 overlay::overlay(int density)
-    : m_shader("overlay/overlay.vert", "overlay/overlay.frag")
+    : m_shader("overlay.vert", "overlay.frag")
 {
     regenerate_film(density);
 }

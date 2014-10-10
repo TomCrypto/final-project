@@ -8,8 +8,8 @@ framebuffer::framebuffer(const glm::ivec2& dims)
     : m_dims(dims),
       m_tex(dims, GL_FLOAT),
       m_cpy(dims, GL_FLOAT),
-      m_shader("generic/fs_quad.vert", "tonemap/reinhard.frag"),
-      m_cpy_shader("generic/fs_quad.vert", "tonemap/copy.frag")
+      m_shader("fs_quad.vert", "tonemap.frag"),
+      m_cpy_shader("fs_quad.vert", "frame_copy.frag")
 {
     if (!GLEW_ARB_framebuffer_object && !GLEW_EXT_framebuffer_object) {
         LOG(ERROR) << "Framebuffer requires ARB or EXT framebuffer_object"

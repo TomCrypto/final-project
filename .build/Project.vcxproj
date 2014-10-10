@@ -156,49 +156,49 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Text>
-    <Text Include="..\res\shaders\occlusion\occlusion.frag">
+    <Text Include="..\res\shaders\occlusion.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Text>
-    <Text Include="..\res\shaders\occlusion\occlusion.vert">
+    <Text Include="..\res\shaders\occlusion.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Text>
-    <Text Include="..\res\shaders\tonemap\copy.frag">
+    <Text Include="..\res\shaders\frame_copy.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Text>
-    <Text Include="..\res\shaders\skybox\skybox.frag">
+    <Text Include="..\res\shaders\skybox.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Text>
-    <Text Include="..\res\shaders\skybox\skybox.vert">
+    <Text Include="..\res\shaders\skybox.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Text>
-    <Text Include="..\res\shaders\overlay\overlay.frag">
+    <Text Include="..\res\shaders\overlay.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Text>
-    <Text Include="..\res\shaders\overlay\overlay.vert">
+    <Text Include="..\res\shaders\overlay.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Text>
-    <Text Include="..\res\shaders\generic\fs_quad.vert">
+    <Text Include="..\res\shaders\fs_quad.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </Text>
-    <Text Include="..\res\shaders\tonemap\reinhard.frag">
+    <Text Include="..\res\shaders\tonemap.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
