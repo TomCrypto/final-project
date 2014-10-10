@@ -177,7 +177,7 @@ void Model::display() {
 	if (drawLists.empty()) {
 		CreateDrawingLists();
 	}
-	for each (std::pair<std::string, int> var in drawLists)
+	for (std::pair<std::string, int> var : drawLists)
 	{
 		glCallList(var.second);
 	}
@@ -198,7 +198,7 @@ void Model::addToList(int v, int n, int u) {
 }
 void Model::CreateDrawingLists() {
 	if (!drawLists.empty()) {
-		for each (std::pair<std::string,int> var in drawLists)
+		for (std::pair<std::string,int> var : drawLists)
 		{
 			glDeleteLists(var.second, 1);
 		}
