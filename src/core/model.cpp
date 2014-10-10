@@ -25,10 +25,6 @@ void Model::addGroup(std::string g) {
 	groups[g];
 }
 Model::Model(std::string filename) {
-	mode = G308_SHADE_POLYGON;
-    m_glGeomListPoly = 0;
-    m_glGeomListWire = 0;
-
 	std::string line;
 	std::ifstream myfile(filename);
 	int v1, v2, v3, n1, n2, n3, t1, t2, t3;
@@ -181,16 +177,9 @@ void Model::display() {
 	if (drawLists.empty()) {
 		CreateDrawingLists();
 	}
-	if (mode == G308_SHADE_POLYGON) {
-		if (m_glGeomListPoly == 0) CreateGLPolyGeometry();
-		glCallList(m_glGeomListPoly);
-	}
-	else if (mode == G308_SHADE_WIREFRAME) {
-		if (m_glGeomListWire == 0) CreateGLWireGeometry();
-		glCallList(m_glGeomListWire);
-	}
-	else {
-		printf("Warning: Wrong Shading Mode. \n");
+	for each (std::pair<std::string, int> var in drawLists)
+	{
+		glCallList(var.second);
 	}
 }
 
