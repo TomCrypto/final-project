@@ -66,12 +66,12 @@ namespace gui
         TwAddVarRW(m_bar,
             "theta", TW_TYPE_FLOAT, &Atmos.theta,
             " label='theta' group='Atmospheric'"
-            " min=0 max=180 step=0.1");
+            " min=0 max=90.2 step=0.05");
 
         TwAddVarRW(m_bar,
             "phi", TW_TYPE_FLOAT, &Atmos.phi,
             " label='phi' group='Atmospheric'"
-            " min=0 max=180 step=0.1");
+            " min=0 max=180 step=0.05");
 
         TwAddVarRW(m_bar,
             "lens_exposure", TW_TYPE_FLOAT, &lens_exposure,
