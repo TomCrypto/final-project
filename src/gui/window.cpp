@@ -93,8 +93,8 @@ namespace gui
         // OCCLUSION QUERY <<< HERE >>>
 
         const gl::texture2D& occlusion = m_occlusion.query(lights, m_framebuffer, m_cam);
-        image img = image(glm::ivec2(8, 1), occlusion());
-        img.save("occlusion.exr");
+        //image img = image(glm::ivec2(8, 1), occlusion());
+        //img.save("occlusion.exr");
 
         // END OCCLUSION QUERY
 
