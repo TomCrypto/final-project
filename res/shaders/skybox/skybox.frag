@@ -2,8 +2,10 @@
 
 varying vec3 extinction;
 varying vec3 inscattering;
+varying vec3 debug;
 
 void main()
 {
-gl_FragColor = vec4(0.0138f,0.0113f, 0.008f,1)*vec4(extinction,1)+vec4(inscattering,1);
+gl_FragColor = 10 * vec4(vec3(0.0138,0.0113, 0.008) * extinction + inscattering, 1.0);
+//gl_FragColor = vec4(debug, 1.0);
 }
