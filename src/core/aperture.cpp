@@ -2,9 +2,9 @@
 
 #include "core/aperture.h"
 
-#include <string>
 #include <cmath>
 
+#if 0
 static bool is_empty_row(const image& img, int row, const glm::vec3& noise)
 {
     const glm::vec4* ptr = img[row];
@@ -75,68 +75,70 @@ static glm::ivec2 trim_and_denoise(image& img)
     return glm::ivec2((l + dims.x - 1 - r) / 2,
                       (t + dims.y - 1 - b) / 2);
 }
+#endif
 
-aperture::aperture(const glm::ivec2& dims, const aperture_params& params,
-         fft_engine& fft) : m_rng(m_rd()), m_fft(fft),
-                            m_shader("aperture.vert", "aperture.frag")
+aperture::aperture(fft_engine& fft)
+    : m_fft(fft), m_shader("aperture.vert", "aperture.frag")
 {
-    const std::string& base = "apertures/";
 
-    LOG(INFO) << "Loading aperture textures.";
-
-    m_apertures.push_back(image(base + "circular.png"));
-    m_apertures.push_back(image(base + "elliptical.png"));
-    m_apertures.push_back(image(base + "pentagonal.png"));
-    m_apertures.push_back(image(base + "hexagonal.png"));
-    m_apertures.push_back(image(base + "heptagonal.png"));
-    m_apertures.push_back(image(base + "octagonal.png"));
-    m_apertures.push_back(image(base + "nonagonal.png"));
-    m_apertures.push_back(image(base + "decagonal.png"));
-
-    m_noise.push_back(image(base + "noise1.png"));
-    m_noise.push_back(image(base + "noise2.png"));
-    m_noise.push_back(image(base + "noise3.png"));
-    m_noise.push_back(image(base + "noise4.png"));
-    m_noise.push_back(image(base + "noise5.png"));
-    m_noise.push_back(image(base + "noise6.png"));
-
-    LOG(INFO) << "All textures loaded.";
-
-    LOG(INFO) << "Generating aperture.";
-
-    image aperture = gen_aperture(dims);
-
-    image cfft = get_cfft(aperture, dims);
-
-    LOG(INFO) << "Done.";
-
-    LOG(INFO) << "Generating filters.";
-
-    //const int radii[] = { 1, 2, 4, 8, 16, 32, 64, 128 };
-    const int radii[] = { 6 };
-
-    for (int radius : radii) {
-        m_filters[radius] = get_flare(cfft, radius);
-        m_filters[radius].first.save("radius" + std::to_string(radius) + ".exr");
-        /*printf("%d => (%d, %d)\n", radius, m_filters[radius].second.x,
-                                           m_filters[radius].second.y);*/
-    }
-
-    m_tex = new gl::texture2D(m_filters[6].first, GL_FLOAT);
-
-    LOG(INFO) << "Done.";
 }
 
-image aperture::gen_aperture(const glm::ivec2& dims)
+void aperture::load_aperture(const transmission_function& tf,
+                             float scale)
 {
-    float scale = 0.35;
+    // 1024x1024 appears to be the sweet spot of
+    // frequency resolution vs. leakage tradeoff
+    const glm::ivec2& resize = glm::ivec2(1024);
 
-    image img("apertures/circle_noise.png");
-    img = img.resize(glm::ivec2(1024));
+    // Fibonacci series gives optimal accuracy when we
+    // select the closest radius, for every lens flare
+    const int radii[] = { 1, 2, 3, 5, 8, 13, 21, 34 };
 
-    img = img.enlarge((glm::ivec2)((glm::vec2)(img.dims()) * (1.0f / scale)));
+    m_flares.clear();
+    std::string path;
 
-    return img.resize(dims);
+    switch (tf)
+    {
+        case PENTAGON:
+            path = "apertures/pentagon.png";
+            break;
+        case CIRCLE:
+            path = "apertures/fingerprints.png";
+            break;
+        default:
+            LOG(ERROR) << "Bad aperture passed!";
+            throw std::runtime_error("");
+    }
+
+    LOG(INFO) << "Now loading aperture '" << path << "'.";
+
+    auto aperture = image(path)
+                  .enlarge(((glm::ivec2)((glm::vec2)resize / scale)))
+                  .resize(resize);
+
+    aperture.save("aperture.exr");
+
+    LOG(TRACE) << "Computing point spread function.";
+
+    auto point_spread_function = m_fft.psf(aperture, aperture.dims());
+    point_spread_function.reproduce(channels::R);
+    point_spread_function.normalize(false);
+
+    LOG(TRACE) << "Computing chromatic Fourier transform.";
+
+    auto chromatic_transform = get_cfft(point_spread_function);
+    chromatic_transform.normalize(false);
+
+    LOG(TRACE) << "Convolving chromatic Fourier transform.";
+
+    for (auto r : radii) {
+        auto convolved = get_flare(chromatic_transform, r);
+        m_flares[r] = std::unique_ptr<gl::texture2D>(
+            new gl::texture2D(convolved, GL_FLOAT)
+        );
+    }
+
+    LOG(INFO) << "Aperture successfully loaded.";
 }
 
 static glm::vec3 curve[81] = {
@@ -212,20 +214,13 @@ static glm::vec3 wavelength_rgb(float lambda)
     return rgb;
 }
 
-image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
+image aperture::get_cfft(const image& psf)
 {
-    // first compute the power spectrum of the aperture
-
-    image spectrum = m_fft.psf(aperture, glm::ivec2(aperture.width(), aperture.height()));
-    spectrum.reproduce(channels::R);
-    spectrum.normalize(false);
-
     // next superimpose it resized over different wavelengths
 
-    image out(spectrum.dims());
+    image out(psf.dims());
 
-    const int samples = 80; // pass as quality parameter?
-    const float z = 0.75; // TODO: pass this as parameter later!
+    const int samples = 25; // pass as quality parameter?
 
     for (int t = 0; t < samples; ++t)
     {
@@ -235,27 +230,22 @@ image aperture::get_cfft(const image& aperture, const glm::ivec2& dims)
         int newX = (int)(out.width() * scale);
         int newY = (int)(out.height() * scale);
 
-        auto ps_resized = spectrum.resize(glm::ivec2(newX, newY),
-                                          FILTER_BILINEAR);
+        auto ps_resized = psf.resize(glm::ivec2(newX, newY),
+                                     FILTER_BILINEAR);
         auto color = wavelength_rgb(lambda);
         ps_resized.normalize(false);
         ps_resized.colorize(color);
-        ps_resized = ps_resized.enlarge(spectrum.dims());
+        ps_resized = ps_resized.enlarge(psf.dims());
 
         out.add(ps_resized);
     }
 
-    out = out.resize(dims, FILTER_BILINEAR);
-    out.normalize(false);
-
     return out;
 }
 
-std::pair<image, glm::ivec2> aperture::get_flare(const image& cfft, int radius)
+image aperture::get_flare(const image& cfft, int radius)
 {
-    auto flare = m_fft.convolve_disk(cfft, radius);
-    const auto dims = trim_and_denoise(flare);
-    return std::make_pair(flare, dims);
+    return m_fft.convolve_disk(cfft, radius);
 }
 
 void aperture::render(const std::vector<light>& lights,
@@ -271,7 +261,7 @@ void aperture::render(const std::vector<light>& lights,
 
     m_shader.bind();
 
-    m_tex->bind(0);
+    m_flares[21].get()->bind(0);
     occlusion.bind(1, GL_NEAREST, GL_NEAREST);
     m_shader.set("flare", 0);
     m_shader.set("occlusion", 1);
@@ -289,9 +279,9 @@ void aperture::render(const std::vector<light>& lights,
     }
 
     for (size_t t = 0; t < lights.size(); ++t) {
-        float radius = 16; // radius of flare texture (convolution)
+        //float radius = 17; // radius of flare texture (convolution)
 
-        float uv_mult = 0.55; // by how much to scale?
+        float uv_mult = 1; // by how much to scale?
 
         // Project light on sensor
         bool forward_facing = glm::dot(glm::normalize((glm::vec3)lights[t].pos - camera.pos() * lights[t].pos.w),

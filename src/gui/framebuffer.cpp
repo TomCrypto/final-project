@@ -49,8 +49,6 @@ framebuffer::framebuffer(const glm::ivec2& dims)
         {
             case GL_FRAMEBUFFER_COMPLETE:
                 LOG(INFO) << "Framebuffer successfully initialized.";
-                LOG(TRACE) << "Resolution " << dims.x <<
-                              " by " << dims.y << " pixels.";
                 break;
             default:
                 LOG(ERROR) << "Failed to create the framebuffer!";
@@ -61,8 +59,6 @@ framebuffer::framebuffer(const glm::ivec2& dims)
         {
             case GL_FRAMEBUFFER_COMPLETE_EXT:
                 LOG(INFO) << "Framebuffer successfully initialized.";
-                LOG(TRACE) << "Resolution " << dims.x <<
-                              " by " << dims.y << " pixels.";
                 break;
             default:
                 LOG(ERROR) << "Failed to create the framebuffer!";

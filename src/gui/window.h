@@ -76,7 +76,7 @@ namespace gui
         // Stuff that needs OpenGL functionality
 
         main_bar m_bar;
-        camera m_cam;
+        camera m_camera;
 
         Model m_lighthouse;
         Model m_outbuilding;

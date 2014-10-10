@@ -51,6 +51,7 @@ namespace gui
         float lens_flare_size;
         float lens_flare_intensity;
         transmission_function lens_aperture;
+        float lens_diff_spread;
 
         /* === */
 

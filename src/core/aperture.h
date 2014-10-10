@@ -3,8 +3,11 @@
 
 #include <glm/glm.hpp>
 #include <fftw3.h>
+
+#include <memory>
 #include <vector>
-#include <random>
+#include <string>
+#include <map>
 
 #include "utils/fft_engine.h"
 #include "utils/image.h"
@@ -19,19 +22,16 @@ enum transmission_function
     CIRCLE          = 1,
 };
 
-struct aperture_params
-{
-    float scale;
-};
-
 // allows one to generate random apertures of a given size as well as their
 // chromatic Fourier transform
 
 class aperture
 {
 public:
-    aperture(const glm::ivec2& dims, const aperture_params& params,
-             fft_engine& fft);
+    aperture(fft_engine& fft);
+
+    void load_aperture(const transmission_function& tf,
+                       float scale);
 
     // renders into/using the current framebuffer
     void render(const std::vector<light>& lights,
@@ -39,32 +39,17 @@ public:
                 const camera& camera,
                 float w0, float i0);
 
-    // generates a random aperture with noise
-    // TODO: make noise configurable as parameters?
-    image gen_aperture(const glm::ivec2& dims);
-
-    // gets the chromatic Fourier transform of an aperture
-    // the final output is resized to the given dimensions
-    image get_cfft(const image& aperture, const glm::ivec2& dims);
-
-    std::pair<image, glm::ivec2> get_flare(const image& cfft, int radius);
-
 private:
     aperture& operator=(const aperture& other);
     aperture(const aperture& other);
 
-    std::vector<image> m_apertures;
-    std::vector<image> m_noise;
-
-    std::map<int, std::pair<image, glm::ivec2>> m_filters;
-
-    std::random_device m_rd;
-    std::mt19937 m_rng;
-    fft_engine& m_fft;
-
-    gl::texture2D* m_tex;
+    std::map<int, std::unique_ptr<gl::texture2D>> m_flares;
 
     gl::shader m_shader;
+    fft_engine& m_fft;
+
+    image get_cfft(const image& aperture);
+    image get_flare(const image& cfft, int radius);
 };
 
 #endif

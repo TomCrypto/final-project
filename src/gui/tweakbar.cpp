@@ -51,6 +51,7 @@ namespace gui
         lens_flare_size = 1.6f;
         lens_flare_intensity = 25;
         lens_aperture = PENTAGON;
+        lens_diff_spread = 0.35f;
 
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
@@ -59,7 +60,7 @@ namespace gui
 		color2 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color3 = glm::vec3(0.75f, 0.25f, 0.25f);
 		color4 = glm::vec3(0.75f, 0.25f, 0.25f);
-        aperture_regen_btn = false;
+        aperture_regen_btn = true;
 		Atmos.theta = 90.0f;
 		Atmos.phi = 90.0f;
 
@@ -119,6 +120,12 @@ namespace gui
             " label='Aperture' group='Lens'"
             " enum='0 {Pentagon}, 1 {Circle}'"
             " help='Lens flare aperture to use'");
+
+        TwAddVarRW(m_bar,
+            "lens_diff_spread", TW_TYPE_FLOAT, &lens_diff_spread,
+            " label='Diffraction Spread' group='Lens'"
+            " min=0.2 max=1.0 step=0.01"
+            " help='Amount of spread in the lens diffraction'");
 
         TwAddButton(m_bar,
             "aperture_regen_btn", btn_cb, &aperture_regen_btn,

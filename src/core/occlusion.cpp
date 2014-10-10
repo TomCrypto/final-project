@@ -53,7 +53,7 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
     glBegin(GL_POINTS);
 
     for (size_t i = 0; i < light_count; ++i) {
-        glVertex3f((2 * i + 1) / (float)(2 * max_lights) * 2 - 1, 0.0f, i);
+        glVertex3f((2 * i + 1) / (float)(2 * max_lights) * 2 - 1, 0.0f, (float)i);
     }
 
     glEnd();
