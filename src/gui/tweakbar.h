@@ -56,13 +56,10 @@ namespace gui
 
 		atmos Atmos;
 
-		glm::vec3 skycolor;
 		glm::vec3 color1;
 		glm::vec3 color2;
 		glm::vec3 color3;
 		glm::vec3 color4;
-
-		glm::vec3 LightSun;
 
         bool aperture_regen_btn;
 
