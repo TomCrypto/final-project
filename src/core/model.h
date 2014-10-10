@@ -13,6 +13,8 @@
 #include <iterator>
 #include <algorithm>
 #include "utils/gl_utils.h"
+#include "core/camera.h"
+#include "core/light.h"
 
 #define G308_SHADE_POLYGON 0
 #define G308_SHADE_WIREFRAME 1
@@ -41,7 +43,7 @@ struct Group {
 class Model {
 public:
 	Model(std::string filename);
-	void display();
+	void display(const camera& camera, const std::vector<light>& lights);
 private:
 	void readMTL(std::string filename);
 	void useMTL(std::string mtl);
@@ -65,6 +67,8 @@ private:
 
 	int m_glGeomListPoly;   // Display List for Polygon
 	int m_glGeomListWire;   // Display List for Wireframe
+
+	gl::shader m_shader;
 };
 
 #endif
