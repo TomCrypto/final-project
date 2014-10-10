@@ -178,6 +178,9 @@ void Model::readMTL(std::string filename) {
 }
 
 void Model::display() {
+	if (drawLists.empty()) {
+		CreateDrawingLists();
+	}
 	if (mode == G308_SHADE_POLYGON) {
 		if (m_glGeomListPoly == 0) CreateGLPolyGeometry();
 		glCallList(m_glGeomListPoly);
@@ -204,36 +207,23 @@ void Model::addToList(int v, int n, int u) {
 	glNormal3f(normals[n].x, normals[n].y, normals[n].z); //Add the normal
 	glVertex3f(vertices[v].x, vertices[v].y, vertices[v].z); //Add the vertex
 }
-void Model::CreateGLPolyGeometry() {
-	if (m_glGeomListPoly != 0)
-		glDeleteLists(m_glGeomListPoly, 1);
-	LOG(INFO) << "Attempting to draw";
-	// Assign a display list; return 0 if err
-	m_glGeomListPoly = glGenLists(1);
-	glNewList(m_glGeomListPoly, GL_COMPILE);
-
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-	glBegin(GL_TRIANGLES); //Begin drawing triangles
+void Model::CreateDrawingLists() {
+	if (!drawLists.empty()) {
+		for each (std::pair<std::string,int> var in drawLists)
+		{
+			glDeleteLists(var.second, 1);
+		}
+		drawLists.clear();
+	}
 	for (auto& g : groups) {
-		useMTL(g.second.materialIdx);
+		int l = glGenLists(1);
+		glBegin(GL_TRIANGLES);
 		for (Triangle t : g.second.triangles) {
 			addToList(t.v[0], t.n[0], t.t[0]);
 			addToList(t.v[1], t.n[1], t.t[1]);
 			addToList(t.v[2], t.n[2], t.t[2]);
 		}
+		glEnd();
+		drawLists.push_back(std::pair<std::string, int>(g.second.materialIdx, l));
 	}
-	glEnd();
-	//glDisable(GL_BLEND);
-	glEndList();
-	LOG(INFO) << "Finished attempting to draw";
-}
-void Model::CreateGLWireGeometry() {
-	if (m_glGeomListWire != 0)
-		glDeleteLists(m_glGeomListWire, 1);
-
-	// Assign a display list; return 0 if err
-	m_glGeomListWire = glGenLists(1);
-	glNewList(m_glGeomListWire, GL_COMPILE);
-	glEndList();
 }
