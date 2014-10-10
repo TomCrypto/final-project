@@ -40,23 +40,8 @@
     <Filter Include="Source Files\GUI">
       <UniqueIdentifier>{18a1e681-55a1-4d88-8f53-a0ab71340ded}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Shaders\Tonemapping">
-      <UniqueIdentifier>{d0b1af37-4c3c-4547-a400-928782cceefb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Shaders\Generic">
-      <UniqueIdentifier>{d4b9ca4d-7020-4f9b-a293-f4156523028f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Lighthouse">
       <UniqueIdentifier>{756948f4-b700-40b7-9fba-b4de33fac46b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Shaders\Skybox">
-      <UniqueIdentifier>{6b2da6f6-da9e-47dc-ba96-d269c45e21aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Shaders\Overlay">
-      <UniqueIdentifier>{189a5172-1eff-45e5-aac4-767795591bcc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Shaders\Occlusion">
-      <UniqueIdentifier>{7c8a6a42-dace-4544-b66a-ebc70f45bad6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -227,32 +212,32 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\res\shaders\generic\fs_quad.vert">
-      <Filter>Resource Files\Shaders\Generic</Filter>
+    <Text Include="..\res\shaders\fs_quad.vert">
+      <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="..\res\shaders\tonemap\reinhard.frag">
-      <Filter>Resource Files\Shaders\Tonemapping</Filter>
+    <Text Include="..\res\shaders\tonemap.frag">
+      <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="..\res\shaders\skybox\skybox.frag">
-      <Filter>Resource Files\Shaders\Skybox</Filter>
+    <Text Include="..\res\shaders\skybox.frag">
+      <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="..\res\shaders\skybox\skybox.vert">
-      <Filter>Resource Files\Shaders\Skybox</Filter>
+    <Text Include="..\res\shaders\skybox.vert">
+      <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="..\res\shaders\overlay\overlay.frag">
-      <Filter>Resource Files\Shaders\Overlay</Filter>
+    <Text Include="..\res\shaders\overlay.frag">
+      <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="..\res\shaders\overlay\overlay.vert">
-      <Filter>Resource Files\Shaders\Overlay</Filter>
+    <Text Include="..\res\shaders\overlay.vert">
+      <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="..\res\shaders\tonemap\copy.frag">
-      <Filter>Resource Files\Shaders\Tonemapping</Filter>
+    <Text Include="..\res\shaders\frame_copy.frag">
+      <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="..\res\shaders\occlusion\occlusion.frag">
-      <Filter>Resource Files\Shaders\Occlusion</Filter>
+    <Text Include="..\res\shaders\occlusion.frag">
+      <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="..\res\shaders\occlusion\occlusion.vert">
-      <Filter>Resource Files\Shaders\Occlusion</Filter>
+    <Text Include="..\res\shaders\occlusion.vert">
+      <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="..\res\shaders\aperture.frag">
       <Filter>Resource Files\Shaders</Filter>

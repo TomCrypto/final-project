@@ -4,7 +4,7 @@
 
 occlusion::occlusion()
     : m_tex(glm::ivec2(max_lights, 1), GL_FLOAT),
-      m_shader("occlusion/occlusion.vert", "occlusion/occlusion.frag")
+      m_shader("occlusion.vert", "occlusion.frag")
 {
 
 }

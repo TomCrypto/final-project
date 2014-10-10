@@ -6,8 +6,8 @@
 #include <cmath>
 
 skybox::skybox()
-    : m_shader("skybox/skybox.vert", "skybox/skybox.frag"),
-      m_sun("skybox/sun.vert", "skybox/sun.frag")
+    : m_shader("skybox.vert", "skybox.frag"),
+      m_sun("sun.vert", "sun.frag")
 {
     quad = gluNewQuadric();
 	gluQuadricDrawStyle(quad, GLU_FILL);
