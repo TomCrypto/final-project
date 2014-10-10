@@ -7,18 +7,29 @@
 // use this to communicate light sources between different
 // subsystems
 
+enum light_type
+{
+    LIGHT_TINY,
+    LIGHT_SMALL,
+    LIGHT_NORMAL,
+    LIGHT_LARGE,
+    LIGHT_HUGE
+};
+
 struct light
 {
     public:
         light(const glm::vec4& pos,
-              const float& radius)
-            : pos(pos), radius(radius)
+              const float& radius,
+              const light_type& type)
+            : pos(pos), radius(radius), type(type)
         {
 
         }
 
         const glm::vec4& pos; // world coordinates
         const float& radius; // in world space, approximate extent of light source
+        const light_type& type;
 };
 
 #endif
