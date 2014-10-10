@@ -51,7 +51,7 @@ namespace gui
         lens_flare_size = 1.6f;
         lens_flare_intensity = 25;
         lens_aperture = PENTAGON;
-        lens_diff_spread = 0.35f;
+        lens_diff_spread = 0.69f;
 
         cam_move_speed = 3.5f;
         cam_sensitivity = 1.5f;
@@ -118,7 +118,11 @@ namespace gui
         TwAddVarRW(m_bar,
             "lens_aperture", apertureType, &lens_aperture,
             " label='Aperture' group='Lens'"
-            " enum='0 {Pentagon}, 1 {Circle}'"
+            " enum='0 {Pentagonal aperture},"
+                   "1 {Dirty lens},"
+                   "2 {Lens with scratch},"
+                   "3 {Octagonal aperture},"
+                   "4 {Custom aperture}'"
             " help='Lens flare aperture to use'");
 
         TwAddVarRW(m_bar,

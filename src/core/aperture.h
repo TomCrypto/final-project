@@ -19,11 +19,11 @@
 enum transmission_function
 {
     PENTAGON        = 0,
-    CIRCLE          = 1,
+    FINGERPRINTS    = 1,
+    GRAZED          = 2,
+    OCTAGON         = 3,
+    SIGGRAPH        = 4,
 };
-
-// allows one to generate random apertures of a given size as well as their
-// chromatic Fourier transform
 
 class aperture
 {

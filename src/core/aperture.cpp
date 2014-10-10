@@ -100,10 +100,19 @@ void aperture::load_aperture(const transmission_function& tf,
     switch (tf)
     {
         case PENTAGON:
-            path = "apertures/pentagon.png";
+            path = "pentagon.png";
             break;
-        case CIRCLE:
-            path = "apertures/fingerprints.png";
+        case FINGERPRINTS:
+            path = "fingerprints.png";
+            break;
+        case GRAZED:
+            path = "grazed_cut.png";
+            break;
+        case OCTAGON:
+            path = "octagon.png";
+            break;
+        case SIGGRAPH:
+            path = "siggraph_custom.png";
             break;
         default:
             LOG(ERROR) << "Bad aperture passed!";
@@ -112,11 +121,9 @@ void aperture::load_aperture(const transmission_function& tf,
 
     LOG(INFO) << "Now loading aperture '" << path << "'.";
 
-    auto aperture = image(path)
+    auto aperture = image("apertures/" + path)
                   .enlarge(((glm::ivec2)((glm::vec2)resize / scale)))
                   .resize(resize);
-
-    aperture.save("aperture.exr");
 
     LOG(TRACE) << "Computing point spread function.";
 
@@ -181,8 +188,7 @@ static glm::vec3 curve[81] = {
     glm::vec3(0.0007,0.0002,0.0000), glm::vec3(0.0005,0.0002,0.0000),
     glm::vec3(0.0003,0.0001,0.0000), glm::vec3(0.0002,0.0001,0.0000),
     glm::vec3(0.0002,0.0001,0.0000), glm::vec3(0.0001,0.0000,0.0000),
-    glm::vec3(0.0001,0.0000,0.0000), glm::vec3(0.0001,0.0000,0.0000),
-    glm::vec3(0.0000,0.0000,0.0000)
+    glm::vec3(0.0001,0.0000,0.0000), glm::vec3(0.0001,0.0000,0.0000)
 };
 
 static glm::vec3 wavelength_rgb(float lambda)
@@ -190,8 +196,8 @@ static glm::vec3 wavelength_rgb(float lambda)
     if (lambda <= 380)
         return curve[0];
 
-    if (lambda >= 780)
-        return curve[80];
+    if (lambda >= 775)
+        return curve[79];
 
     int pos = (int)((lambda - 380) / 5);
     float t = pos + 1 - (lambda - 380) / 5;
@@ -216,11 +222,9 @@ static glm::vec3 wavelength_rgb(float lambda)
 
 image aperture::get_cfft(const image& psf)
 {
-    // next superimpose it resized over different wavelengths
-
     image out(psf.dims());
 
-    const int samples = 25; // pass as quality parameter?
+    const int samples = 40; // pass as quality parameter?
 
     for (int t = 0; t < samples; ++t)
     {
@@ -261,7 +265,7 @@ void aperture::render(const std::vector<light>& lights,
 
     m_shader.bind();
 
-    m_flares[21].get()->bind(0);
+    m_flares[8].get()->bind(0);
     occlusion.bind(1, GL_NEAREST, GL_NEAREST);
     m_shader.set("flare", 0);
     m_shader.set("occlusion", 1);
@@ -281,7 +285,7 @@ void aperture::render(const std::vector<light>& lights,
     for (size_t t = 0; t < lights.size(); ++t) {
         //float radius = 17; // radius of flare texture (convolution)
 
-        float uv_mult = 1; // by how much to scale?
+        float s = 1; // by how much to scale?
 
         // Project light on sensor
         bool forward_facing = glm::dot(glm::normalize((glm::vec3)lights[t].pos - camera.pos() * lights[t].pos.w),
@@ -293,13 +297,13 @@ void aperture::render(const std::vector<light>& lights,
 
         if (forward_facing) {
             glBegin(GL_QUADS);
-            glTexCoord3f(0.5f - 0.5f * uv_mult, 0.5f - 0.5f * uv_mult, (float)t);
+            glTexCoord3f(0.5f - 0.5f * s, 0.5f - 0.5f * s, (float)t);
             glVertex2f(-w0 + projected.x, -w0 * aspect + projected.y);
-            glTexCoord3f(0.5f + 0.5f * uv_mult, 0.5f - 0.5f * uv_mult, (float)t);
+            glTexCoord3f(0.5f + 0.5f * s, 0.5f - 0.5f * s, (float)t);
             glVertex2f(+w0 + projected.x, -w0 * aspect + projected.y);
-            glTexCoord3f(0.5f + 0.5f * uv_mult, 0.5f + 0.5f * uv_mult, (float)t);
+            glTexCoord3f(0.5f + 0.5f * s, 0.5f + 0.5f * s, (float)t);
             glVertex2f(+w0 + projected.x, +w0 * aspect + projected.y);
-            glTexCoord3f(0.5f - 0.5f * uv_mult, 0.5f + 0.5f * uv_mult, (float)t);
+            glTexCoord3f(0.5f - 0.5f * s, 0.5f + 0.5f * s, (float)t);
             glVertex2f(-w0 + projected.x, +w0 * aspect + projected.y);
             glEnd();
         }
