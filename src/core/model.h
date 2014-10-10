@@ -14,9 +14,6 @@
 #include <algorithm>
 #include "utils/gl_utils.h"
 
-#define G308_SHADE_POLYGON 0
-#define G308_SHADE_WIREFRAME 1
-
 struct Triangle {
     glm::ivec3 v;
     glm::ivec3 n;
@@ -45,8 +42,7 @@ public:
 private:
 	void readMTL(std::string filename);
 	void useMTL(std::string mtl);
-	void CreateGLPolyGeometry();
-	void CreateGLWireGeometry();
+	void CreateDrawingLists();
 	void addToList(int v, int n, int u);
 	void addGroup(std::string g);
 
@@ -63,8 +59,7 @@ private:
 	std::map < std::string, Group > groups;
 	std::map < std::string, Material > materials;
 
-	int m_glGeomListPoly;   // Display List for Polygon
-	int m_glGeomListWire;   // Display List for Wireframe
+	std::vector<std::pair<std::string,int>> drawLists;
 };
 
 #endif
