@@ -24,16 +24,9 @@ std::vector<std::string> split(const std::string &s, char delim) {
 void Model::addGroup(std::string g) {
 	groups[g];
 }
-<<<<<<< HEAD
+
 Model::Model(std::string filename)
     : m_shader("model/model.vert", "model/model.frag") {
-	mode = G308_SHADE_POLYGON;
-    m_glGeomListPoly = 0;
-    m_glGeomListWire = 0;
-
-=======
-Model::Model(std::string filename) {
->>>>>>> 6c7d93fe9ff7e9a15fb1b02959b02687711d83b8
 	std::string line;
 	std::ifstream myfile(filename);
 	int v1, v2, v3, n1, n2, n3, t1, t2, t3;
@@ -204,8 +197,6 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
     m_shader.set("kd", glm::vec3(0.4, 0.3, 0.2));
     m_shader.set("ka", glm::vec3(0.1, 0.1, 0.1));
     m_shader.set("shininess", 32.0f);
-
-    glCallList(m_glGeomListPoly);
 
 	for each (std::pair<std::string, int> var in drawLists)
 	{
