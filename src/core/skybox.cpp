@@ -77,7 +77,7 @@ void skybox::display(const camera& cam, atmos vars)
 	m_shader.set("sunDir",sunDir);
 	//calculate colour
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
-	float m = 1.0f / (glm::cos(glm::radians(vars.theta)) + 0.5f / std::pow(93.885f - glm::radians(vars.theta), 1.253f));
+	float m = 1.0f / (glm::cos(glm::radians(vars.theta)) + 0.5f / std::pow(93.885f - vars.theta, 1.253f));
 	glm::vec3 lam = glm::vec3(0.65f, 0.57f, 0.475f); //red green & blue in um
 	float fTauRx = glm::exp(-m*0.008735f*std::pow(lam.x, -4.08f));
 	float fTauRy = glm::exp(-m*0.008735f*std::pow(lam.y, -4.08f));
