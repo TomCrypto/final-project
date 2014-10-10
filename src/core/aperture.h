@@ -37,7 +37,7 @@ public:
     void render(const std::vector<light>& lights,
                 const gl::texture2D& occlusion,
                 const camera& camera,
-                float w0, float i0);
+                float i0);
 
 private:
     aperture& operator=(const aperture& other);
@@ -50,6 +50,8 @@ private:
 
     image get_cfft(const image& aperture);
     image get_flare(const image& cfft, int radius);
+    std::pair<int, float> compensate(
+        const camera& camera, const light& light);
 };
 
 #endif

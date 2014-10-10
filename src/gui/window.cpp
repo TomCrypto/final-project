@@ -7,7 +7,7 @@ namespace gui
 {
     window::window(const std::string& window_title, const glm::ivec2& dims)
         : m_cursor_locked(false), m_dims(dims), m_fps(51),
-          m_fft(glm::ivec2(1500)),
+          m_fft(glm::ivec2(2048)),
           m_context(window_title, dims,
                     std::bind(&window::on_mouse_up,   this, _1),
                     std::bind(&window::on_mouse_down, this, _1),
@@ -64,7 +64,7 @@ namespace gui
         float sun_radius = 0.02f; // experimentally determined - radius of sun as viewed by camera
 
         std::vector<light> lights;
-        lights.push_back(light(sun_pos, sun_radius));
+        lights.push_back(light(sun_pos, sun_radius, LIGHT_NORMAL));
 
         //lights.push_back(light(glm::vec4(10, 0, 5, 1), glm::vec3(0), 0.5f));
 
@@ -74,19 +74,16 @@ namespace gui
 
         m_skybox.display(m_camera,m_bar.Atmos);
 
-		/*
         m_lighthouse.display(m_camera, lights);
 		m_outbuilding.display(m_camera, lights);
 		m_terrain.display(m_camera, lights);
 		m_tree.display(m_camera, lights);
-        */
 
         const auto& occlusion = m_occlusion.query(lights,
                                                   m_framebuffer,
                                                   m_camera);
 
         m_aperture.render(lights, occlusion, m_camera,
-                          m_bar.lens_flare_size,
                           m_bar.lens_flare_intensity);
 
         if (m_bar.lens_overlay) {

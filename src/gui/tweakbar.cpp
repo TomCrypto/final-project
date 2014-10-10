@@ -48,7 +48,6 @@ namespace gui
         lens_overlay = true;
         lens_reflectivity = 0.35f;
         lens_density = 70;
-        lens_flare_size = 1.6f;
         lens_flare_intensity = 25;
         lens_aperture = PENTAGON;
         lens_diff_spread = 0.69f;
@@ -98,12 +97,6 @@ namespace gui
             " help='Whether the lens dirt/imperfections are rendered'");
 
         TwAddVarRW(m_bar,
-            "lens_flare_size", TW_TYPE_FLOAT, &lens_flare_size,
-            " label='Flare w0' group='Lens'"
-            " min=0.5 max=2.5 step=0.01"
-            " help='Size of the lens flares'");
-
-        TwAddVarRW(m_bar,
             "lens_flare_intensity", TW_TYPE_FLOAT, &lens_flare_intensity,
             " label='Flare I0' group='Lens'"
             " min=0 max=100 step=0.1"
@@ -128,7 +121,7 @@ namespace gui
         TwAddVarRW(m_bar,
             "lens_diff_spread", TW_TYPE_FLOAT, &lens_diff_spread,
             " label='Diffraction Spread' group='Lens'"
-            " min=0.2 max=1.0 step=0.01"
+            " min=0.3 max=1.0 step=0.01"
             " help='Amount of spread in the lens diffraction'");
 
         TwAddButton(m_bar,
@@ -166,7 +159,7 @@ namespace gui
         TwAddVarRW(m_bar,
             "cam_fov", TW_TYPE_FLOAT, &cam_fov,
             " label='Field of View' group='Navigation'"
-            " min=10 max=90 step=0.1"
+            " min=10 max=70 step=0.1"
             " help='Camera field of view'");
 
         TwAddVarRO(m_bar,

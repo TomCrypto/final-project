@@ -4,96 +4,22 @@
 
 #include <cmath>
 
-#if 0
-static bool is_empty_row(const image& img, int row, const glm::vec3& noise)
-{
-    const glm::vec4* ptr = img[row];
-    auto dims = img.dims();
-
-    for (int x = 0; x < dims.x; ++x)
-    {
-        if (ptr->x > noise.x)
-            return false;
-        if (ptr->y > noise.y)
-            return false;
-        if (ptr->z > noise.z)
-            return false;
-
-        ++ptr;
-    }
-
-    return true;
-}
-
-static bool is_empty_col(const image& img, int col, const glm::vec3& noise)
-{
-    auto dims = img.dims();
-
-    for (int y = 0; y < dims.y; ++y)
-    {
-        const glm::vec4* ptr = img[y] + col;
-
-        if (ptr->x > noise.x)
-            return false;
-        if (ptr->y > noise.y)
-            return false;
-        if (ptr->z > noise.z)
-            return false;
-    }
-
-    return true;
-}
-
-// this function performs the following operations:
-// 1. denoises the image by estimating the ground noise at the image
-//    edges and removing it through subtraction
-// 2. trims the image by removing any zero rows or columns
-static glm::ivec2 trim_and_denoise(image& img)
-{
-    // TODO: better denoising? for now, just subtract 2 * 1e-7 arbitrarily
-
-    auto dims = img.dims();
-
-    glm::vec3 noise = glm::vec3(1e-8);
-
-    // find empty rows
-    int l = 0;
-    int r = 0;
-    int t = 0;
-    int b = 0;
-
-    while (is_empty_col(img, l, noise)) ++l;
-    while (is_empty_row(img, t, noise)) ++t;
-    while (is_empty_col(img, dims.x - 1 - r, noise)) ++r;
-    while (is_empty_row(img, dims.y - 1 - b, noise)) ++b;
-
-    // TODO: NEED TO KEEP TRACK OF CENTER HERE
-
-    img = img.subregion(l, t, dims.x - 1 - r - l,
-                              dims.y - 1 - b - t);
-
-    return glm::ivec2((l + dims.x - 1 - r) / 2,
-                      (t + dims.y - 1 - b) / 2);
-}
-#endif
-
 aperture::aperture(fft_engine& fft)
     : m_fft(fft), m_shader("aperture.vert", "aperture.frag")
 {
 
 }
 
+// Five different disk radii for every light type
+static const int radii[] = { 2, 4, 10, 28, 75 };
+
+// This seems to be the sweet spot of frequency
+// sampling resolution versus spectral leakage
+static const float quality = 1024;
+
 void aperture::load_aperture(const transmission_function& tf,
                              float scale)
 {
-    // 1024x1024 appears to be the sweet spot of
-    // frequency resolution vs. leakage tradeoff
-    const glm::ivec2& resize = glm::ivec2(1024);
-
-    // Fibonacci series gives optimal accuracy when we
-    // select the closest radius, for every lens flare
-    const int radii[] = { 1, 2, 3, 5, 8, 13, 21, 34 };
-
     m_flares.clear();
     std::string path;
 
@@ -122,8 +48,8 @@ void aperture::load_aperture(const transmission_function& tf,
     LOG(INFO) << "Now loading aperture '" << path << "'.";
 
     auto aperture = image("apertures/" + path)
-                  .enlarge(((glm::ivec2)((glm::vec2)resize / scale)))
-                  .resize(resize);
+                  .enlarge(glm::ivec2((int)(quality / scale)))
+                  .resize(glm::ivec2(quality));
 
     LOG(TRACE) << "Computing point spread function.";
 
@@ -252,10 +178,55 @@ image aperture::get_flare(const image& cfft, int radius)
     return m_fft.convolve_disk(cfft, radius);
 }
 
+std::pair<int, float> aperture::compensate(
+    const camera& camera, const light& light)
+{
+    int selected_radius = radii[(int)light.type];
+
+    // compute best flare texture + compensation factor
+    
+    // first compute the MAXIMUM projected radius (on screen)
+    
+    float max_radius = 0.0;
+    const int samples = 16;
+    
+    glm::vec4 ref = camera.proj() * camera.view() * light.pos;
+    ref /= ref.w;
+    
+    for (int y = 0; y < samples; ++y) {
+        float theta = y / float(samples) * glm::pi<float>();
+        
+        for (int x = 0; x < samples; ++x) {
+            float phi = x / float(samples) * glm::pi<float>() * 2;
+            
+            glm::vec4 world_pos = light.pos + glm::vec4(
+                glm::sin(theta) * glm::cos(phi),
+                glm::cos(theta),
+                glm::sin(theta) * glm::sin(phi),
+                0.0) * (light.radius * 0.99f);
+
+            glm::vec4 projected = camera.proj() * camera.view() * world_pos;
+            projected /= projected.w;
+            
+            float distance = glm::length((glm::vec2)projected - 
+                                         (glm::vec2)ref) / 2.0f;
+
+            //max_radius = glm::max(max_radius, distance);
+            max_radius += distance / (samples * samples);
+        }
+    }
+
+    // now that we've settled on a radius, check how large we need it to be
+    return std::make_pair(
+        selected_radius,
+        (2.0 * selected_radius / (float)quality) / max_radius
+    );
+}
+
 void aperture::render(const std::vector<light>& lights,
                       const gl::texture2D& occlusion,
                       const camera& camera,
-                      float w0, float i0)
+                      float i0)
 {
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
@@ -264,8 +235,7 @@ void aperture::render(const std::vector<light>& lights,
     glViewport(0, 0, camera.dims().x, camera.dims().y);
 
     m_shader.bind();
-
-    m_flares[8].get()->bind(0);
+    
     occlusion.bind(1, GL_NEAREST, GL_NEAREST);
     m_shader.set("flare", 0);
     m_shader.set("occlusion", 1);
@@ -283,13 +253,22 @@ void aperture::render(const std::vector<light>& lights,
     }
 
     for (size_t t = 0; t < lights.size(); ++t) {
-        //float radius = 17; // radius of flare texture (convolution)
+        auto comp = compensate(camera, lights[t]);
+        float s = comp.second; // compensation
+        m_flares[comp.first].get()->bind(0,
+            GL_LINEAR, GL_LINEAR,
+            GL_CLAMP_TO_EDGE,
+            GL_CLAMP_TO_EDGE);
+        const float w0 = 1.6f;
 
-        float s = 1; // by how much to scale?
+        auto cam_to_light = (glm::vec3)lights[t].pos
+                          - camera.pos() * lights[t].pos.w;
 
         // Project light on sensor
-        bool forward_facing = glm::dot(glm::normalize((glm::vec3)lights[t].pos - camera.pos() * lights[t].pos.w),
-                                       glm::normalize(camera.dir())) > 0;
+        bool forward_facing = glm::dot(
+            glm::normalize(cam_to_light),
+            glm::normalize(camera.dir())) > 0;
+
         glm::vec4 projected = camera.proj() * camera.view() * lights[t].pos;
         projected /= projected.w;
 
