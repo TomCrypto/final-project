@@ -195,6 +195,12 @@
     <Text Include="..\res\shaders\aperture.vert">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
+    <Text Include="..\res\shaders\ghost.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="..\res\shaders\ghost.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
     <Text Include="..\res\shaders\model.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
