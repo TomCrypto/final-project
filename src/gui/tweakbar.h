@@ -42,28 +42,24 @@ namespace gui
         main_bar(const std::string& name,
                  const std::string& title);
 
-        /* === lens flare stuff === */
+        /* === atmospheric options === */
+
+		atmos Atmos;
+
+        /* === lens options === */
 
         float lens_exposure;
         int lens_density;
         float lens_reflectivity;
         bool lens_overlay;
         float lens_flare_intensity;
+        float lens_flare_f_number;
         transmission_function lens_aperture;
         float lens_diff_spread;
+        bool lens_update_btn;
 
-        /* === */
+        /* === camera options === */
 
-		atmos Atmos;
-
-		glm::vec3 color1;
-		glm::vec3 color2;
-		glm::vec3 color3;
-		glm::vec3 color4;
-
-        bool aperture_regen_btn;
-
-        // camera stuff
         float cam_move_speed;
         float cam_sensitivity;
         bool cam_locked;

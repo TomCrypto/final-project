@@ -226,7 +226,8 @@ std::pair<int, float> aperture::compensate(
 void aperture::render(const std::vector<light>& lights,
                       const gl::texture2D& occlusion,
                       const camera& camera,
-                      float i0)
+                      float i0,
+                      float f_number)
 {
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
@@ -244,6 +245,7 @@ void aperture::render(const std::vector<light>& lights,
     m_shader.set("max_lights", 8);
     m_shader.set("viewproj", camera.proj() * camera.view());
     m_shader.set("view_pos", camera.pos());
+    m_shader.set("f_number", f_number);
 
     for (size_t t = 0; t < lights.size(); ++t) {
         m_shader.set("lights[" + std::to_string(t) + "].pos",
@@ -254,12 +256,12 @@ void aperture::render(const std::vector<light>& lights,
 
     for (size_t t = 0; t < lights.size(); ++t) {
         auto comp = compensate(camera, lights[t]);
-        float s = comp.second; // compensation
+        float s = comp.second * f_number; // compensation
         m_flares[comp.first].get()->bind(0,
             GL_LINEAR, GL_LINEAR,
             GL_CLAMP_TO_EDGE,
             GL_CLAMP_TO_EDGE);
-        const float w0 = 1.6f;
+        const float w0 = 2.0f * f_number;
 
         auto cam_to_light = (glm::vec3)lights[t].pos
                           - camera.pos() * lights[t].pos.w;
