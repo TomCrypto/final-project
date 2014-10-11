@@ -17,16 +17,17 @@ the simple GUI widget used to interact with our program.
 Instructions
 ------------
 
-    To build and run the program, either open the Project.sln solution file or
-    execute the makefile depending on whether you are on Windows or Linux, and
-    then compile the program using `make` or by having Visual Studio build it.
+    To build and run the program, please use the provided Makefile. A solution
+    file Project.sln is also available for Visual Studio (>= 2012) on Windows.
 
     The compiled program will be generated in the `bin` folder and can then be
     run, note that the working directory of the program is the `bin` folder so
     for Windows double-clicking will work, for Linux please cd into the folder
     before executing the program, e.g. as follows:
 
-        make && cd bin && ./Project; cd ..
+        $ make
+        $ cd bin && ./Project
+        $ cd ..
 
 Folder Contents
 ---------------
