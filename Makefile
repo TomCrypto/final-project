@@ -19,9 +19,9 @@ RES              = $(patsubst $(RESDIR)/%,$(BINDIR)/%,$(RESOURCES))
 
 LDPATH           = -L$(LIBDIR)/bin/linux
 INCLUDE          = -I$(LIBDIR)/include -I$(SRCDIR)
-CFLAGS           = -O2 -Wall -Wextra -pedantic -std=c99
+CFLAGS           = -O2 -march=native -Wall -Wextra -pedantic -std=c99
 CFLAGS          += -Wno-unused-parameter -Wno-unused-variable
-CXXFLAGS         = -O2 -Wall -Wextra -pedantic -std=c++11
+CXXFLAGS         = -O2 -march=native -Wall -Wextra -pedantic -std=c++11
 CXXFLAGS        += -Wno-unused-parameter -Wno-unused-variable
 CXXFLAGS        += -Wno-reorder -DGLM_FORCE_RADIANS
 CXXFLAGS        += -D_ELPP_DISABLE_DEFAULT_CRASH_HANDLING
