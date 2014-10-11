@@ -19,6 +19,9 @@
 #include "core/light.h"
 #include "gui/framebuffer.h"
 
+const size_t resolution = 8;
+const size_t max_lights = 8;
+
 class occlusion
 {
 public:
@@ -28,9 +31,6 @@ public:
     const gl::texture2D& query(const std::vector<light>& lights,
                                framebuffer& framebuffer,
                                const camera& camera);
-
-    static const size_t resolution = 8;
-    static const size_t max_lights = 8;
 
 private:
     occlusion& operator=(const occlusion& other);
