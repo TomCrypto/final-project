@@ -179,7 +179,14 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 	if (drawLists.empty()) {
 		CreateDrawingLists();
 	}
-    m_shader.bind();
+	
+	for (auto var : drawLists)
+	{
+		m_shader.bind();
+		glCallList(var.second);
+		m_shader.unbind();
+	}
+	/*m_shader.bind();
     m_shader.set("view", camera.view());
     m_shader.set("proj", camera.proj());
 
@@ -204,7 +211,7 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 		glCallList(var.second);
 	}
 
-	m_shader.unbind();
+	m_shader.unbind(); */
 }
 
 void Model::useMTL(std::string mtl) {

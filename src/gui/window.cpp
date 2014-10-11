@@ -28,8 +28,8 @@ namespace gui
           m_tree("lighthouse/Tree.obj"),
           m_skybox(),
           m_overlay(m_bar.lens_density),
-          m_aperture(m_fft),
-          m_occlusion(),
+          //m_aperture(m_fft),
+          //m_occlusion(),
           m_framebuffer(m_dims)
     {
         LOG(TRACE) << "Window resolution is "
@@ -79,24 +79,24 @@ namespace gui
 		m_terrain.display(m_camera, lights);
 		m_tree.display(m_camera, lights);
 
-        const auto& occlusion = m_occlusion.query(
-            lights, m_framebuffer, m_camera
-        );
+        //const auto& occlusion = m_occlusion.query(
+        //    lights, m_framebuffer, m_camera
+        //);
 
-        m_aperture.render_flare(lights, occlusion, m_camera,
-                                m_bar.lens_flare_intensity,
-                                m_bar.lens_flare_f_number);
+        //m_aperture.render_flare(lights, occlusion, m_camera,
+        //                        m_bar.lens_flare_intensity,
+        //                        m_bar.lens_flare_f_number);
 
-        m_aperture.render_ghosts(lights, occlusion, m_camera,
-                                 m_bar.lens_flare_intensity,
-                                 m_bar.lens_ghost_count,
-                                 m_bar.lens_ghost_max_size);
+        //m_aperture.render_ghosts(lights, occlusion, m_camera,
+        //                         m_bar.lens_flare_intensity,
+        //                         m_bar.lens_ghost_count,
+        //                         m_bar.lens_ghost_max_size);
 
         if (m_bar.lens_overlay) {
-            m_overlay.render(lights,
-                             occlusion,
-                             m_camera,
-                             m_bar.lens_reflectivity);
+        //    m_overlay.render(lights,
+        //                     occlusion,
+        //                     m_camera,
+        //                     m_bar.lens_reflectivity);
         }
 
         m_framebuffer.render(m_bar.lens_exposure);
@@ -126,8 +126,8 @@ namespace gui
         if (m_bar.lens_update_btn) {
             m_bar.lens_update_btn = false;
 
-            m_aperture.load_aperture(m_bar.lens_aperture,
-                                     m_bar.lens_diff_spread);
+            //m_aperture.load_aperture(m_bar.lens_aperture,
+            //                         m_bar.lens_diff_spread);
         }
 
         if (m_overlay.get_density() != m_bar.lens_density) {
