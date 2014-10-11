@@ -187,6 +187,8 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 		m_shader.bind();
 		m_shader.set("view", camera.view());
         m_shader.set("proj", camera.proj());
+		m_shader.set("sun_dir", lights[0].pos);
+		useMTL(var.first);
 		glCallList(var.second);
 		m_shader.unbind();
 	}
@@ -221,12 +223,10 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 }
 
 void Model::useMTL(std::string mtl) {
-	glMaterialfv(GL_FRONT, GL_AMBIENT, glm::value_ptr(materials[mtl].Ka));
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, glm::value_ptr(materials[mtl].Kd));
-	glMaterialfv(GL_FRONT, GL_SPECULAR, glm::value_ptr(glm::vec4(materials[mtl].Ks, materials[mtl].Ns)));
-	//glEnable(GL_TEXTURE_2D);
-	//materials[mtl].map_Kd->bind(0);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	m_shader.set("ka", materials[mtl].Ka);
+	m_shader.set("kd", materials[mtl].Kd);
+	m_shader.set("ks", materials[mtl].Ks);
+	m_shader.set("shininess", materials[mtl].Ns);
 }
 void Model::addToList(int v, int n, int u) {
 	if (uv.size()>0) glTexCoord2f(uv[u].x, uv[u].y);

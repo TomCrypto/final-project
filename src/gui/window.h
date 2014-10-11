@@ -85,8 +85,8 @@ namespace gui
 
         skybox m_skybox;
         overlay m_overlay;
-        //aperture m_aperture;
-        //occlusion m_occlusion;
+        aperture m_aperture;
+        occlusion m_occlusion;
         framebuffer m_framebuffer;
     };
 }
