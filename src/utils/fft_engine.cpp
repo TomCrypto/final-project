@@ -225,5 +225,9 @@ image fft_engine::convolve_disk(const image& _input, int radius)
     }
 
     convolved.normalize(true);
-    return convolved;
+    
+    int dx = (convolved.dims().x - _input.dims().x) / 2;
+    int dy = (convolved.dims().y - _input.dims().y) / 2;
+    
+    return convolved.subregion(dx, dy, _input.dims().x, _input.dims().y);
 }
