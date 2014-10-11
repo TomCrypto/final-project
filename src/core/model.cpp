@@ -176,6 +176,8 @@ void Model::readMTL(std::string filename) {
 }
 
 void Model::display(const camera& camera, const std::vector<light>& lights) {
+    glEnable(GL_DEPTH_TEST);
+
 	if (drawLists.empty()) {
 		CreateDrawingLists();
 	}
@@ -183,9 +185,14 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 	for (auto var : drawLists)
 	{
 		m_shader.bind();
+		m_shader.set("view", camera.view());
+        m_shader.set("proj", camera.proj());
 		glCallList(var.second);
 		m_shader.unbind();
 	}
+	
+    glDisable(GL_DEPTH_TEST);
+	
 	/*m_shader.bind();
     m_shader.set("view", camera.view());
     m_shader.set("proj", camera.proj());
@@ -235,8 +242,10 @@ void Model::CreateDrawingLists() {
 		}
 		drawLists.clear();
 	}
+	
 	for (auto& g : groups) {
 		int l = glGenLists(1);
+		glNewList(l, GL_COMPILE);
 		glBegin(GL_TRIANGLES);
 		for (Triangle t : g.second.triangles) {
 			addToList(t.v[0], t.n[0], t.t[0]);
@@ -244,6 +253,7 @@ void Model::CreateDrawingLists() {
 			addToList(t.v[2], t.n[2], t.t[2]);
 		}
 		glEnd();
+		glEndList();
 		drawLists.push_back(std::pair<std::string, int>(g.second.materialIdx, l));
 	}
 }

@@ -71,6 +71,7 @@ namespace gui
         // --- end of light precomputations ---
 
         m_framebuffer.bind();
+        m_framebuffer.clear(true);
 
         m_skybox.display(m_camera,m_bar.Atmos);
 
