@@ -183,12 +183,13 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 	for (auto var : drawLists)
 	{
 		m_shader.bind();
+		m_shader.set("view", camera.view());
+		m_shader.set("proj", camera.proj());
 		glCallList(var.second);
 		m_shader.unbind();
 	}
 	/*m_shader.bind();
-    m_shader.set("view", camera.view());
-    m_shader.set("proj", camera.proj());
+    
 
     m_shader.set("camera_pos", camera.pos());
     m_shader.set("light_count", (int)lights.size());
