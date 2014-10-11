@@ -5,7 +5,8 @@
 #include <cmath>
 
 aperture::aperture(fft_engine& fft)
-    : m_fft(fft), m_shader("aperture.vert", "aperture.frag")
+    : m_fft(fft), m_shader("aperture.vert", "aperture.frag"),
+      m_ghost_shader("ghost.vert", "ghost.frag")
 {
 
 }
@@ -72,6 +73,10 @@ void aperture::load_aperture(const transmission_function& tf,
     }
 
     LOG(INFO) << "Aperture successfully loaded.";
+    
+    // Try and compute a unique ID number for the
+    // aperture + scale combination we processed
+    m_flare_hash = (int)tf + (int)(1000 * scale);
 }
 
 static glm::vec3 curve[81] = {
@@ -223,11 +228,11 @@ std::pair<int, float> aperture::compensate(
     );
 }
 
-void aperture::render(const std::vector<light>& lights,
-                      const gl::texture2D& occlusion,
-                      const camera& camera,
-                      float i0,
-                      float f_number)
+void aperture::render_flare(const std::vector<light>& lights,
+                            const gl::texture2D& occlusion,
+                            const camera& camera,
+                            float intensity,
+                            float f_number)
 {
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
@@ -240,12 +245,11 @@ void aperture::render(const std::vector<light>& lights,
     occlusion.bind(1, GL_NEAREST, GL_NEAREST);
     m_shader.set("flare", 0);
     m_shader.set("occlusion", 1);
-
-    m_shader.set("intensity", i0);
     m_shader.set("max_lights", 8);
+    m_shader.set("intensity", intensity);
+    m_shader.set("f_number", f_number);
     m_shader.set("viewproj", camera.proj() * camera.view());
     m_shader.set("view_pos", camera.pos());
-    m_shader.set("f_number", f_number);
 
     for (size_t t = 0; t < lights.size(); ++t) {
         m_shader.set("lights[" + std::to_string(t) + "].pos",
@@ -292,6 +296,85 @@ void aperture::render(const std::vector<light>& lights,
 
     m_shader.unbind();
 
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+}
+
+static float uniform()
+{
+    return (float)rand() / RAND_MAX;
+}
+
+void aperture::render_ghosts(const std::vector<light>& lights,
+                             const gl::texture2D& occlusion,
+                             const camera& camera,
+                             float intensity,
+                             int ghost_count,
+                             float ghost_size)
+{
+    glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glViewport(0, 0, camera.dims().x, camera.dims().y);
+
+    m_ghost_shader.bind();
+    
+    occlusion.bind(0, GL_NEAREST, GL_NEAREST);
+    m_ghost_shader.set("occlusion", 0);
+    m_ghost_shader.set("max_lights", 8);
+    m_ghost_shader.set("intensity", intensity);
+    m_ghost_shader.set("viewproj", camera.proj() * camera.view());
+    m_ghost_shader.set("view_pos", camera.pos());
+    
+    for (size_t t = 0; t < lights.size(); ++t) {
+        auto cam_to_light = (glm::vec3)lights[t].pos
+                          - camera.pos() * lights[t].pos.w;
+
+        bool forward_facing = glm::dot(
+            glm::normalize(cam_to_light),
+            glm::normalize(camera.dir())) > 0;
+
+        glm::vec4 projected = camera.proj() * camera.view() * lights[t].pos;
+        projected /= projected.w;
+
+        float aspect = camera.aspect_ratio();
+
+        if (forward_facing) {
+            for (int t = 0; t < ghost_count; ++t) {
+                srand(100 * t + m_flare_hash);
+            
+                float p = exp(1 / sqrt(uniform())) - exp(1.0f);
+                float sz = ghost_size * (0.3f + pow(uniform(), 2.0f));
+                
+                m_ghost_shader.set("ghost_blur", uniform() * 0.45f + 0.35f);
+
+                m_ghost_shader.set("ghost_color",
+                    (0.00005f + uniform() * 0.0002f) *
+                    wavelength_rgb(uniform() * 300 + 400)
+                );
+                
+                float aspect = camera.aspect_ratio();
+
+                auto pos = glm::mix((glm::vec2)projected, glm::vec2(0), p);
+                if (p < 1) sz *= glm::sqrt(p); // ghosts smaller near flare
+                
+                glBegin(GL_QUADS);
+                glTexCoord3f(0.0f, 0.0f, (float)t);
+                glVertex2f(-sz + pos.x, -sz * aspect + pos.y);
+                glTexCoord3f(1.0f, 0.0f, (float)t);
+                glVertex2f(+sz + pos.x, -sz * aspect + pos.y);
+                glTexCoord3f(1.0f, 1.0f, (float)t);
+                glVertex2f(+sz + pos.x, +sz * aspect + pos.y);
+                glTexCoord3f(0.0f, 1.0f, (float)t);
+                glVertex2f(-sz + pos.x, +sz * aspect + pos.y);
+                glEnd();
+            }
+        }
+    }
+
+    m_ghost_shader.unbind();
+    
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
 }

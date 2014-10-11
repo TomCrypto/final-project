@@ -18,11 +18,6 @@ vec3 Uncharted2Tonemap(vec3 x)
     return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
 }
 
-float luminance(vec3 color)
-{
-    return dot(color, vec3(0.2126, 0.7152, 0.0722));
-}
-
 void main()
 {
     vec3 texColor = max(texture2D(render, uv).rgb, vec3(0.0));

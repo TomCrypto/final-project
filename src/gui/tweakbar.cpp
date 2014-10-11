@@ -67,6 +67,8 @@ namespace gui
         lens_density = 70;
         lens_flare_intensity = 25;
         lens_flare_f_number = 1.0f;
+        lens_ghost_count = 150;
+        lens_ghost_max_size = 0.18f;
         lens_aperture = PENTAGON;
         lens_diff_spread = 0.69f;
         lens_update_btn = true;
@@ -107,7 +109,23 @@ namespace gui
             " help='The f-number of the aperture'");
 
         TwAddSeparator(m_bar,
-            "lens_sep",
+            "lens_sep1",
+            " group='Lens'");
+
+        TwAddVarRW(m_bar,
+            "lens_ghost_count", TW_TYPE_INT32, &lens_ghost_count,
+            " label='Ghost count' group='Lens'"
+            " min=0 max=500"
+            " help='The number of lens flare ghosts'");
+
+        TwAddVarRW(m_bar,
+            "lens_ghost_max_size", TW_TYPE_FLOAT, &lens_ghost_max_size,
+            " label='Ghost max size' group='Lens'"
+            " min=0.05 max=0.3 step=0.01"
+            " help='The maximum ghost radius'");
+
+        TwAddSeparator(m_bar,
+            "lens_sep2",
             " group='Lens'");
 
         auto apertureType = TwDefineEnum("Aperture", nullptr, 0);

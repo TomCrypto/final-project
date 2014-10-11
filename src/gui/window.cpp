@@ -79,13 +79,18 @@ namespace gui
 		m_terrain.display(m_camera, lights);
 		m_tree.display(m_camera, lights);
 
-        const auto& occlusion = m_occlusion.query(lights,
-                                                  m_framebuffer,
-                                                  m_camera);
+        const auto& occlusion = m_occlusion.query(
+            lights, m_framebuffer, m_camera
+        );
 
-        m_aperture.render(lights, occlusion, m_camera,
-                          m_bar.lens_flare_intensity,
-                          m_bar.lens_flare_f_number);
+        m_aperture.render_flare(lights, occlusion, m_camera,
+                                m_bar.lens_flare_intensity,
+                                m_bar.lens_flare_f_number);
+
+        m_aperture.render_ghosts(lights, occlusion, m_camera,
+                                 m_bar.lens_flare_intensity,
+                                 m_bar.lens_ghost_count,
+                                 m_bar.lens_ghost_max_size);
 
         if (m_bar.lens_overlay) {
             m_overlay.render(lights,

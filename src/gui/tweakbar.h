@@ -54,6 +54,8 @@ namespace gui
         bool lens_overlay;
         float lens_flare_intensity;
         float lens_flare_f_number;
+        int lens_ghost_count;
+        float lens_ghost_max_size;
         transmission_function lens_aperture;
         float lens_diff_spread;
         bool lens_update_btn;
