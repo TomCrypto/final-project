@@ -3,6 +3,7 @@
 #include "utils/gl_utils.h"
 
 #include <glm/gtc/type_ptr.hpp>
+
 #include <functional>
 #include <stdexcept>
 #include <algorithm>
@@ -43,6 +44,10 @@ namespace gl
 
     shader& shader::operator=(const shader& other)
     {
+        glDeleteProgram(m_prog);
+        glDeleteShader(m_frag);
+        glDeleteShader(m_vert);
+    
         m_missing_vars = other.m_missing_vars;
         m_vert_name = other.m_vert_name;
         m_frag_name = other.m_frag_name;
@@ -66,6 +71,18 @@ namespace gl
 
         m_vert = glCreateShader(GL_VERTEX_SHADER);
         m_frag = glCreateShader(GL_FRAGMENT_SHADER);
+        
+        if (!m_vert) {
+            LOG(ERROR) << "Failed to create vertex shader.";
+            LOG(TRACE) << "glCreateShader failed.";
+            throw std::runtime_error("");
+        }
+        
+        if (!m_frag) {
+            LOG(ERROR) << "Failed to create fragment shader.";
+            LOG(TRACE) << "glCreateShader failed.";
+            throw std::runtime_error("");
+        }
 
         auto vert_src = load_file(base_path + vert_name);
         const char *vert_src_ptr = vert_src.c_str();
@@ -81,7 +98,7 @@ namespace gl
             LOG(ERROR) << "Failed to compile vertex shader '"
                        << vert_name << "':";
             LOG(TRACE) << vert_log();
-            throw 0;
+            throw std::runtime_error("");
         }
 
         glCompileShader(m_frag);
@@ -90,10 +107,17 @@ namespace gl
             LOG(ERROR) << "Failed to compile fragment shader '"
                        << frag_name << "':";
             LOG(TRACE) << frag_log();
-            throw 0;
+            throw std::runtime_error("");
         }
 
         m_prog = glCreateProgram();
+        
+        if (!m_prog) {
+            LOG(ERROR) << "Failed to create shader program.";
+            LOG(TRACE) << "glCreateProgram failed.";
+            throw std::runtime_error("");
+        }
+        
         glAttachShader(m_prog, m_vert);
         glAttachShader(m_prog, m_frag);
         glLinkProgram(m_prog);
@@ -103,7 +127,7 @@ namespace gl
                        << vert_name << ", " << frag_name
                        << ">:";
             LOG(TRACE) << link_log();
-            throw 0;
+            throw std::runtime_error("");
         }
     }
 
