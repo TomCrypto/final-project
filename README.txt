@@ -43,15 +43,9 @@ Folder Contents
 External Links
 --------------
 
-http://freeimage.sourceforge.net/
-http://www.fftw.org/
-http://anttweakbar.sourceforge.net/
-http://glew.sourceforge.net/
 http://glm.g-truc.net/0.9.5/index.html
+http://anttweakbar.sourceforge.net/
+http://freeimage.sourceforge.net/
 http://freeglut.sourceforge.net/
-
-http://resources.mpi-inf.mpg.de/lensflareRendering/
-https://graphics.tudelft.nl/Publications-new/2013/LE13/PracticalReal-TimeLens.pdf
-http://www.graphics.stanford.edu/papers/nightsky/
-http://www.cs.utah.edu/~shirley/papers/sunsky/
-http://escholarship.org/uc/item/5n07m4p6
+http://glew.sourceforge.net/
+http://www.fftw.org/
