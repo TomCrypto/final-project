@@ -341,8 +341,8 @@ void aperture::render_ghosts(const std::vector<light>& lights,
         float aspect = camera.aspect_ratio();
 
         if (forward_facing) {
-            for (int t = 0; t < ghost_count; ++t) {
-                srand(100 * t + m_flare_hash);
+            for (int i = 0; i < ghost_count; ++i) {
+                srand(100 * i + m_flare_hash);
             
                 float p = exp(1 / sqrt(uniform())) - exp(1.0f);
                 float sz = ghost_size * (0.3f + pow(uniform(), 2.0f));

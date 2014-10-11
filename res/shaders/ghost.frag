@@ -81,7 +81,7 @@ uniform vec3 ghost_color;
 uniform float ghost_blur;
 
 varying vec2 uv;
-varying float light;
+varying float light_f;
 
 vec3 get_occlusion(int light_id)
 {
@@ -103,7 +103,7 @@ void main()
         return;
     }
     
-    int lid = int(light);
+    int lid = int(light_f);
     vec3 color = vec3(1);
     
     if (dist > ghost_blur) {
