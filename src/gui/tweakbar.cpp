@@ -44,22 +44,8 @@ namespace gui
                        const std::string& title)
       : basic_bar(name, title)
     {
-        lens_exposure = 0.18f;
-        lens_overlay = true;
-        lens_reflectivity = 0.35f;
-        lens_density = 70;
-        lens_flare_intensity = 25;
-        lens_aperture = PENTAGON;
-        lens_diff_spread = 0.69f;
-
-        cam_move_speed = 3.5f;
-        cam_sensitivity = 1.5f;
-        cam_fov = 50;
-		color1 = glm::vec3(0.75f, 0.25f, 0.25f);
-		color2 = glm::vec3(0.75f, 0.25f, 0.25f);
-		color3 = glm::vec3(0.75f, 0.25f, 0.25f);
-		color4 = glm::vec3(0.75f, 0.25f, 0.25f);
-        aperture_regen_btn = true;
+		/* === atmospheric options === */
+		
 		Atmos.theta = 90.0f;
 		Atmos.phi = 90.0f;
 
@@ -72,6 +58,18 @@ namespace gui
             "phi", TW_TYPE_FLOAT, &Atmos.phi,
             " label='phi' group='Atmospheric'"
             " min=0 max=180 step=0.05");
+
+        /* === lens options === */
+
+        lens_exposure = 0.18f;
+        lens_overlay = true;
+        lens_reflectivity = 0.35f;
+        lens_density = 70;
+        lens_flare_intensity = 25;
+        lens_flare_f_number = 1.0f;
+        lens_aperture = PENTAGON;
+        lens_diff_spread = 0.69f;
+        lens_update_btn = true;
 
         TwAddVarRW(m_bar,
             "lens_exposure", TW_TYPE_FLOAT, &lens_exposure,
@@ -98,9 +96,15 @@ namespace gui
 
         TwAddVarRW(m_bar,
             "lens_flare_intensity", TW_TYPE_FLOAT, &lens_flare_intensity,
-            " label='Flare I0' group='Lens'"
+            " label='Flare intensity' group='Lens'"
             " min=0 max=100 step=0.1"
             " help='Intensity of the lens flares'");
+
+        TwAddVarRW(m_bar,
+            "lens_flare_f_number", TW_TYPE_FLOAT, &lens_flare_f_number,
+            " label='Flare f-number' group='Lens'"
+            " min=1.0 max=3.5 step=0.01"
+            " help='The f-number of the aperture'");
 
         TwAddSeparator(m_bar,
             "lens_sep",
@@ -125,24 +129,15 @@ namespace gui
             " help='Amount of spread in the lens diffraction'");
 
         TwAddButton(m_bar,
-            "aperture_regen_btn", btn_cb, &aperture_regen_btn,
+            "lens_update_btn", btn_cb, &lens_update_btn,
             " label='Update Aperture' group='Lens'");
 
-		/*TwAddVarRW(m_bar,
-			"sky_color", TW_TYPE_COLOR3F, &skycolor,
-			" label='Sky Color' colormode=hls");*/
-		/*TwAddVarRW(m_bar,
-			"color1", TW_TYPE_COLOR3F, &color1,
-			" label='Color1' colormode=hls");
-		TwAddVarRW(m_bar,
-			"color2", TW_TYPE_COLOR3F, &color2,
-			" label='Color2' colormode=hls");
-		TwAddVarRW(m_bar,
-			"color3", TW_TYPE_COLOR3F, &color3,
-			" label='Color3' colormode=hls");
-		TwAddVarRW(m_bar,
-			"color4", TW_TYPE_COLOR3F, &color4,
-			" label='Color4' colormode=hls");*/
+        /* === camera options === */
+
+        cam_move_speed = 3.5f;
+        cam_sensitivity = 1.5f;
+        cam_fov = 50;
+        cam_locked = false;
 
         TwAddVarRW(m_bar,
             "cam_move_speed", TW_TYPE_FLOAT, &cam_move_speed,
@@ -166,6 +161,8 @@ namespace gui
             "cam_locked", TW_TYPE_BOOLCPP, &cam_locked,
             " label='Cursor Locked' group='Navigation'"
             " help='Right-click to lock or unlock cursor'");
+
+        /* === general bar settings === */
 
         TwDefine((m_name + " contained=true").c_str());
         TwDefine((m_name + " size='220 360'").c_str());

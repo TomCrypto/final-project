@@ -37,7 +37,8 @@ public:
     void render(const std::vector<light>& lights,
                 const gl::texture2D& occlusion,
                 const camera& camera,
-                float i0);
+                float i0,
+                float f_number);
 
 private:
     aperture& operator=(const aperture& other);

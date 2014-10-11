@@ -84,7 +84,8 @@ namespace gui
                                                   m_camera);
 
         m_aperture.render(lights, occlusion, m_camera,
-                          m_bar.lens_flare_intensity);
+                          m_bar.lens_flare_intensity,
+                          m_bar.lens_flare_f_number);
 
         if (m_bar.lens_overlay) {
             m_overlay.render(lights,
@@ -117,8 +118,8 @@ namespace gui
         m_bar.cam_locked = m_cursor_locked;
         m_bar.refresh();
 
-        if (m_bar.aperture_regen_btn) {
-            m_bar.aperture_regen_btn = false;
+        if (m_bar.lens_update_btn) {
+            m_bar.lens_update_btn = false;
 
             m_aperture.load_aperture(m_bar.lens_aperture,
                                      m_bar.lens_diff_spread);
