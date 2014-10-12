@@ -242,29 +242,16 @@ void aperture::render_flare(const std::vector<light>& lights,
 
     m_shader.bind();
     
-    occlusion.bind(1, GL_NEAREST, GL_NEAREST);
-    m_shader.set("flare", 0);
-    m_shader.set("occlusion", 1);
+    m_shader.set("occlusion", occlusion, 1, GL_NEAREST, GL_NEAREST);
     m_shader.set("max_lights", 8);
     m_shader.set("intensity", intensity);
     m_shader.set("f_number", f_number);
-    m_shader.set("viewproj", camera.proj() * camera.view());
-    m_shader.set("view_pos", camera.pos());
-
-    for (size_t t = 0; t < lights.size(); ++t) {
-        m_shader.set("lights[" + std::to_string(t) + "].pos",
-                     lights[t].pos);
-        m_shader.set("lights[" + std::to_string(t) + "].radius",
-                     lights[t].radius);
-    }
 
     for (size_t t = 0; t < lights.size(); ++t) {
         auto comp = compensate(camera, lights[t]);
         float s = comp.second * f_number; // compensation
-        m_flares[comp.first].get()->bind(0,
-            GL_LINEAR, GL_LINEAR,
-            GL_CLAMP_TO_EDGE,
-            GL_CLAMP_TO_EDGE);
+        m_shader.set("flare", *m_flares[comp.first].get(), 0,
+            GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
         const float w0 = 2.0f * f_number;
 
         auto cam_to_light = (glm::vec3)lights[t].pos
@@ -321,13 +308,10 @@ void aperture::render_ghosts(const std::vector<light>& lights,
 
     m_ghost_shader.bind();
     
-    occlusion.bind(0, GL_NEAREST, GL_NEAREST);
-    m_ghost_shader.set("occlusion", 0);
+    m_shader.set("occlusion", occlusion, 0, GL_NEAREST, GL_NEAREST);
     m_ghost_shader.set("max_lights", 8);
     m_ghost_shader.set("intensity", intensity);
     m_ghost_shader.set("ghost_brightness", ghost_brightness);
-    m_ghost_shader.set("viewproj", camera.proj() * camera.view());
-    m_ghost_shader.set("view_pos", camera.pos());
     
     for (size_t t = 0; t < lights.size(); ++t) {
         auto cam_to_light = (glm::vec3)lights[t].pos
@@ -346,8 +330,8 @@ void aperture::render_ghosts(const std::vector<light>& lights,
             for (int i = 0; i < ghost_count; ++i) {
                 srand(100 * i + m_flare_hash);
             
-                float p = exp(1 / std::pow(uniform(), 0.25f)) - exp(1.0f);
-                float sz = ghost_size * (0.3f + pow(uniform(), 2.0f));
+                float p = exp(1 / std::pow(uniform(), 0.35f)) - exp(1.0f);
+                float sz = ghost_size * (0.3f + pow(uniform(), 1.5f));
                 
                 m_ghost_shader.set("ghost_blur", uniform() * 0.45f + 0.35f);
 

@@ -82,8 +82,7 @@ void overlay::render(const std::vector<light>& lights,
     m_shader.set("inv_ratio", 1.0f / camera.aspect_ratio());
     m_shader.set("reflectivity", reflectivity);
 
-    occlusion.bind(0, GL_NEAREST, GL_NEAREST);
-    m_shader.set("occlusion", 0);
+    m_shader.set("occlusion", occlusion, 0, GL_NEAREST, GL_NEAREST);
     m_shader.set("max_lights", 8);
 
     for (int t = 0; t < std::min((int)lights.size(), 8); ++t) {

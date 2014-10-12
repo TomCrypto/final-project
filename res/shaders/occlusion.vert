@@ -7,9 +7,7 @@ struct light
 };
 
 uniform mat4 viewproj;
-uniform vec3 view_pos;
 
-uniform int max_lights;
 uniform light lights[8];
 
 uniform sampler2D render;
