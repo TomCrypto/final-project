@@ -1,4 +1,10 @@
-// simple class that takes in frametimes and computes fps
+/* Purpose:
+ *
+ *  - acts as a very simple framerate counter
+ *
+ * This class simply keeps a rolling history of the last N frametimes in order
+ * to average them when requested (the window class then derives the FPS).
+*/
 
 #ifndef GUI_FPS_COUNTER_H
 #define GUI_FPS_COUNTER_H

@@ -1,10 +1,19 @@
-// extremely simple wrapper around an AntTweakBar bar instance
+/* Purpose:
+ *
+ *  - very simple wrapper around the AntTweakBar GUI library
+ *
+ * This class contains all our program parameters, which are directly modified
+ * by the AntTweakBar library and can then be read directly each frame through
+ * the m_bar instance in the window class.
+*/
 
 #ifndef GUI_TWEAKBAR_H
 #define GUI_TWEAKBAR_H
 
 #include <AntTweakBar.h>
 #include <glm/glm.hpp>
+
+// TODO: move those parameter structs/types into a types.h header?
 
 #include "core/skybox.h"
 #include "core/aperture.h"
@@ -14,15 +23,12 @@
 namespace gui
 {
     // Basic AntTweakBar bar which takes care of boilerplate stuff
-    // Do not instantiate it, rather extend main_bar further below
+    // Do not instantiate it, please extend main_bar further below
     class basic_bar
     {
     public:
-        basic_bar(const std::string& name,
-                  const std::string& title);
+        basic_bar(const std::string& name);
         ~basic_bar();
-
-        void set_title(const std::string& title);
 
         void refresh();
 
@@ -35,7 +41,7 @@ namespace gui
     };
 
     // The main configuration bar for the program, just add more
-    // members and initialize them in the constructor
+    // members and create/initialize them in the constructor
     class main_bar : public basic_bar
     {
     public:
@@ -56,6 +62,7 @@ namespace gui
         float lens_flare_f_number;
         int lens_ghost_count;
         float lens_ghost_max_size;
+        float lens_ghost_brightness;
         transmission_function lens_aperture;
         float lens_diff_spread;
         bool lens_update_btn;

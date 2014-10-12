@@ -310,7 +310,8 @@ void aperture::render_ghosts(const std::vector<light>& lights,
                              const camera& camera,
                              float intensity,
                              int ghost_count,
-                             float ghost_size)
+                             float ghost_size,
+                             float ghost_brightness)
 {
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
@@ -324,6 +325,7 @@ void aperture::render_ghosts(const std::vector<light>& lights,
     m_ghost_shader.set("occlusion", 0);
     m_ghost_shader.set("max_lights", 8);
     m_ghost_shader.set("intensity", intensity);
+    m_ghost_shader.set("ghost_brightness", ghost_brightness);
     m_ghost_shader.set("viewproj", camera.proj() * camera.view());
     m_ghost_shader.set("view_pos", camera.pos());
     
@@ -344,7 +346,7 @@ void aperture::render_ghosts(const std::vector<light>& lights,
             for (int i = 0; i < ghost_count; ++i) {
                 srand(100 * i + m_flare_hash);
             
-                float p = exp(1 / sqrt(uniform())) - exp(1.0f);
+                float p = exp(1 / std::pow(uniform(), 0.25f)) - exp(1.0f);
                 float sz = ghost_size * (0.3f + pow(uniform(), 2.0f));
                 
                 m_ghost_shader.set("ghost_blur", uniform() * 0.45f + 0.35f);

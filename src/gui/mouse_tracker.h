@@ -1,4 +1,12 @@
-// keeps track of the mouse position and outputs movement deltas
+/* Purpose:
+ *
+ *  - tracks the mouse movement
+ *  - computes difference in mouse position between frames
+ *
+ * This class is used for the ``first person camera'' feature where the cursor
+ * is locked in the center of the window so that the user can move around with
+ * only mouse movements without needing to click and drag.
+*/
 
 #ifndef GUI_MOUSE_TRACKER_H
 #define GUI_MOUSE_TRACKER_H

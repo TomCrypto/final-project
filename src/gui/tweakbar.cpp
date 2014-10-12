@@ -2,7 +2,6 @@
 
 #include "gui/tweakbar.h"
 
-#include <FreeImage.h>
 #include <stdexcept>
 
 namespace gui
@@ -13,26 +12,18 @@ namespace gui
         *((bool*)user_data) = true;
     }
 
-    basic_bar::basic_bar(const std::string& name,
-                         const std::string& title)
+    basic_bar::basic_bar(const std::string& name)
     {
         if (!(m_bar = TwNewBar((m_name = name).c_str()))) {
             LOG(ERROR) << "Failed to create tweakbar.";
             LOG(TRACE) << "TwNewBar failed.";
             throw std::runtime_error("");
         }
-
-        set_title(title);
     }
 
     basic_bar::~basic_bar()
     {
         TwDeleteBar(m_bar);
-    }
-
-    void basic_bar::set_title(const std::string& title)
-    {
-        TwDefine((m_name + " label='" + title + "'").c_str());
     }
 
     void basic_bar::refresh()
@@ -42,7 +33,7 @@ namespace gui
 
     main_bar::main_bar(const std::string& name,
                        const std::string& title)
-      : basic_bar(name, title)
+      : basic_bar(name)
     {
 		/* === atmospheric options === */
 		
@@ -63,12 +54,13 @@ namespace gui
 
         lens_exposure = 0.18f;
         lens_overlay = true;
-        lens_reflectivity = 0.35f;
-        lens_density = 70;
-        lens_flare_intensity = 25;
+        lens_reflectivity = 0.16f;
+        lens_density = 80;
+        lens_flare_intensity = 15;
         lens_flare_f_number = 1.0f;
         lens_ghost_count = 150;
-        lens_ghost_max_size = 0.18f;
+        lens_ghost_max_size = 0.23f;
+        lens_ghost_brightness = 0.25f;
         lens_aperture = PENTAGON;
         lens_diff_spread = 0.69f;
         lens_update_btn = true;
@@ -123,6 +115,12 @@ namespace gui
             " label='Ghost max size' group='Lens'"
             " min=0.05 max=0.3 step=0.01"
             " help='The maximum ghost radius'");
+
+        TwAddVarRW(m_bar,
+            "lens_ghost_brightness", TW_TYPE_FLOAT, &lens_ghost_brightness,
+            " label='Ghost brightness' group='Lens'"
+            " min=0.01 max=0.75 step=0.01"
+            " help='The intensity of the ghosts'");
 
         TwAddSeparator(m_bar,
             "lens_sep2",
@@ -182,6 +180,7 @@ namespace gui
 
         /* === general bar settings === */
 
+        TwDefine((m_name + " label='" + title + "'").c_str());
         TwDefine((m_name + " contained=true").c_str());
         TwDefine((m_name + " size='220 360'").c_str());
     }

@@ -44,7 +44,8 @@ public:
                        const camera& camera,
                        float intensity,
                        int ghost_count,
-                       float ghost_size);
+                       float ghost_size,
+                       float ghost_brightness);
 
 private:
     aperture& operator=(const aperture& other);
