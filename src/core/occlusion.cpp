@@ -36,10 +36,7 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
 
     // set up our occlusion shader and attach the rendered stuff to it
     m_shader.bind();
-    copy.bind(0);
-    m_shader.set("render", 0);
-    m_shader.set("max_lights", (int)max_lights);
-    m_shader.set("view_pos", camera.pos());
+    m_shader.set("render", copy, 0);
     m_shader.set("viewproj", camera.proj() * camera.view());
 
     for (size_t t = 0; t < light_count; ++t) {

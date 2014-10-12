@@ -242,6 +242,14 @@ namespace gl
         glUniformMatrix4fv((*this)[var], 1, GL_FALSE, glm::value_ptr(value));
     }
 
+    void shader::set(const std::string& var, const gl::texture2D& tex,
+                     int texture_unit,
+                     int min_filter, int mag_filter,
+                     int wrap_s, int wrap_t) {
+        tex.bind(texture_unit, min_filter, mag_filter, wrap_s, wrap_t);
+        set(var, texture_unit);
+    }
+
     void shader::fullscreen_quad()
     {
         glBegin(GL_QUADS);
