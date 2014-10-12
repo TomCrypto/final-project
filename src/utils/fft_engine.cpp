@@ -1,7 +1,8 @@
 #include <easylogging.h>
-#include <stdexcept>
 
 #include "utils/fft_engine.h"
+
+#include <stdexcept>
 
 static fftwf_complex* buf_alloc(const glm::ivec2& dims)
 {

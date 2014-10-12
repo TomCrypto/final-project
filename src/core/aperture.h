@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <fftw3.h>
 
-#include <memory>
 #include <vector>
 #include <string>
 #include <map>

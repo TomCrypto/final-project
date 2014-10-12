@@ -1,10 +1,23 @@
+/* Purpose:
+ *
+ *  - provides Fourier transform and image convolution services
+ *
+ * This class is essentially a massive cache of FFTW plans, to make it as easy
+ * to use as possible. As the contents of this class takes a lot of memory, it
+ * was essential to make it memory-leak-free, hence it uses smart pointers and
+ * an unordered_map to guarantee memory is freed as soon as possible.
+ *
+ * It is also noncopyable, to force passing it by reference.
+*/
+
 #ifndef UTILS_FFT_ENGINE_H
 #define UTILS_FFT_ENGINE_H
 
 #include <glm/glm.hpp>
 #include <fftw3.h>
-#include <memory>
+
 #include <unordered_map>
+#include <memory>
 
 #include "utils/image.h"
 
@@ -26,11 +39,15 @@ public:
     image convolve_disk(const image& input, int radius);
 
 private:
-    struct ivec2_order_helper
+    /* ivec2 hash function */
+    struct ivec2_hash_helper
     {
         size_t operator()(const glm::ivec2& k) const
         {
-            return std::hash<int>()(k.x) ^ std::hash<int>()(k.y);
+            size_t p = 13;
+            p ^= 17 * std::hash<int>()(k.x);
+            p ^= 23 * std::hash<int>()(k.y);
+            return p;
         }
 
         bool operator()(const glm::ivec2& a, const glm::ivec2& b) const
@@ -48,8 +65,8 @@ private:
 
     std::unordered_map<glm::ivec2,
                        std::unique_ptr<fftwf_plan_s, plan_free_fn>,
-                       ivec2_order_helper,
-                       ivec2_order_helper> m_plans;
+                       ivec2_hash_helper,
+                       ivec2_hash_helper> m_plans;
     std::unique_ptr<fftwf_complex, buf_free_fn> m_fft_buf;
     std::unique_ptr<fftwf_complex, buf_free_fn> m_tmp_buf;
 };
