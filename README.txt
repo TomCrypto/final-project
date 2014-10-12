@@ -14,6 +14,9 @@ and simple image processing, FFTW for calculating two-dimensional fast Fourier
 transforms (an important part of the lens flare pipeline) and AntTweakBar, for
 the simple GUI widget used to interact with our program.
 
+The code is written in standard C++11 and should run on Visual Studio 2012 and
+later, g++, clang++, and the Intel C++ compiler on Linux. OpenGL 2.1 required.
+
 Instructions
 ------------
 
@@ -39,6 +42,11 @@ Folder Contents
         - `lib`: third-party libraries, excluding OpenGL-related libs
         - `res`: assets used in our project (textures, models, etc.)
         - `src`: C/C++ source code and headers
+
+    The `src/core` folder contains the actual implementations of the different
+    rendering subsystems. The `src/gui` folder contains only source pertaining
+    to the user interface, and `src/utils` general purpose utilities. Note the
+    different vertex and fragment shaders are in the `res/shaders` folder.
 
 External Links
 --------------
