@@ -19,10 +19,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
-#include <AntTweakBar.h>
-#include <FreeImage.h>
 #include <glm/glm.hpp>
-#include <fftw3.h>
 
 #include <functional>
 #include <stdexcept>

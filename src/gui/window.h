@@ -1,13 +1,15 @@
+/* Purpose:
+ *
+ *  - controls the program's main loop
+ *
+ * The window class implements the program's high level logic, as evidenced by
+ * the fact that it includes essentially every single gui and core header.
+*/
+
 #ifndef GUI_WINDOW_H
 #define GUI_WINDOW_H
 
-#include <GL/glew.h>
-#include <GL/freeglut.h>
-
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
-#include <FreeImage.h>
-#include <fftw3.h>
 
 #include <functional>
 #include <stdexcept>
@@ -29,8 +31,6 @@
 
 namespace gui
 {
-    // This controls the main window and the program logic. There should only
-    // be one instance of this class, and initialize() should be called first
     class window
     {
     public:
@@ -41,7 +41,6 @@ namespace gui
         window& operator=(const window& other);
         window(const window& other);
 
-        // Different window event callbacks (logic goes here)
         void on_key_press(unsigned char key);
         void on_key_up(unsigned char key);
         void on_mouse_down(int button);

@@ -1,10 +1,26 @@
-// manages an HDR framebuffer with tonemapping capabilities
+/* Purpose:
+ *
+ *  - manages an OpenGL floating-point framebuffer
+ *  - has high dynamic range capabilities using GL_FLOAT
+ *  - also allows temporarily rendering to other textures
+ *  - automatically handles tonemapping into the backbuffer
+ *
+ * This framebuffer is designed such that the rest of the program doesn't even
+ * know that they are rendering into an HDR texture - it behaves as a standard
+ * backbuffer.
+ *
+ * The only class which makes use of more advanced features of the framebuffer
+ * is the occlusion class, which needs a copy of the current frame data, using
+ * frame_copy(), and also needs to render into its own texture with bind_as().
+*/
 
 #ifndef GUI_FRAMEBUFFER_H
 #define GUI_FRAMEBUFFER_H
 
-#include <glm/glm.hpp>
 #include <GL/glew.h>
+
+#include <glm/glm.hpp>
+
 #include <string>
 
 #include "utils/gl_utils.h"

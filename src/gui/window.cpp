@@ -1,4 +1,5 @@
 #include <easylogging.h>
+
 #include "gui/window.h"
 
 using namespace std::placeholders;
@@ -91,7 +92,8 @@ namespace gui
         m_aperture.render_ghosts(lights, occlusion, m_camera,
                                  m_bar.lens_flare_intensity,
                                  m_bar.lens_ghost_count,
-                                 m_bar.lens_ghost_max_size);
+                                 m_bar.lens_ghost_max_size,
+                                 m_bar.lens_ghost_brightness);
 
         if (m_bar.lens_overlay) {
             m_overlay.render(lights,
@@ -127,8 +129,8 @@ namespace gui
         if (m_bar.lens_update_btn) {
             m_bar.lens_update_btn = false;
 
-            //m_aperture.load_aperture(m_bar.lens_aperture,
-            //                         m_bar.lens_diff_spread);
+            m_aperture.load_aperture(m_bar.lens_aperture,
+                                     m_bar.lens_diff_spread);
         }
 
         if (m_overlay.get_density() != m_bar.lens_density) {

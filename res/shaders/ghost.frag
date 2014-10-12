@@ -79,6 +79,7 @@ uniform int max_lights;
 uniform float intensity;
 uniform vec3 ghost_color;
 uniform float ghost_blur;
+uniform float ghost_brightness;
 
 varying vec2 uv;
 varying float light_f;
@@ -112,6 +113,7 @@ void main()
 
     color *= 1 + 0.5 * snoise(0.4 * (uv * 2 - 1));
     color *= luminance(get_occlusion(lid));
+    color *= ghost_brightness;
     color *= ghost_color;
     color *= intensity;
 

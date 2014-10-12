@@ -1,5 +1,10 @@
 #include <easylogging.h>
+
 #include "gui/context.h"
+
+#include <AntTweakBar.h>
+#include <FreeImage.h>
+#include <fftw3.h>
 
 namespace gui
 {
@@ -162,9 +167,7 @@ namespace gui
         glutInit(&saved_argc, saved_argv);
         glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
         glutInitWindowSize(window_dims.x, window_dims.y);
-        glutInitWindowPosition(
-            (glutGet(GLUT_SCREEN_WIDTH)-window_dims.x)/2,
-            (glutGet(GLUT_SCREEN_HEIGHT)-window_dims.y)/2);
+        glutInitWindowPosition(100, 100);
         glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,
                       GLUT_ACTION_GLUTMAINLOOP_RETURNS);
         m_window = glutCreateWindow(window_title.c_str());

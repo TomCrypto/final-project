@@ -7,6 +7,12 @@
 #include <windows.h>
 #endif
 
+/* Very high accuracy timer.
+ *
+ * Windows: QueryPerformanceCounter
+ * Unix: clock_gettime (monotonic)
+*/
+
 static double current_time()
 {
     #if defined(_WIN32)
