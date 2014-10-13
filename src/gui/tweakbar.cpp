@@ -119,7 +119,7 @@ namespace gui
             "lens_sep2",
             " group='Lens'");
 
-        auto apertureType = TwDefineEnum("Aperture", nullptr, 0);
+        auto apertureType = TwDefineEnum("transmission_function", nullptr, 0);
 
         TwAddVarRW(m_bar,
             "lens_aperture", apertureType, &lens_aperture,
