@@ -57,7 +57,7 @@ namespace gui
         lens_reflectivity = 0.16f;
         lens_density = 80;
         lens_flare_intensity = 15;
-        lens_ghost_count = 150;
+        lens_ghost_count = 115;
         lens_ghost_max_size = 0.16f;
         lens_ghost_brightness = 0.15f;
         lens_aperture = OCTAGON;
