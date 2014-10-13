@@ -261,7 +261,7 @@ namespace gui
         has_failed = true;
     }
 
-    void context::start()
+    void context::main_loop()
     {
         glutMainLoop();
     }
