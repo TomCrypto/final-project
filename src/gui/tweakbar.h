@@ -59,12 +59,11 @@ namespace gui
         float lens_reflectivity;
         bool lens_overlay;
         float lens_flare_intensity;
-        float lens_flare_f_number;
         int lens_ghost_count;
         float lens_ghost_max_size;
         float lens_ghost_brightness;
         transmission_function lens_aperture;
-        float lens_diff_spread;
+        float lens_aperture_f_number;
         bool lens_update_btn;
 
         /* === camera options === */

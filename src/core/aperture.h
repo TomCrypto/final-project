@@ -30,13 +30,12 @@ public:
     aperture(fft_engine& fft);
 
     void load_aperture(const transmission_function& tf,
-                       float scale);
+                       float f_number);
 
     void render_flare(const std::vector<light>& lights,
                       const gl::texture2D& occlusion,
                       const camera& camera,
-                      float intensity,
-                      float f_number);
+                      float intensity);
 
     void render_ghosts(const std::vector<light>& lights,
                        const gl::texture2D& occlusion,
@@ -56,6 +55,7 @@ private:
     gl::shader m_ghost_shader;
     fft_engine& m_fft;
     int m_flare_hash;
+    float m_f_number;
 
     image get_cfft(const image& aperture);
     image get_flare(const image& cfft, int radius);

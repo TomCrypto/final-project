@@ -86,8 +86,7 @@ namespace gui
         );
 
         m_aperture.render_flare(lights, occlusion, m_camera,
-                                m_bar.lens_flare_intensity,
-                                m_bar.lens_flare_f_number);
+                                m_bar.lens_flare_intensity);
 
         m_aperture.render_ghosts(lights, occlusion, m_camera,
                                  m_bar.lens_flare_intensity,
@@ -96,9 +95,7 @@ namespace gui
                                  m_bar.lens_ghost_brightness);
 
         if (m_bar.lens_overlay) {
-            m_overlay.render(lights,
-                             occlusion,
-                             m_camera,
+            m_overlay.render(lights, occlusion, m_camera,
                              m_bar.lens_reflectivity);
         }
 
@@ -130,7 +127,7 @@ namespace gui
             m_bar.lens_update_btn = false;
 
             m_aperture.load_aperture(m_bar.lens_aperture,
-                                     m_bar.lens_diff_spread);
+                                     m_bar.lens_aperture_f_number);
         }
 
         if (m_overlay.get_density() != m_bar.lens_density) {
