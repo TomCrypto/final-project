@@ -133,7 +133,7 @@ namespace gui
 
         TwAddVarRW(m_bar,
             "lens_aperture_f_number", TW_TYPE_FLOAT, &lens_aperture_f_number,
-            " label='Aperture f-number' group='Lens'"
+            " label='F-number' group='Lens'"
             " min=1.0 max=8.0 step=0.1"
             " help='The f-number of the aperture'");
 

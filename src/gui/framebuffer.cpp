@@ -145,12 +145,15 @@ void framebuffer::render(float exposure)
     }
 
     m_shader.bind();
-    m_tex.bind(0);
-
-    m_shader.set("render", 0);
+    m_shader.set("render", m_tex, 0);
     m_shader.set("exposure", exposure);
 
-    m_shader.fullscreen_quad();
+    glBegin(GL_QUADS);
+    glVertex2f(-1, -1);
+    glVertex2f(+1, -1);
+    glVertex2f(+1, +1);
+    glVertex2f(-1, +1);
+    glEnd();
 
     m_shader.unbind();
 }
@@ -163,10 +166,15 @@ const gl::texture2D& framebuffer::frame_copy()
     bind_as(m_cpy);
 
     m_cpy_shader.bind();
-    m_tex.bind(0);
-    m_cpy_shader.set("render", 0);
+    m_cpy_shader.set("render", m_tex, 0);
 
-    m_cpy_shader.fullscreen_quad();
+    glBegin(GL_QUADS);
+    glVertex2f(-1, -1);
+    glVertex2f(+1, -1);
+    glVertex2f(+1, +1);
+    glVertex2f(-1, +1);
+    glEnd();
+
     m_cpy_shader.unbind();
 
     bind();

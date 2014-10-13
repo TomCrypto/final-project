@@ -47,7 +47,7 @@ namespace gl
         glDeleteProgram(m_prog);
         glDeleteShader(m_frag);
         glDeleteShader(m_vert);
-    
+
         m_missing_vars = other.m_missing_vars;
         m_vert_name = other.m_vert_name;
         m_frag_name = other.m_frag_name;
@@ -71,13 +71,13 @@ namespace gl
 
         m_vert = glCreateShader(GL_VERTEX_SHADER);
         m_frag = glCreateShader(GL_FRAGMENT_SHADER);
-        
+
         if (!m_vert) {
             LOG(ERROR) << "Failed to create vertex shader.";
             LOG(TRACE) << "glCreateShader failed.";
             throw std::runtime_error("");
         }
-        
+
         if (!m_frag) {
             LOG(ERROR) << "Failed to create fragment shader.";
             LOG(TRACE) << "glCreateShader failed.";
@@ -111,13 +111,13 @@ namespace gl
         }
 
         m_prog = glCreateProgram();
-        
+
         if (!m_prog) {
             LOG(ERROR) << "Failed to create shader program.";
             LOG(TRACE) << "glCreateProgram failed.";
             throw std::runtime_error("");
         }
-        
+
         glAttachShader(m_prog, m_vert);
         glAttachShader(m_prog, m_frag);
         glLinkProgram(m_prog);
@@ -248,16 +248,6 @@ namespace gl
                      int wrap_s, int wrap_t) {
         tex.bind(texture_unit, min_filter, mag_filter, wrap_s, wrap_t);
         set(var, texture_unit);
-    }
-
-    void shader::fullscreen_quad()
-    {
-        glBegin(GL_QUADS);
-        glVertex2f(-1, -1);
-        glVertex2f(+1, -1);
-        glVertex2f(+1, +1);
-        glVertex2f(-1, +1);
-        glEnd();
     }
 
     bool shader::has_compiled(GLuint shader) const
