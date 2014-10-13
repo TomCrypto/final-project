@@ -16,7 +16,7 @@ static const int radii[] = { 2, 4, 10, 28, 75 };
 
 // This seems to be the sweet spot of frequency
 // sampling resolution versus spectral leakage
-static const float quality = 1024;
+static const int quality = 1024;
 
 void aperture::load_aperture(const transmission_function& tf,
                              float scale)
