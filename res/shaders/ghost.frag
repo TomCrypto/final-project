@@ -76,6 +76,7 @@ float snoise(vec2 v)
 uniform sampler2D occlusion;
 
 uniform int max_lights;
+uniform float f_number;
 uniform float intensity;
 uniform vec3 ghost_color;
 uniform float ghost_blur;
@@ -103,16 +104,17 @@ void main()
         gl_FragColor = vec4(0, 0, 0, 1);
         return;
     }
-    
+
     int lid = int(light_f);
     vec3 color = vec3(1);
-    
+
     if (dist > ghost_blur) {
         color *= pow((1 - dist) / (1 - ghost_blur), 5);
     }
 
     color *= 1 + 0.5 * snoise(0.4 * (uv * 2 - 1));
     color *= luminance(get_occlusion(lid));
+    color *= pow(f_number, -1);
     color *= ghost_brightness;
     color *= ghost_color;
     color *= intensity;

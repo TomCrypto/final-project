@@ -36,7 +36,7 @@ namespace gui
       : basic_bar(name)
     {
 		/* === atmospheric options === */
-		
+
 		Atmos.theta = 90.0f;
 		Atmos.phi = 90.0f;
 
@@ -57,12 +57,11 @@ namespace gui
         lens_reflectivity = 0.16f;
         lens_density = 80;
         lens_flare_intensity = 15;
-        lens_flare_f_number = 1.0f;
         lens_ghost_count = 150;
-        lens_ghost_max_size = 0.23f;
-        lens_ghost_brightness = 0.25f;
-        lens_aperture = PENTAGON;
-        lens_diff_spread = 0.69f;
+        lens_ghost_max_size = 0.16f;
+        lens_ghost_brightness = 0.15f;
+        lens_aperture = OCTAGON;
+        lens_aperture_f_number = 1.1f;
         lens_update_btn = true;
 
         TwAddVarRW(m_bar,
@@ -93,12 +92,6 @@ namespace gui
             " label='Flare intensity' group='Lens'"
             " min=0 max=100 step=0.1"
             " help='Intensity of the lens flares'");
-
-        TwAddVarRW(m_bar,
-            "lens_flare_f_number", TW_TYPE_FLOAT, &lens_flare_f_number,
-            " label='Flare f-number' group='Lens'"
-            " min=1.0 max=3.5 step=0.01"
-            " help='The f-number of the aperture'");
 
         TwAddSeparator(m_bar,
             "lens_sep1",
@@ -139,10 +132,10 @@ namespace gui
             " help='Lens flare aperture to use'");
 
         TwAddVarRW(m_bar,
-            "lens_diff_spread", TW_TYPE_FLOAT, &lens_diff_spread,
-            " label='Diffraction Spread' group='Lens'"
-            " min=0.3 max=1.0 step=0.01"
-            " help='Amount of spread in the lens diffraction'");
+            "lens_aperture_f_number", TW_TYPE_FLOAT, &lens_aperture_f_number,
+            " label='Aperture f-number' group='Lens'"
+            " min=1.0 max=8.0 step=0.1"
+            " help='The f-number of the aperture'");
 
         TwAddButton(m_bar,
             "lens_update_btn", btn_cb, &lens_update_btn,

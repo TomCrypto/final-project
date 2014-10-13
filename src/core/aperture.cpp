@@ -19,7 +19,7 @@ static const int radii[] = { 2, 4, 10, 28, 75 };
 static const int quality = 1024;
 
 void aperture::load_aperture(const transmission_function& tf,
-                             float scale)
+                             float f_number)
 {
     m_flares.clear();
     std::string path;
@@ -49,8 +49,11 @@ void aperture::load_aperture(const transmission_function& tf,
     LOG(INFO) << "Now loading aperture '" << path << "'.";
 
     auto aperture = image("apertures/" + path)
-                  .enlarge(glm::ivec2((int)(quality / scale)))
                   .resize(glm::ivec2(quality));
+
+    auto blades = utils::draw_circle((int)((quality / 2) / f_number), false);
+    blades = blades.enlarge(glm::ivec2(quality));
+    aperture.mul(blades);
 
     LOG(TRACE) << "Computing point spread function.";
 
@@ -76,7 +79,9 @@ void aperture::load_aperture(const transmission_function& tf,
 
     // Try and compute a unique ID number for the
     // aperture + scale combination we processed
-    m_flare_hash = (int)tf + (int)(1000 * scale);
+    m_flare_hash = (int)tf + (int)(1000 * f_number);
+
+    m_f_number = f_number;
 }
 
 static glm::vec3 curve[81] = {
@@ -231,8 +236,7 @@ std::pair<int, float> aperture::compensate(
 void aperture::render_flare(const std::vector<light>& lights,
                             const gl::texture2D& occlusion,
                             const camera& camera,
-                            float intensity,
-                            float f_number)
+                            float intensity)
 {
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
@@ -245,14 +249,14 @@ void aperture::render_flare(const std::vector<light>& lights,
     m_shader.set("occlusion", occlusion, 1, GL_NEAREST, GL_NEAREST);
     m_shader.set("max_lights", 8);
     m_shader.set("intensity", intensity);
-    m_shader.set("f_number", f_number);
+    m_shader.set("f_number", m_f_number);
 
     for (size_t t = 0; t < lights.size(); ++t) {
         auto comp = compensate(camera, lights[t]);
-        float s = comp.second * f_number; // compensation
+        float s = comp.second; // compensation
         m_shader.set("flare", *m_flares[comp.first].get(), 0,
             GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-        const float w0 = 2.0f * f_number;
+        const float w0 = 2.0f;
 
         auto cam_to_light = (glm::vec3)lights[t].pos
                           - camera.pos() * lights[t].pos.w;
@@ -311,6 +315,7 @@ void aperture::render_ghosts(const std::vector<light>& lights,
     m_ghost_shader.set("occlusion", occlusion, 0, GL_NEAREST, GL_NEAREST);
     m_ghost_shader.set("max_lights", 8);
     m_ghost_shader.set("intensity", intensity);
+    m_ghost_shader.set("f_number", m_f_number);
     m_ghost_shader.set("ghost_brightness", ghost_brightness);
 
     for (size_t t = 0; t < lights.size(); ++t) {
