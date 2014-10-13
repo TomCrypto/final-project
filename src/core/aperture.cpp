@@ -73,7 +73,7 @@ void aperture::load_aperture(const transmission_function& tf,
     }
 
     LOG(INFO) << "Aperture successfully loaded.";
-    
+
     // Try and compute a unique ID number for the
     // aperture + scale combination we processed
     m_flare_hash = (int)tf + (int)(1000 * scale);
@@ -189,21 +189,21 @@ std::pair<int, float> aperture::compensate(
     int selected_radius = radii[(int)light.type];
 
     // compute best flare texture + compensation factor
-    
+
     // first compute the MAXIMUM projected radius (on screen)
-    
+
     float max_radius = 0.0;
     const int samples = 16;
-    
+
     glm::vec4 ref = camera.proj() * camera.view() * light.pos;
     ref /= ref.w;
-    
+
     for (int y = 0; y < samples; ++y) {
         float theta = y / float(samples) * glm::pi<float>();
-        
+
         for (int x = 0; x < samples; ++x) {
             float phi = x / float(samples) * glm::pi<float>() * 2;
-            
+
             glm::vec4 world_pos = light.pos + glm::vec4(
                 glm::sin(theta) * glm::cos(phi),
                 glm::cos(theta),
@@ -212,8 +212,8 @@ std::pair<int, float> aperture::compensate(
 
             glm::vec4 projected = camera.proj() * camera.view() * world_pos;
             projected /= projected.w;
-            
-            float distance = glm::length((glm::vec2)projected - 
+
+            float distance = glm::length((glm::vec2)projected -
                                          (glm::vec2)ref) / 2.0f;
 
             //max_radius = glm::max(max_radius, distance);
@@ -241,7 +241,7 @@ void aperture::render_flare(const std::vector<light>& lights,
     glViewport(0, 0, camera.dims().x, camera.dims().y);
 
     m_shader.bind();
-    
+
     m_shader.set("occlusion", occlusion, 1, GL_NEAREST, GL_NEAREST);
     m_shader.set("max_lights", 8);
     m_shader.set("intensity", intensity);
@@ -307,12 +307,12 @@ void aperture::render_ghosts(const std::vector<light>& lights,
     glViewport(0, 0, camera.dims().x, camera.dims().y);
 
     m_ghost_shader.bind();
-    
-    m_shader.set("occlusion", occlusion, 0, GL_NEAREST, GL_NEAREST);
+
+    m_ghost_shader.set("occlusion", occlusion, 0, GL_NEAREST, GL_NEAREST);
     m_ghost_shader.set("max_lights", 8);
     m_ghost_shader.set("intensity", intensity);
     m_ghost_shader.set("ghost_brightness", ghost_brightness);
-    
+
     for (size_t t = 0; t < lights.size(); ++t) {
         auto cam_to_light = (glm::vec3)lights[t].pos
                           - camera.pos() * lights[t].pos.w;
@@ -329,22 +329,22 @@ void aperture::render_ghosts(const std::vector<light>& lights,
         if (forward_facing) {
             for (int i = 0; i < ghost_count; ++i) {
                 srand(100 * i + m_flare_hash);
-            
+
                 float p = exp(1 / std::pow(uniform(), 0.35f)) - exp(1.0f);
                 float sz = ghost_size * (0.3f + pow(uniform(), 1.5f));
-                
+
                 m_ghost_shader.set("ghost_blur", uniform() * 0.45f + 0.35f);
 
                 m_ghost_shader.set("ghost_color",
                     (0.00005f + uniform() * 0.0002f) *
                     wavelength_rgb(uniform() * 300 + 400)
                 );
-                
+
                 float aspect = camera.aspect_ratio();
 
                 auto pos = glm::mix((glm::vec2)projected, glm::vec2(0), p);
                 if (p < 1) sz *= glm::sqrt(p); // ghosts smaller near flare
-                
+
                 glBegin(GL_QUADS);
                 glTexCoord3f(0.0f, 0.0f, (float)t);
                 glVertex2f(-sz + pos.x, -sz * aspect + pos.y);
@@ -360,7 +360,7 @@ void aperture::render_ghosts(const std::vector<light>& lights,
     }
 
     m_ghost_shader.unbind();
-    
+
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
 }
