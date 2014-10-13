@@ -6,8 +6,11 @@ using namespace std::placeholders;
 
 namespace gui
 {
+    const glm::vec3& initial_camera_pos = glm::vec3(0, 25, -5);
+    const glm::vec3& initial_camera_dir = glm::vec3(-0.05f, -0.1f, 0.9f);
+
     window::window(const std::string& window_title, const glm::ivec2& dims)
-        : m_cursor_locked(false), m_dims(dims), m_fps(51),
+        : m_cursor_locked(false), m_dims(dims), m_fps(60),
           m_fft(glm::ivec2(2048)),
           m_context(window_title, dims,
                     std::bind(&window::on_mouse_up,   this, _1),
@@ -21,8 +24,10 @@ namespace gui
                     std::bind(&window::on_display,    this),
                     std::bind(&window::on_update,     this)),
           m_bar("main", "Configuration"),
-          m_camera(m_dims, glm::vec3(0, 25, -5), glm::vec3(-0.05f, -0.1f, 0.9f),
-                   m_bar.cam_fov * glm::pi<float>() / 180),
+          m_camera(m_dims,
+                   initial_camera_pos,
+                   initial_camera_dir,
+                   glm::radians(m_bar.cam_fov)),
           m_lighthouse("lighthouse/Lighthouse.obj"),
           m_outbuilding("lighthouse/OutBuilding.obj"),
           m_terrain("lighthouse/Terrain.obj"),
@@ -46,10 +51,8 @@ namespace gui
 
     void window::on_resize(const glm::ivec2& new_dims)
     {
-        m_dims = new_dims;
-
-        m_framebuffer.resize(m_dims);
-        m_camera.resize(m_dims);
+        m_framebuffer.resize(m_dims = new_dims);
+        m_camera.resize(m_dims = new_dims);
     }
 
     void window::on_display()
@@ -151,7 +154,7 @@ namespace gui
             m_mouse.set_pos((glm::vec2)(m_dims / 2) / (float)m_dims.x);
         }
 
-        m_camera.set_fov(m_bar.cam_fov * glm::pi<float>() / 180);
+        m_camera.set_fov(glm::radians(m_bar.cam_fov));
         m_bar.cam_locked = m_cursor_locked;
         m_bar.refresh();
 

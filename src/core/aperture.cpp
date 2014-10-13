@@ -84,7 +84,7 @@ void aperture::load_aperture(const transmission_function& tf,
     m_f_number = f_number;
 }
 
-static glm::vec3 curve[81] = {
+static glm::vec3 curve[80] = {
     glm::vec3(0.0014,0.0000,0.0065), glm::vec3(0.0022,0.0001,0.0105),
     glm::vec3(0.0042,0.0001,0.0201), glm::vec3(0.0076,0.0002,0.0362),
     glm::vec3(0.0143,0.0004,0.0679), glm::vec3(0.0232,0.0006,0.1102),
@@ -160,7 +160,7 @@ image aperture::get_cfft(const image& psf)
 {
     image out(psf.dims());
 
-    const int samples = 40; // pass as quality parameter?
+    const int samples = 40; // 10nm step (400nm over 40 samples)
 
     for (int t = 0; t < samples; ++t)
     {
@@ -195,7 +195,7 @@ std::pair<int, float> aperture::compensate(
 
     // compute best flare texture + compensation factor
 
-    // first compute the MAXIMUM projected radius (on screen)
+    // first compute the AVERAGE projected radius (on screen)
 
     float max_radius = 0.0;
     const int samples = 16;
@@ -221,7 +221,6 @@ std::pair<int, float> aperture::compensate(
             float distance = glm::length((glm::vec2)projected -
                                          (glm::vec2)ref) / 2.0f;
 
-            //max_radius = glm::max(max_radius, distance);
             max_radius += distance / (samples * samples);
         }
     }
@@ -333,7 +332,7 @@ void aperture::render_ghosts(const std::vector<light>& lights,
 
         if (forward_facing) {
             for (int i = 0; i < ghost_count; ++i) {
-                srand(100 * i + m_flare_hash);
+                srand(101 * i + m_flare_hash);
 
                 float p = exp(1 / std::pow(uniform(), 0.35f)) - exp(1.0f);
                 float sz = ghost_size * 3 * (0.2f + 0.8f * pow(uniform(), 5.0f));

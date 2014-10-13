@@ -87,9 +87,6 @@ namespace gl
                  int min_filter = GL_LINEAR, int mag_filter = GL_LINEAR,
                  int wrap_s = GL_REPEAT, int wrap_t = GL_REPEAT);
 
-        //<< Run this shader on a fullscreen quad (bind first)
-        void fullscreen_quad();
-
     private:
         std::string m_vert_name;
         std::string m_frag_name;
