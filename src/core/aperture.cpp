@@ -336,9 +336,9 @@ void aperture::render_ghosts(const std::vector<light>& lights,
                 srand(100 * i + m_flare_hash);
 
                 float p = exp(1 / std::pow(uniform(), 0.35f)) - exp(1.0f);
-                float sz = ghost_size * (0.3f + pow(uniform(), 1.5f));
+                float sz = ghost_size * 3 * (0.2f + 0.8f * pow(uniform(), 5.0f));
 
-                m_ghost_shader.set("ghost_blur", uniform() * 0.45f + 0.35f);
+                m_ghost_shader.set("ghost_blur", uniform() * 0.45f + 0.25f);
 
                 m_ghost_shader.set("ghost_color",
                     (0.00005f + uniform() * 0.0002f) *

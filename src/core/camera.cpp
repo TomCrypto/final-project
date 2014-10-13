@@ -6,7 +6,8 @@ camera::camera(const glm::ivec2& dims,
                const glm::vec3& position,
                const glm::vec3& direction,
                float fov)
-    : m_dims(dims), m_pos(position), m_dir(direction),
+    : m_dims(dims), m_pos(position),
+      m_dir(glm::normalize(direction)),
       m_fov(fov)
 {
 

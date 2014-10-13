@@ -21,7 +21,7 @@ namespace gui
                     std::bind(&window::on_display,    this),
                     std::bind(&window::on_update,     this)),
           m_bar("main", "Configuration"),
-          m_camera(m_dims, glm::vec3(0, 25, -5), glm::vec3(0, 0, 1),
+          m_camera(m_dims, glm::vec3(0, 25, -5), glm::vec3(-0.05f, -0.1f, 0.9f),
                    m_bar.cam_fov * glm::pi<float>() / 180),
           m_lighthouse("lighthouse/Lighthouse.obj"),
           m_outbuilding("lighthouse/OutBuilding.obj"),
@@ -33,6 +33,7 @@ namespace gui
           m_occlusion(),
           m_framebuffer(m_dims)
     {
+        LOG(INFO) << "All components initialized.";
         LOG(TRACE) << "Window resolution is "
                    << m_dims.x << " by "
                    << m_dims.y << " pixels.";
@@ -40,7 +41,7 @@ namespace gui
 
     void window::run()
     {
-        m_context.start();
+        m_context.main_loop();
     }
 
     void window::on_resize(const glm::ivec2& new_dims)
@@ -119,10 +120,6 @@ namespace gui
 
     void window::on_update()
     {
-        m_camera.set_fov(m_bar.cam_fov * glm::pi<float>() / 180);
-        m_bar.cam_locked = m_cursor_locked;
-        m_bar.refresh();
-
         if (m_bar.lens_update_btn) {
             m_bar.lens_update_btn = false;
 
@@ -132,11 +129,6 @@ namespace gui
 
         if (m_overlay.get_density() != m_bar.lens_density) {
             m_overlay.regenerate_film(m_bar.lens_density);
-        }
-
-        if (m_keys[27 /* escape */]) {
-            glutLeaveMainLoop();
-            return;
         }
 
         float move_speed = m_bar.cam_move_speed / 60.0f;
@@ -157,6 +149,15 @@ namespace gui
         if (m_cursor_locked) {
             glutWarpPointer(m_dims.x / 2, m_dims.y / 2);
             m_mouse.set_pos((glm::vec2)(m_dims / 2) / (float)m_dims.x);
+        }
+
+        m_camera.set_fov(m_bar.cam_fov * glm::pi<float>() / 180);
+        m_bar.cam_locked = m_cursor_locked;
+        m_bar.refresh();
+
+        if (m_keys[27 /* escape */]) {
+            glutLeaveMainLoop();
+            return;
         }
     }
 

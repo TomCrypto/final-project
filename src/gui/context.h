@@ -63,12 +63,12 @@ namespace gui
         const GLint& operator()();
         const bool& failed();
         void set_failed();
-        void start();
+        void main_loop();
 
     private:
         context& operator=(context& other);
         context(context& other);
-        
+
         int m_window;
     };
 }
