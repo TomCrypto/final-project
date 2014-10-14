@@ -11,7 +11,8 @@ float C = 0.10;
 float D = 0.20;
 float E = 0.02;
 float F = 0.30;
-float W = 11.2;
+
+float white_point = 11.2;
 
 vec3 Uncharted2Tonemap(vec3 x)
 {
@@ -20,14 +21,12 @@ vec3 Uncharted2Tonemap(vec3 x)
 
 void main()
 {
-    vec3 texColor = max(texture2D(render, uv).rgb, vec3(0.0));
+    vec3 sample = max(texture2D(render, uv).rgb, vec3(0.0));
 
     // assume values > W map to white
 
-    vec3 curr = Uncharted2Tonemap(exposure * texColor);
-
-    vec3 whiteScale = 1.0 / Uncharted2Tonemap(vec3(W));
-    vec3 color = curr * whiteScale;
+    vec3 color = Uncharted2Tonemap(exposure * sample)
+               / Uncharted2Tonemap(vec3(white_point));
 
     gl_FragColor = vec4(pow(color, vec3(1.0 / 2.2)), 1.0);
 }

@@ -251,9 +251,6 @@ void aperture::render_flare(const std::vector<light>& lights,
     m_shader.set("f_number", m_f_number);
 
     for (size_t t = 0; t < lights.size(); ++t) {
-        m_shader.set("lights[" + std::to_string(t) + "].intensity",
-                     lights[t].intensity);
-
         auto comp = compensate(camera, lights[t]);
         float s = comp.second; // compensation
 			m_shader.set("flare", *m_flares[comp.first].get(), 0,
