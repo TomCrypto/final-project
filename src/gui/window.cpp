@@ -61,14 +61,8 @@ namespace gui
 
     void window::on_display()
     {
-        /* TEMPORARY: recalculate sun position here to pass to overlay.
+        /* TEMPORARY: recalculate sun light data here to pass to overlay.
          * later this could be done by e.g. asking m_skybox for it. */
-
-        glm::vec4 sun_pos = glm::vec4(
-            glm::sin(glm::radians(m_bar.Atmos.theta))*glm::cos(glm::radians(m_bar.Atmos.phi)),
-            glm::cos(glm::radians(m_bar.Atmos.theta)),
-            glm::sin(glm::radians(m_bar.Atmos.theta))*glm::sin(glm::radians(m_bar.Atmos.phi)),
-            0.0f);
 
         float sun_radius = 0.02f; // experimentally determined - radius of sun as viewed by camera
 
