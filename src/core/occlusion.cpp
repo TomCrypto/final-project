@@ -41,7 +41,7 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
 
     for (size_t t = 0; t < light_count; ++t) {
         m_shader.set("lights[" + std::to_string(t) + "].pos",
-                     lights[t].pos);
+                     lights[t].position);
         m_shader.set("lights[" + std::to_string(t) + "].radius",
                      lights[t].radius);
     }

@@ -187,7 +187,7 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 		m_shader.bind();
 		m_shader.set("view", camera.view());
         m_shader.set("proj", camera.proj());
-		m_shader.set("sun_dir", lights[0].pos);
+		m_shader.set("sun_dir", lights[0].position);
 		useMTL(var.first);
 		glCallList(var.second);
 		m_shader.unbind();
