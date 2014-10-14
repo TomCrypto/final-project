@@ -1,6 +1,6 @@
-                        ==============================                        
-                        COMP308 2014T2 - Final Project                        
-                        ==============================                        
+                        ==============================
+                        COMP308 2014T2 - Final Project
+                        ==============================
 
 Joseph Zachariah Sim (300263896)                           simjose@myvuw.ac.nz
 Thomas Beneteau (300250968)                             benetethom@myvuw.ac.nz
@@ -31,6 +31,14 @@ Instructions
         $ make
         $ cd bin && ./Project
         $ cd ..
+
+Features Implemented
+--------------------
+
+    * realistic daylight sky
+    * physically based lens flares (with occlusion)
+    * lens flare ghosts (not physically based)
+    * simple model rendering and lighting
 
 Folder Contents
 ---------------

@@ -29,6 +29,10 @@
 #include "core/aperture.h"
 #include "core/occlusion.h"
 
+#if _WIN32
+#define NO_LENS_FLARES
+#endif
+
 namespace gui
 {
     class window
@@ -83,9 +87,11 @@ namespace gui
         Model m_tree;
 
         skybox m_skybox;
+        #if !NO_LENS_FLARES
         overlay m_overlay;
         aperture m_aperture;
         occlusion m_occlusion;
+        #endif
         framebuffer m_framebuffer;
     };
 }
