@@ -122,22 +122,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\lib\bin\win32\freeglut.dll" />
-    <Media Include="..\res\lighthouse\Lighthouse.mtl">
+    <Media Include="..\res\models\Lighthouse.mtl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Media>
-    <Media Include="..\res\lighthouse\OutBuilding.mtl">
+    <Media Include="..\res\models\OutBuilding.mtl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Media>
-    <Media Include="..\res\lighthouse\Terrain.mtl">
+    <Media Include="..\res\models\Terrain.mtl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Media>
-    <Media Include="..\res\lighthouse\Trees.mtl">
+    <Media Include="..\res\models\Trees.mtl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
@@ -254,22 +254,22 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\res\lighthouse\Lighthouse.obj">
+    <Media Include="..\res\models\Lighthouse.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Media>
-    <Media Include="..\res\lighthouse\OutBuilding.obj">
+    <Media Include="..\res\models\OutBuilding.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Media>
-    <Media Include="..\res\lighthouse\Terrain.obj">
+    <Media Include="..\res\models\Terrain.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Media>
-    <Media Include="..\res\lighthouse\Trees.obj">
+    <Media Include="..\res\models\Trees.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
