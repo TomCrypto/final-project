@@ -49,8 +49,23 @@ void skybox::display(const camera& cam, atmos vars)
 	glm::vec3 lambda = glm::vec3(1 / 650e-9f, 1 / 570e-9f, 1 / 475e-9f); // red, green & blue. Note: 650e-9 m = 650nm.
 
 	float tmp = pi*pi*(n*n - 1.0f)*(n*n - 1.0f)*(6+3*pn)/(6-7*pn)/N;
+	glm::vec3 betaRay = (8.0f*tmp*pi / 3) * lambda*lambda*lambda*lambda;
 	glm::vec3 rayleighTheta = (tmp/2) * (lambda*lambda*lambda*lambda);
-	m_shader.set("betaDashRay", rayleighTheta*glm::vec3(vars.ray));
+	m_shader.set("betaDashRay", rayleighTheta*vars.ray);
+	
+	float T = 2.0f; //turbidity
+	float c = (0.6544*T - 0.6510)*1e-16; //concentration factor
+	tmp = 0.434*c*(2 * pi)*(2 * pi)*0.5f;
+	glm::vec3 mieTheta = tmp*lambda*lambda;
+	m_shader.set("betaDashMie", mieTheta*vars.mie);
+
+	glm::vec3 K = glm::vec3(0.685f, 0.679f, 0.670f);
+	tmp = 0.434f*c*pi*(2 * pi)*(2 * pi);
+	glm::vec3 betaMie = tmp*K*lambda*lambda;
+
+	glm::vec3 betaRayMie = betaRay + betaMie;
+	glm::vec3 oneOverBetaRayMie = 1.0f / (betaRayMie);
+	m_shader.set("oneOverBetaRayMie", oneOverBetaRayMie);
 	/*LOG(ERROR) << glm::to_string(glm::vec3(lambda*lambda*lambda*lambda));
 	LOG(ERROR) << glm::to_string(rayleighTheta*glm::vec3(vars.ray));
 	LOG(ERROR) << glm::to_string(rayleighTheta*glm::vec3(50));
@@ -65,15 +80,9 @@ void skybox::display(const camera& cam, atmos vars)
 	std::cout << glm::to_string(glm::vec3(1,2,3) * glm::vec3(6,7,8)) << "\n";*/
 	//exit(0);
 
-	float T = 2.0f; //turbidity
-	float c = (0.6544*T - 0.6510)*1e-16; //concentration factor
-	float v = 4; //Junge's exponent = 4 for the sky model
+	
 
-	glm::vec3 K = glm::vec3(0.685f, 0.679f, 0.670f);
-	float Temp = 0.434*c*(2 * pi)*(2 * pi)*0.5f;
-	glm::vec3 mieTheta = Temp*lambda*lambda;
-	Temp = 0.434f*c*pi*(2 * pi)*(2 * pi);
-	glm::vec3 betaMie = Temp*K*lambda*lambda;
+	
 
 	//Rayleigh + Mie
 	//glm::vec3 betaRM = betaRayleigh+betaMie;
@@ -82,8 +91,6 @@ void skybox::display(const camera& cam, atmos vars)
 	float g = 0.8f; //Henyey Greensteins's G value
 	glm::vec3 HG = glm::vec3((1 - g)*(1 - g), 1 + g*g, 2 * g);
 
-	m_shader.set("betaMie", betaMie);
-	m_shader.set("mieTheta", mieTheta);
 	//m_shader.set("betaRM", betaRM);
 	//m_shader.set("oneOverBetaRM", oneOverBetaRM);
 	m_shader.set("gHG", HG);
