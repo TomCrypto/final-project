@@ -8,7 +8,7 @@
 #include "core/camera.h"
 
 struct atmos {
-	glm::vec3 ray, mie;
+	glm::vec3 ray, mie, sunColor;
     float theta, phi; //sun
 };
 
@@ -16,7 +16,7 @@ class skybox
 {
 public:
     skybox();
-
+	static glm::vec3 calcSunColor(float theta);
 	void display(const camera& cam, atmos vars);
 
 private:
