@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -95,12 +95,13 @@
     <ClCompile Include="..\src\gui\fps_counter.cpp" />
     <ClCompile Include="..\src\gui\mouse_tracker.cpp" />
     <ClCompile Include="..\src\utils\fft_engine.cpp" />
-    <ClCompile Include="..\src\utils\gl_utils.cpp" />
     <ClCompile Include="..\src\gui\tweakbar.cpp" />
     <ClCompile Include="..\src\gui\framebuffer.cpp" />
     <ClCompile Include="..\src\gui\window.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\utils\image.cpp" />
+    <ClCompile Include="..\src\utils\shader.cpp" />
+    <ClCompile Include="..\src\utils\texture2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\core\aperture.h" />
@@ -114,11 +115,12 @@
     <ClInclude Include="..\src\gui\fps_counter.h" />
     <ClInclude Include="..\src\gui\mouse_tracker.h" />
     <ClInclude Include="..\src\utils\fft_engine.h" />
-    <ClInclude Include="..\src\utils\gl_utils.h" />
     <ClInclude Include="..\src\gui\tweakbar.h" />
     <ClInclude Include="..\src\gui\framebuffer.h" />
     <ClInclude Include="..\src\gui\window.h" />
     <ClInclude Include="..\src\utils\image.h" />
+    <ClInclude Include="..\src\utils\shader.h" />
+    <ClInclude Include="..\src\utils\texture2d.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\lib\bin\win32\freeglut.dll" />
