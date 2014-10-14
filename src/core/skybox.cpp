@@ -15,7 +15,7 @@ skybox::skybox()
 	gluQuadricNormals(quad, GLU_SMOOTH);
 }
 
-static glm::vec3 skybox::calcSunColor(float theta) {
+glm::vec3 skybox::calcSunColor(float theta) {
 	float T = 2.0f; //turbidity
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
 	float m = 1.0f / (glm::cos(glm::radians(theta)) + 0.5f / std::pow(93.885f - theta, 1.253f));
