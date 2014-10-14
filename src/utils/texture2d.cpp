@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <cstdint>
 #include <cctype>
 #include <locale>
 
@@ -17,6 +18,52 @@ static unsigned char saturate(float x)
     if (x < 0) return 0;
     if (x > 1) return 255;
     return (int)(x * 255);
+}
+
+static GLuint alloc_texture(const glm::ivec2& dims,
+                            const void *raw_ptr,
+                            GLenum internal,
+                            GLenum format)
+{
+    GLuint tex;
+
+    glGenTextures(1, &tex);
+    if (!tex) {
+        LOG(ERROR) << "Failed to generate texture.";
+        LOG(TRACE) << "glGenTextures failed.";
+        throw std::runtime_error("");
+    }
+
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, internal, dims.x, dims.y,
+                         0, GL_RGBA, format, raw_ptr);
+
+    return tex;
+}
+
+static std::vector<uint8_t> image_to_bytes(const image& img)
+{
+    auto w = img.dims().x;
+    auto h = img.dims().y;
+
+    auto buf = std::vector<unsigned char>();
+    buf.resize(w * h * 4); // 4 bytes/pixel
+
+    for (int y = 0; y < h; ++y) {
+        const glm::vec4* ptr = img[y];
+
+        for (int x = 0; x < w; ++x) {
+            buf[4 * (y * w + x) + 0] = saturate(ptr->x);
+            buf[4 * (y * w + x) + 1] = saturate(ptr->y);
+            buf[4 * (y * w + x) + 2] = saturate(ptr->z);
+            buf[4 * (y * w + x) + 3] = 0;
+
+            ++ptr;
+        }
+    }
+
+    return buf;
 }
 
 namespace gl
@@ -42,47 +89,17 @@ namespace gl
     }
 
     texture2D::texture2D(const std::string& path, GLenum format)
-        : m_fmt(format)
+        : m_fmt(format), m_tex(0)
     {
         image img(path);
-        m_dims = glm::ivec2(img.width(),
-                            img.height());
-
-		LOG(INFO) << img.width() << " " << img.height();
-
-        glGenTextures(1, &m_tex);
-
-        if (m_tex == 0) {
-            LOG(ERROR) << "Failed to create texture object.";
-            throw std::runtime_error("");
-        }
-
-        glBindTexture(GL_TEXTURE_2D, m_tex);
+        m_dims = img.dims();
 
         if (m_fmt == GL_UNSIGNED_BYTE) {
-            int w = m_dims.x, h = m_dims.y;
-
-            auto buf = std::vector<unsigned char>();
-            buf.resize(w * h * 4); // 4 bytes/pixel
-
-            for (int y = 0; y < h; ++y) {
-                const glm::vec4* ptr = img[y];
-
-                for (int x = 0; x < w; ++x) {
-                    buf[4 * (y * w + x) + 0] = saturate(ptr->x);
-                    buf[4 * (y * w + x) + 1] = saturate(ptr->y);
-                    buf[4 * (y * w + x) + 2] = saturate(ptr->z);
-                    buf[4 * (y * w + x) + 3] = 0;
-
-                    ++ptr;
-                }
-            }
-
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y,
-                         0, GL_RGBA, GL_UNSIGNED_BYTE, &buf[0]);
+            m_tex = alloc_texture(m_dims, &image_to_bytes(img)[0],
+                                  GL_RGBA, GL_UNSIGNED_BYTE);
         } else if (m_fmt == GL_FLOAT) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_dims.x, m_dims.y,
-                         0, GL_RGBA, GL_FLOAT, img.data());
+            m_tex = alloc_texture(m_dims, img.data(),
+                                  GL_RGBA32F, GL_FLOAT);
         } else {
             LOG(ERROR) << "Unsupported texture format.";
             LOG(TRACE) << "Supported formats are:";
@@ -95,42 +112,14 @@ namespace gl
     texture2D::texture2D(const image& img, GLenum format)
         : m_fmt(format)
     {
-        m_dims = glm::ivec2(img.width(),
-                            img.height());
-
-        glGenTextures(1, &m_tex);
-
-        if (m_tex == 0) {
-            LOG(ERROR) << "Failed to create texture object.";
-            throw std::runtime_error("");
-        }
-
-        glBindTexture(GL_TEXTURE_2D, m_tex);
+        m_dims = img.dims();
 
         if (m_fmt == GL_UNSIGNED_BYTE) {
-            int w = m_dims.x, h = m_dims.y;
-
-            auto buf = std::vector<unsigned char>();
-            buf.resize(w * h * 4); // 4 bytes/pixel
-
-            for (int y = 0; y < h; ++y) {
-                const glm::vec4* ptr = img[y];
-
-                for (int x = 0; x < w; ++x) {
-                    buf[4 * (y * w + x) + 0] = 255;//saturate(ptr->x);
-                    buf[4 * (y * w + x) + 1] = 0;//saturate(ptr->y);
-                    buf[4 * (y * w + x) + 2] = 255;//saturate(ptr->z);
-                    buf[4 * (y * w + x) + 3] = 0;
-
-                    ++ptr;
-                }
-            }
-
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_dims.x, m_dims.y,
-                         0, GL_RGBA, GL_UNSIGNED_BYTE, &buf[0]);
+            m_tex = alloc_texture(m_dims, &image_to_bytes(img)[0],
+                                  GL_RGBA, GL_UNSIGNED_BYTE);
         } else if (m_fmt == GL_FLOAT) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_dims.x, m_dims.y,
-                         0, GL_RGBA, GL_FLOAT, img.data());
+            m_tex = alloc_texture(m_dims, img.data(),
+                                  GL_RGBA32F, GL_FLOAT);
         } else {
             LOG(ERROR) << "Unsupported texture format.";
             LOG(TRACE) << "Supported formats are:";
@@ -143,32 +132,24 @@ namespace gl
     texture2D::texture2D(const glm::ivec2& dims, GLenum format)
         : m_dims(dims), m_fmt(format)
     {
-        if ((m_fmt != GL_UNSIGNED_BYTE) && (m_fmt != GL_FLOAT)) {
+        if (m_fmt == GL_UNSIGNED_BYTE) {
+            m_tex = alloc_texture(m_dims, nullptr,
+                                  GL_RGBA, GL_UNSIGNED_BYTE);
+        } else if (m_fmt == GL_FLOAT) {
+            m_tex = alloc_texture(m_dims, nullptr,
+                                  GL_RGBA32F, GL_FLOAT);
+        } else {
             LOG(ERROR) << "Unsupported texture format.";
             LOG(TRACE) << "Supported formats are:";
             LOG(TRACE) << "* GL_UNSIGNED_BYTE";
             LOG(TRACE) << "* GL_FLOAT";
             throw std::logic_error("");
         }
-
-        glGenTextures(1, &m_tex);
-
-        if (m_tex == 0) {
-            LOG(ERROR) << "Failed to create texture object.";
-            throw std::runtime_error("");
-        }
-
-        glBindTexture(GL_TEXTURE_2D, m_tex);
-
-        GLenum internal = m_fmt == GL_FLOAT ? GL_RGBA32F : GL_RGBA;
-
-        glTexImage2D(GL_TEXTURE_2D, 0, internal, m_dims.x, m_dims.y, 0,
-                     GL_RGBA, m_fmt, nullptr);
     }
 
     texture2D::~texture2D()
     {
-        if (m_tex != 0) {
+        if (m_tex) {
             glDeleteTextures(1, &m_tex);
         }
     }
@@ -177,11 +158,13 @@ namespace gl
     {
         m_dims = dims;
 
-        GLenum internal = m_fmt == GL_FLOAT ? GL_RGBA32F : GL_RGBA;
-
-        glBindTexture(GL_TEXTURE_2D, m_tex);
-        glTexImage2D(GL_TEXTURE_2D, 0, internal, m_dims.x, m_dims.y, 0,
-                     GL_RGBA, m_fmt, nullptr);
+        if (m_fmt == GL_UNSIGNED_BYTE) {
+            m_tex = alloc_texture(m_dims, nullptr,
+                                  GL_RGBA, GL_UNSIGNED_BYTE);
+        } else if (m_fmt == GL_FLOAT) {
+            m_tex = alloc_texture(m_dims, nullptr,
+                                  GL_RGBA32F, GL_FLOAT);
+        }
     }
 
     void texture2D::bind(int unit, int min_filter,
