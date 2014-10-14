@@ -1,12 +1,6 @@
 #version 120
 
-struct light
-{
-    vec3 intensity;
-};
-
 uniform int max_lights;
-uniform light lights[8];
 
 uniform sampler2D flare;
 uniform sampler2D occlusion;
@@ -29,5 +23,5 @@ void main()
 
     float noise_threshold = 1e-7;
 
-	gl_FragColor = vec4(max(vec3(0.0), texture2D(flare, uv).rgb - noise_threshold) * get_occlusion(lid) * intensity * pow(f_number, -1.0) * lights[lid].intensity, 1);
+	gl_FragColor = vec4(max(vec3(0.0), texture2D(flare, uv).rgb - noise_threshold) * get_occlusion(lid) * intensity * pow(f_number, -1.0), 1);
 }

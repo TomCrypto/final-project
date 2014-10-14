@@ -130,7 +130,8 @@ void skybox::display(const camera& cam, atmos vars)
     m_sun.bind();
     m_sun.set("view", cam.view(false));
     m_sun.set("proj", cam.proj());
-    m_sun.set("sun_color", 0.2f * glm::vec3(12000, 11600, 11000));
+
+    m_sun.set("sun_color", 10000.0f * calcSunColor(vars.theta));
     m_sun.set("sun_pos", calcSunDir(vars.theta, vars.phi));
 
     float sun_radius = 0.02f;

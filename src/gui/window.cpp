@@ -112,7 +112,7 @@ namespace gui
         glutSwapBuffers();
         m_fps.add_frame();
         if (m_fps.average_ready()) {
-            int period = (int)(30.0 * 60.0f);
+            const int period = (int)(20.0 * 60.0f);
             int fps = (int)(1.0 / m_fps.get_average() + 0.5);
             LOG_EVERY_N(period, INFO) << fps << " frames per second.";
         }

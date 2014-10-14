@@ -48,7 +48,7 @@ namespace gui
     {
 		/* === atmospheric options === */
 
-		Atmos.theta = 70.0f;
+		Atmos.theta = 75.0f;
 		Atmos.phi = 90.0f;
 		Atmos.ray = 500.0f;
 		Atmos.mie = 0.8f;
@@ -67,7 +67,7 @@ namespace gui
 			"theta", TW_TYPE_FLOAT,
 			sun_theta_scb, sun_theta_gcb, &Atmos,
 			" label='theta' group='Atmospheric'"
-			" min=0 max=88 step=0.05");
+			" min=0 max=89 step=0.05");
 
 		TwAddVarRW(m_bar,
 			"phi", TW_TYPE_FLOAT, &Atmos.phi,
