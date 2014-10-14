@@ -6,7 +6,7 @@ uniform mat4 proj;
 varying vec3 extinction;
 varying vec3 inscattering;
 
-uniform vec4 Esun;
+uniform vec3 Esun;
 uniform vec3 sunDir;
 uniform vec3 eyePos;
 uniform vec3 betaRay;
