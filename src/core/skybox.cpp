@@ -29,7 +29,7 @@ glm::vec3 skybox::calcSunColor(float theta) {
 	return glm::vec3(fTauRx*fTauAx, fTauRy*fTauAy, fTauRz*fTauAz);
 }
 
-glm::vec3 calcSunDir(float theta, float phi) {
+glm::vec3 skybox::calcSunDir(float theta, float phi) {
 	return glm::vec3(glm::sin(glm::radians(theta))*glm::cos(glm::radians(phi)),
 		glm::cos(glm::radians(theta)),
 		glm::sin(glm::radians(theta))*glm::sin(glm::radians(phi)));
@@ -58,7 +58,7 @@ void skybox::display(const camera& cam, atmos vars)
 	glm::vec3 betaRay = (8.0f*tmp*pi / 3) * lambda*lambda*lambda*lambda;
 	glm::vec3 rayleighTheta = (tmp/2) * (lambda*lambda*lambda*lambda);
 	m_shader.set("betaDashRay", rayleighTheta*vars.ray);
-	
+
 	float T = 2.0f; //turbidity
 	float c = (0.6544*T - 0.6510)*1e-16; //concentration factor
 	tmp = 0.434*c*(2 * pi)*(2 * pi)*0.5f;
@@ -86,9 +86,9 @@ void skybox::display(const camera& cam, atmos vars)
 	std::cout << glm::to_string(glm::vec3(1,2,3) * glm::vec3(6,7,8)) << "\n";*/
 	//exit(0);
 
-	
 
-	
+
+
 
 	//Rayleigh + Mie
 	//glm::vec3 betaRM = betaRayleigh+betaMie;
@@ -131,7 +131,7 @@ void skybox::display(const camera& cam, atmos vars)
     m_sun.set("view", cam.view(false));
     m_sun.set("proj", cam.proj());
     m_sun.set("sun_color", 0.2f * glm::vec3(12000, 11600, 11000));
-    m_sun.set("sun_pos", sunDir);
+    m_sun.set("sun_pos", calcSunDir(vars.theta, vars.phi));
 
     float sun_radius = 0.02f;
 

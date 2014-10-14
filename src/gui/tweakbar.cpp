@@ -48,10 +48,10 @@ namespace gui
     {
 		/* === atmospheric options === */
 
-		Atmos.theta = 90.0f;
+		Atmos.theta = 70.0f;
 		Atmos.phi = 90.0f;
 		Atmos.ray = 500.0f;
-		Atmos.mie = 0.4f;
+		Atmos.mie = 0.8f;
         sun_theta_scb(&Atmos.theta, &Atmos);
 
 		TwAddVarRW(m_bar,
@@ -61,13 +61,13 @@ namespace gui
 		TwAddVarRW(m_bar,
 			"Mie Multiplier", TW_TYPE_FLOAT, &Atmos.mie,
 			" label='mieMult' group='Atmospheric'"
-			" min=0.1 step=10");
-		
+			" min=0.1 step=0.05");
+
 		TwAddVarCB(m_bar,
 			"theta", TW_TYPE_FLOAT,
 			sun_theta_scb, sun_theta_gcb, &Atmos,
 			" label='theta' group='Atmospheric'"
-			" min=0 max=90.2 step=0.05");
+			" min=0 max=88 step=0.05");
 
 		TwAddVarRW(m_bar,
 			"phi", TW_TYPE_FLOAT, &Atmos.phi,
