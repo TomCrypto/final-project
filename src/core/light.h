@@ -29,7 +29,7 @@ struct light
 
         const glm::vec4& pos; // world coordinates
         const float& radius; // in world space, approximate extent of light source
-        const light_type& type;
+        light_type type;
 };
 
 #endif
