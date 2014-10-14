@@ -35,7 +35,7 @@ Instructions
 Features Implemented
 --------------------
 
-    * realistic daylight sky
+    * realistic daylight sky (and sun)
     * physically based lens flares (with occlusion)
     * lens flare ghosts (not physically based)
     * simple model rendering and lighting
