@@ -68,12 +68,6 @@ static std::vector<uint8_t> image_to_bytes(const image& img)
 
 namespace gl
 {
-    texture2D::texture2D()
-        : m_fmt(0), m_tex(0)
-    {
-
-    }
-
     texture2D& texture2D::operator=(const texture2D& other)
     {
         m_fmt = other.m_fmt;
