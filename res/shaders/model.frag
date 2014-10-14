@@ -16,5 +16,6 @@ void main()
 	vec3 V = normalize(world_pos - camera_pos);
 
 	vec3 color = max(0.1,dot(N,S))*kd;
+	color = color + ks*pow(max(0,dot(reflect(-S,N),V)),shininess);
     gl_FragColor = vec4(color,1);
 }
