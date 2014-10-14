@@ -1,30 +1,22 @@
 #include <easylogging.h>
-
 #include "gui/tweakbar.h"
-
 #include <stdexcept>
 
-using namespace std::placeholders;
+static void TW_CALL sun_theta_scb(const void *value, void *user_data)
+{
+	atmos* Atmos = (atmos*)user_data;
+	Atmos->theta = *(float*)value;
+	Atmos->sunColor = skybox::calcSunColor(Atmos->theta);
+}
+
+static void TW_CALL sun_theta_gcb(void *value, void *user_data)
+{
+	atmos* Atmos = (atmos*)user_data;
+	*(float*)value = Atmos->theta;
+}
 
 namespace gui
 {
-    /* === Custom callbacks === */
-
-    TW_CALL void sun_theta_scb(const void *value, void *user_data)
-    {
-        atmos* Atmos = (atmos*)user_data;
-        Atmos->theta = *(float*)value;
-        Atmos->sunColor = skybox::calcSunColor(Atmos->theta);
-    }
-
-    TW_CALL void sun_theta_gcb(void *value, void *user_data)
-    {
-        atmos* Atmos = (atmos*)user_data;
-        *(float*)value = Atmos->theta;
-    }
-
-    /* === */
-
     // Use this for button callbacks, pass the bool
     static void TW_CALL btn_cb(void *user_data)
     {
