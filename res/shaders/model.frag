@@ -9,6 +9,14 @@ uniform float shininess;
 varying vec3 world_pos;
 varying vec3 normal;
 
+struct lightSource {
+vec4 pos;
+vec3 intensity;
+vec3 attenuation; // Constant/linear/quadratic (xyz)
+};
+uniform lightSource[8] lights;
+uniform int noOfLights;
+
 void main()
 {
     vec3 N = normalize(normal);
@@ -30,5 +38,5 @@ void main()
         color = mix(color, horizon_color, 1.0 - pow(2, - (dist - fog_falloff) / fog_falloff));
     }
 
-    gl_FragColor = vec4(color,1);
+    gl_FragColor = vec4(lights[0].intensity,1);
 }

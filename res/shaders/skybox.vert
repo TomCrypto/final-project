@@ -8,7 +8,6 @@ varying vec3 eye_dir;
 
 uniform vec3 Esun;
 uniform vec3 sunDir;
-uniform vec3 eyePos;
 uniform vec3 betaDashRay;
 uniform vec3 betaDashMie;
 uniform vec3 oneOverBetaRayMie;
