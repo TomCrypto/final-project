@@ -42,6 +42,8 @@ namespace gui
         LOG(TRACE) << "Window resolution is "
                    << m_dims.x << " by "
                    << m_dims.y << " pixels.";
+
+		on_update();
     }
 
     void window::run()

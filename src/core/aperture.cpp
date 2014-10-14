@@ -253,8 +253,8 @@ void aperture::render_flare(const std::vector<light>& lights,
     for (size_t t = 0; t < lights.size(); ++t) {
         auto comp = compensate(camera, lights[t]);
         float s = comp.second; // compensation
-        m_shader.set("flare", *m_flares[comp.first].get(), 0,
-            GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+			m_shader.set("flare", *m_flares[comp.first].get(), 0,
+				GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
         const float w0 = 2.0f;
 
         auto cam_to_light = (glm::vec3)lights[t].pos
