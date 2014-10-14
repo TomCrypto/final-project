@@ -7,7 +7,7 @@
 #include "core/camera.h"
 #include "core/light.h"
 
-#include "utils/gl_utils.h"
+#include "utils/shader.h"
 
 // renders a nice overlay on top of the rendered image with
 // imperfections and dirt and stuff that respond to lighting
@@ -18,9 +18,9 @@ class overlay
 {
     public:
         overlay(int density);
-        
+
         void regenerate_film(int density);
-        
+
         void render(const std::vector<light>& lights,
                     const gl::texture2D& occlusion,
                     const camera& camera,
