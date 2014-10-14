@@ -32,13 +32,11 @@ Instructions
         $ cd bin && ./Project
         $ cd ..
 
-Features Implemented
---------------------
-
-    * realistic daylight sky (and sun)
-    * physically based lens flares (with occlusion)
-    * lens flare ghosts (not physically based)
-    * simple model rendering and lighting
+    To navigate the demo, drag the cursor using the left mouse button or right
+    click then move the mouse around, and use WASD to move the camera. The 'c'
+    key makes the camera go downwards, space makes it go upwards - hitting the
+    escape key will close the project - and the various program parameters are
+    available for modification in the graphical user interface (tweak bar).
 
 Folder Contents
 ---------------
