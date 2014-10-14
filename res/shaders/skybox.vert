@@ -5,6 +5,7 @@ uniform mat4 proj;
 
 varying vec3 extinction;
 varying vec3 inscattering;
+varying vec3 eye_dir;
 
 uniform vec3 Esun;
 uniform vec3 sunDir;
@@ -19,6 +20,7 @@ void main()
 gl_Position = proj * view * gl_Vertex;
 vec3 eyeDir = normalize(gl_Vertex.xyz);
 float dotP = dot(normalize(eyeDir),normalize(sunDir));
+eye_dir = eyeDir;
 
 vec3 ray = betaDashRay*(1+dotP*dotP);
 float hg = gHG.x/pow(gHG.y-gHG.z*dotP,1.5);
