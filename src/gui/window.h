@@ -11,8 +11,6 @@
 
 #include <glm/glm.hpp>
 
-#include <functional>
-#include <stdexcept>
 #include <string>
 #include <map>
 
