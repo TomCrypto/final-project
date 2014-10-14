@@ -45,8 +45,6 @@ void skybox::display(const camera& cam, atmos vars)
 
     m_shader.set("view", cam.view(false));
 	m_shader.set("proj", cam.proj());
-	glm::vec3 eyePos = cam.dir();
-	m_shader.set("eyePos", eyePos);
 
 	m_shader.set("extinction", vars.extinction);
 
