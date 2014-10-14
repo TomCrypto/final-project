@@ -18,7 +18,7 @@ skybox::skybox()
 glm::vec3 skybox::calcSunColor(float theta) {
 	float T = 2.0f; //turbidity
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
-	float m = 1.0f / (glm::cos(glm::radians(theta)) + 0.5f / std::pow(93.885f - theta, 1.253f));
+	float m = 1.0f / (glm::cos(glm::radians(theta)) + 0.15f * std::pow(93.885f - theta, -1.253f));
 	glm::vec3 lam = glm::vec3(0.65f, 0.57f, 0.475f); //red green & blue in um
 	float fTauRx = glm::exp(-m*0.008735f*std::pow(lam.x, -4.08f));
 	float fTauRy = glm::exp(-m*0.008735f*std::pow(lam.y, -4.08f));
@@ -50,7 +50,12 @@ void skybox::display(const camera& cam, atmos vars)
 
 	float tmp = pi*pi*(n*n - 1.0f)*(n*n - 1.0f)*(6+3*pn)/(6-7*pn)/N;
 	glm::vec3 rayleighTheta = (tmp/2) * (lambda*lambda*lambda*lambda);
-	glm::vec3 betaRayleigh = (8.0f*tmp*pi/3)*(lambda*lambda*lambda*lambda); //total BetaR
+	m_shader.set("betaDashRay", rayleighTheta*glm::vec3(vars.ray));
+	/*LOG(ERROR) << glm::to_string(glm::vec3(lambda*lambda*lambda*lambda));
+	LOG(ERROR) << glm::to_string(rayleighTheta*glm::vec3(vars.ray));
+	LOG(ERROR) << glm::to_string(rayleighTheta*glm::vec3(50));
+	exit(1);*/
+	//total BetaR
 
 	/*std::cout << glm::to_string(rayleighMultipier) << "\n";
 	std::cout << glm::to_string(betaRayleigh) << "\n";
@@ -71,18 +76,16 @@ void skybox::display(const camera& cam, atmos vars)
 	glm::vec3 betaMie = Temp*K*lambda*lambda;
 
 	//Rayleigh + Mie
-	glm::vec3 betaRM = betaRayleigh+betaMie;
-	glm::vec3 oneOverBetaRM = glm::vec3(1) / betaRM;
+	//glm::vec3 betaRM = betaRayleigh+betaMie;
+	//glm::vec3 oneOverBetaRM = glm::vec3(1) / betaRM;
 
 	float g = 0.8f; //Henyey Greensteins's G value
 	glm::vec3 HG = glm::vec3((1 - g)*(1 - g), 1 + g*g, 2 * g);
 
-	m_shader.set("betaRay", betaRayleigh);
-	m_shader.set("rayleighTheta", rayleighTheta);
 	m_shader.set("betaMie", betaMie);
 	m_shader.set("mieTheta", mieTheta);
-	m_shader.set("betaRM", betaRM);
-	m_shader.set("oneOverBetaRM", oneOverBetaRM);
+	//m_shader.set("betaRM", betaRM);
+	//m_shader.set("oneOverBetaRM", oneOverBetaRM);
 	m_shader.set("gHG", HG);
 
 	//sunDir

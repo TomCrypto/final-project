@@ -8,8 +8,8 @@
 #include "core/camera.h"
 
 struct atmos {
-	glm::vec3 ray, mie, sunColor;
-    float theta, phi; //sun
+	glm::vec3 sunColor;
+    float theta, phi, ray; //sun
 };
 
 class skybox
