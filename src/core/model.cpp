@@ -181,7 +181,7 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 	if (drawLists.empty()) {
 		CreateDrawingLists();
 	}
-	
+
 	for (auto var : drawLists)
 	{
 		m_shader.bind();
@@ -192,11 +192,11 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 		glCallList(var.second);
 		m_shader.unbind();
 	}
-	
+
     glDisable(GL_DEPTH_TEST);
-	
+
 	/*m_shader.bind();
-    
+
 
     m_shader.set("camera_pos", camera.pos());
     m_shader.set("light_count", (int)lights.size());
@@ -241,7 +241,7 @@ void Model::CreateDrawingLists() {
 		}
 		drawLists.clear();
 	}
-	
+
 	for (auto& g : groups) {
 		int l = glGenLists(1);
 		glNewList(l, GL_COMPILE);
