@@ -23,7 +23,8 @@
 
 #include <string>
 
-#include "utils/gl_utils.h"
+#include "utils/shader.h"
+#include "utils/texture2d.h"
 
 class framebuffer
 {

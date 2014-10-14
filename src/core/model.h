@@ -12,7 +12,7 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
-#include "utils/gl_utils.h"
+#include "utils/shader.h"
 #include "core/camera.h"
 #include "core/light.h"
 
