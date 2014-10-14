@@ -1,54 +1,18 @@
-// contains various C++ wrappers of OpenGL objects
-// like shaders and such
+#ifndef UTILS_SHADER_H
+#define UTILS_SHADER_H
 
-#ifndef UTILS_GL_UTILS_H
-#define UTILS_GL_UTILS_H
+#include <GL/glew.h>
 
 #include <glm/glm.hpp>
-#include <GL/glew.h>
+
 #include <utility>
 #include <vector>
 #include <string>
 
-#include "utils/image.h"
+#include "utils/texture2d.h"
 
 namespace gl
 {
-    // Simple texture2D class, mainly designed to store actual texture
-    // data and/or framebuffer data (i.e. it is not designed to hold
-    // depth data or special textures like cubemaps)
-    // It can support both 32-bit (8-bit per channel) or 128-bit float
-    // RGBA data.
-    class texture2D
-    {
-    public:
-        texture2D(const std::string& path, GLenum format);
-        texture2D(const image& img, GLenum format);
-        texture2D(const glm::ivec2& dims, GLenum format);
-        texture2D& operator=(const texture2D& other);
-        texture2D(const texture2D& other);
-        texture2D();
-        ~texture2D();
-
-        // Resizes this texture (after this operation
-        // the contents of the texture are indeterminate)
-        void resize(const glm::ivec2& dims);
-
-        // Binds this texture to a texture unit
-        void bind(int unit, int min_filter = GL_LINEAR,
-                            int mag_filter = GL_LINEAR,
-                            int wrap_s = GL_REPEAT,
-                            int wrap_t = GL_REPEAT) const;
-
-        // Returns the texture ID of the texture
-        GLuint operator()() const;
-
-    private:
-        glm::ivec2 m_dims;
-        GLuint m_tex;
-        GLenum m_fmt;
-    };
-
     //<< Shader class incorporating a vertex + fragment shader
     class shader
     {
@@ -56,7 +20,7 @@ namespace gl
         //<< Names are relative to res/shaders
         shader& operator=(const shader& other);
         shader(const std::string& vert_name,
-               const std::string& frag_name);
+                const std::string& frag_name);
         shader(const shader& other);
         ~shader();
 
@@ -83,9 +47,9 @@ namespace gl
         void set(const std::string& var, const glm::mat3& value);
         void set(const std::string& var, const glm::mat4& value);
         void set(const std::string& var, const gl::texture2D& tex,
-                 int texture_unit,
-                 int min_filter = GL_LINEAR, int mag_filter = GL_LINEAR,
-                 int wrap_s = GL_REPEAT, int wrap_t = GL_REPEAT);
+                    int texture_unit,
+                    int min_filter = GL_LINEAR, int mag_filter = GL_LINEAR,
+                    int wrap_s = GL_REPEAT, int wrap_t = GL_REPEAT);
 
     private:
         std::string m_vert_name;
