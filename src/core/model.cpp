@@ -188,7 +188,6 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 		m_shader.set("view", camera.view());
         m_shader.set("proj", camera.proj());
         m_shader.set("camera_pos", camera.pos());
-		m_shader.set("sun_dir", lights[0].position);
 		m_shader.set("noOfLights", (int)lights.size());
 		for (size_t i = 0; i < lights.size(); i++) {
 			m_shader.set("lights[" + std::to_string(i) + "].pos", lights[i].position);
