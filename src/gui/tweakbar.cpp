@@ -39,16 +39,21 @@ namespace gui
 
 		Atmos.theta = 90.0f;
 		Atmos.phi = 90.0f;
+		Atmos.sunColor = skybox::calcSunColor(Atmos.theta);
 
         TwAddVarRW(m_bar,
             "theta", TW_TYPE_FLOAT, &Atmos.theta,
             " label='theta' group='Atmospheric'"
             " min=0 max=90.2 step=0.05");
 
-        TwAddVarRW(m_bar,
-            "phi", TW_TYPE_FLOAT, &Atmos.phi,
-            " label='phi' group='Atmospheric'"
-            " min=0 max=180 step=0.05");
+		TwAddVarRW(m_bar,
+			"phi", TW_TYPE_FLOAT, &Atmos.phi,
+			" label='phi' group='Atmospheric'"
+			" min=0 max=180 step=0.05");
+
+		TwAddVarRW(m_bar,
+			"color", TW_TYPE_COLOR3F, &Atmos.sunColor,
+			" label='Color' group='Atmospheric' colormode=hls");
 
         /* === lens options === */
 
