@@ -40,7 +40,7 @@
     <Filter Include="Source Files\GUI">
       <UniqueIdentifier>{18a1e681-55a1-4d88-8f53-a0ab71340ded}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Lighthouse">
+    <Filter Include="Resource Files\Models">
       <UniqueIdentifier>{756948f4-b700-40b7-9fba-b4de33fac46b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -215,29 +215,29 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\res\lighthouse\Lighthouse.mtl">
-      <Filter>Resource Files\Lighthouse</Filter>
+    <Media Include="..\res\models\Lighthouse.mtl">
+      <Filter>Resource Files\Models</Filter>
     </Media>
-    <Media Include="..\res\lighthouse\Lighthouse.obj">
-      <Filter>Resource Files\Lighthouse</Filter>
+    <Media Include="..\res\models\Lighthouse.obj">
+      <Filter>Resource Files\Models</Filter>
     </Media>
-    <Media Include="..\res\lighthouse\OutBuilding.mtl">
-      <Filter>Resource Files\Lighthouse</Filter>
+    <Media Include="..\res\models\OutBuilding.mtl">
+      <Filter>Resource Files\Models</Filter>
     </Media>
-    <Media Include="..\res\lighthouse\OutBuilding.obj">
-      <Filter>Resource Files\Lighthouse</Filter>
+    <Media Include="..\res\models\OutBuilding.obj">
+      <Filter>Resource Files\Models</Filter>
     </Media>
-    <Media Include="..\res\lighthouse\Terrain.mtl">
-      <Filter>Resource Files\Lighthouse</Filter>
+    <Media Include="..\res\models\Terrain.mtl">
+      <Filter>Resource Files\Models</Filter>
     </Media>
-    <Media Include="..\res\lighthouse\Terrain.obj">
-      <Filter>Resource Files\Lighthouse</Filter>
+    <Media Include="..\res\models\Terrain.obj">
+      <Filter>Resource Files\Models</Filter>
     </Media>
-    <Media Include="..\res\lighthouse\Trees.mtl">
-      <Filter>Resource Files\Lighthouse</Filter>
+    <Media Include="..\res\models\Trees.mtl">
+      <Filter>Resource Files\Models</Filter>
     </Media>
-    <Media Include="..\res\lighthouse\Trees.obj">
-      <Filter>Resource Files\Lighthouse</Filter>
+    <Media Include="..\res\models\Trees.obj">
+      <Filter>Resource Files\Models</Filter>
     </Media>
   </ItemGroup>
   <ItemGroup>
