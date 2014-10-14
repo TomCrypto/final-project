@@ -50,12 +50,17 @@ namespace gui
 
 		Atmos.theta = 90.0f;
 		Atmos.phi = 90.0f;
-		Atmos.ray = 1.0f;
+		Atmos.ray = 500.0f;
+		Atmos.mie = 10.0f;
         sun_theta_scb(&Atmos.theta, &Atmos);
 
 		TwAddVarRW(m_bar,
-			"Rayleigh Multiple", TW_TYPE_FLOAT, &Atmos.ray,
+			"Rayleigh Multiplier", TW_TYPE_FLOAT, &Atmos.ray,
 			" label='rayMult' group='Atmospheric'"
+			" min=1 step=10");
+		TwAddVarRW(m_bar,
+			"Mie Multiplier", TW_TYPE_FLOAT, &Atmos.mie,
+			" label='mieMult' group='Atmospheric'"
 			" min=1 step=10");
 		
 		TwAddVarCB(m_bar,

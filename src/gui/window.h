@@ -30,7 +30,7 @@
 #include "core/occlusion.h"
 
 #if _WIN32
-#define NO_LENS_FLARES
+#define NO_LENS_FLARES 1
 #endif
 
 namespace gui
