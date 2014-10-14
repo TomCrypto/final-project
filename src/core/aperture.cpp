@@ -200,7 +200,7 @@ std::pair<int, float> aperture::compensate(
     float max_radius = 0.0;
     const int samples = 16;
 
-    glm::vec4 ref = camera.proj() * camera.view() * light.pos;
+    glm::vec4 ref = camera.proj() * camera.view() * light.position;
     ref /= ref.w;
 
     for (int y = 0; y < samples; ++y) {
@@ -209,7 +209,7 @@ std::pair<int, float> aperture::compensate(
         for (int x = 0; x < samples; ++x) {
             float phi = x / float(samples) * glm::pi<float>() * 2;
 
-            glm::vec4 world_pos = light.pos + glm::vec4(
+            glm::vec4 world_pos = light.position + glm::vec4(
                 glm::sin(theta) * glm::cos(phi),
                 glm::cos(theta),
                 glm::sin(theta) * glm::sin(phi),
@@ -257,15 +257,15 @@ void aperture::render_flare(const std::vector<light>& lights,
 				GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
         const float w0 = 2.0f;
 
-        auto cam_to_light = (glm::vec3)lights[t].pos
-                          - camera.pos() * lights[t].pos.w;
+        auto cam_to_light = (glm::vec3)lights[t].position
+                          - camera.pos() * lights[t].position.w;
 
         // Project light on sensor
         bool forward_facing = glm::dot(
             glm::normalize(cam_to_light),
             glm::normalize(camera.dir())) > 0;
 
-        glm::vec4 projected = camera.proj() * camera.view() * lights[t].pos;
+        glm::vec4 projected = camera.proj() * camera.view() * lights[t].position;
         projected /= projected.w;
 
         float aspect = camera.aspect_ratio();
@@ -318,14 +318,17 @@ void aperture::render_ghosts(const std::vector<light>& lights,
     m_ghost_shader.set("ghost_brightness", ghost_brightness);
 
     for (size_t t = 0; t < lights.size(); ++t) {
-        auto cam_to_light = (glm::vec3)lights[t].pos
-                          - camera.pos() * lights[t].pos.w;
+        if (!lights[t].ghosts)
+            continue;
+
+        auto cam_to_light = (glm::vec3)lights[t].position
+                          - camera.pos() * lights[t].position.w;
 
         bool forward_facing = glm::dot(
             glm::normalize(cam_to_light),
             glm::normalize(camera.dir())) > 0;
 
-        glm::vec4 projected = camera.proj() * camera.view() * lights[t].pos;
+        glm::vec4 projected = camera.proj() * camera.view() * lights[t].position;
         projected /= projected.w;
 
         float aspect = camera.aspect_ratio();

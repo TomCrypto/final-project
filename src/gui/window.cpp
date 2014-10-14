@@ -71,7 +71,8 @@ namespace gui
         float sun_radius = 0.02f; // experimentally determined - radius of sun as viewed by camera
 
         std::vector<light> lights;
-        lights.push_back(light(sun_pos, sun_radius, LIGHT_NORMAL));
+        lights.push_back(light(sun_pos, glm::vec3(12000, 11600, 11200),
+                               glm::vec3(1, 1, 1), sun_radius, LIGHT_NORMAL, true));
 
         //lights.push_back(light(glm::vec4(10, 0, 5, 1), glm::vec3(0), 0.5f));
 
