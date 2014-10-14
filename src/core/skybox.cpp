@@ -48,6 +48,8 @@ void skybox::display(const camera& cam, atmos vars)
 	glm::vec3 eyePos = cam.dir();
 	m_shader.set("eyePos", eyePos);
 
+	m_shader.set("extinction", vars.extinction);
+
 	float pi = 3.14159265358979323846f;
 	float n = 1.0003f; //regractive index of air
 	float N = 2.545e25; //molecules per unit valume of air

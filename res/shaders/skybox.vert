@@ -3,7 +3,6 @@
 uniform mat4 view;
 uniform mat4 proj;
 
-varying vec3 extinction;
 varying vec3 inscattering;
 varying vec3 eye_dir;
 
