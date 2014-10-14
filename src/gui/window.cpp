@@ -2,43 +2,46 @@
 
 #include "gui/window.h"
 
+#include <functional>
+#include <stdexcept>
+
 using namespace std::placeholders;
 
 namespace gui
 {
     const glm::vec3& initial_camera_pos = glm::vec3(0, 25, -5);
-    const glm::vec3& initial_camera_dir = glm::vec3(-0.05f, -0.1f, 0.9f);
+    const glm::vec3& initial_camera_dir = glm::vec3(-0.2f, -0.1f, 0.9f);
 
-    window::window(const std::string& window_title, const glm::ivec2& dims)
-        : m_cursor_locked(false), m_dims(dims), m_fps(60),
-          m_fft(glm::ivec2(2048)),
-          m_context(window_title, dims,
-                    std::bind(&window::on_mouse_up,   this, _1),
-                    std::bind(&window::on_mouse_down, this, _1),
-                    std::bind(&window::on_mouse_move, this, _1),
-                    std::bind(&window::on_key_press,  this, _1),
-                    std::bind(&window::on_key_up,     this, _1),
-                    std::bind(&window::on_special,    this, _1),
-                    std::bind(&window::on_special_up, this, _1),
-                    std::bind(&window::on_resize,     this, _1),
-                    std::bind(&window::on_display,    this),
-                    std::bind(&window::on_update,     this)),
-          m_bar("main", "Configuration"),
-          m_camera(m_dims,
-                   initial_camera_pos,
-                   initial_camera_dir,
-                   glm::radians(m_bar.cam_fov)),
-          m_lighthouse("models/Lighthouse.obj"),
-          m_outbuilding("models/OutBuilding.obj"),
-          m_terrain("models/Terrain.obj"),
-          m_tree("models/Tree.obj"),
-          m_skybox(),
-          #if !NO_LENS_FLARES
-          m_overlay(m_bar.lens_density),
-          m_aperture(m_fft),
-          m_occlusion(),
-          #endif
-          m_framebuffer(m_dims)
+    window::window(const std::string& window_title, const glm::ivec2& dims) :
+        m_cursor_locked(false), m_dims(dims), m_fps(60),
+        m_fft(glm::ivec2(2048)),
+        m_context(window_title, dims,
+                  std::bind(&window::on_mouse_up,   this, _1),
+                  std::bind(&window::on_mouse_down, this, _1),
+                  std::bind(&window::on_mouse_move, this, _1),
+                  std::bind(&window::on_key_press,  this, _1),
+                  std::bind(&window::on_key_up,     this, _1),
+                  std::bind(&window::on_special,    this, _1),
+                  std::bind(&window::on_special_up, this, _1),
+                  std::bind(&window::on_resize,     this, _1),
+                  std::bind(&window::on_display,    this),
+                  std::bind(&window::on_update,     this)),
+        m_bar("main", "Configuration"),
+        m_camera(m_dims,
+                 initial_camera_pos,
+                 initial_camera_dir,
+                 glm::radians(m_bar.cam_fov)),
+        m_lighthouse("models/Lighthouse.obj"),
+        m_outbuilding("models/OutBuilding.obj"),
+        m_terrain("models/Terrain.obj"),
+        m_tree("models/Tree.obj"),
+        m_skybox(),
+        #if !NO_LENS_FLARES
+        m_overlay(m_bar.lens_density),
+        m_aperture(m_fft),
+        m_occlusion(),
+        #endif
+        m_framebuffer(m_dims)
     {
         LOG(INFO) << "All components initialized.";
         LOG(TRACE) << "Window resolution is "
