@@ -17,8 +17,8 @@ uniform vec3 gHG; //glm::vec3((1 - g)*(1 - g), 1 + g*g, 2 * g)
 void main()
 {
 gl_Position = proj * view * gl_Vertex;
-vec3 eyeDir = normalize((view * gl_Position).xyz);
-float dotP = dot(normalize(eyeDir),normalize(-sunDir));
+vec3 eyeDir = normalize(gl_Vertex.xyz);
+float dotP = dot(normalize(eyeDir),normalize(sunDir));
 
 vec3 ray = betaDashRay*(1+dotP*dotP);
 float hg = gHG.x/pow(gHG.y-gHG.z*dotP,1.5);
