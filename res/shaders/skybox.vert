@@ -27,5 +27,5 @@ vec3 ray = rayleighTheta*(1+dotP*dotP);
 float hg = gHG.x/pow(gHG.y-gHG.z*dotP,1.5);
 vec3 mie = mieTheta;// * hg;
 
-inscattering = (ray + mie) / (betaRay + betaMie) * Esun.xyz * Esun.w;
+inscattering = (ray + mie) / (betaRay + betaMie) * Esun.xyz;
 }
