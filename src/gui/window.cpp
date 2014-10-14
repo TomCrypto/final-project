@@ -33,9 +33,11 @@ namespace gui
           m_terrain("lighthouse/Terrain.obj"),
           m_tree("lighthouse/Tree.obj"),
           m_skybox(),
+          #if !NO_LENS_FLARES
           m_overlay(m_bar.lens_density),
           m_aperture(m_fft),
           m_occlusion(),
+          #endif
           m_framebuffer(m_dims)
     {
         LOG(INFO) << "All components initialized.";
@@ -88,6 +90,7 @@ namespace gui
 		m_terrain.display(m_camera, lights);
 		m_tree.display(m_camera, lights);
 
+        #if !NO_LENS_FLARES
         const auto& occlusion = m_occlusion.query(
             lights, m_framebuffer, m_camera
         );
@@ -105,6 +108,7 @@ namespace gui
             m_overlay.render(lights, occlusion, m_camera,
                              m_bar.lens_reflectivity);
         }
+        #endif
 
         m_framebuffer.render(m_bar.lens_exposure);
 
@@ -126,6 +130,7 @@ namespace gui
 
     void window::on_update()
     {
+        #if !NO_LENS_FLARES
         if (m_bar.lens_update_btn) {
             m_bar.lens_update_btn = false;
 
@@ -136,6 +141,7 @@ namespace gui
         if (m_overlay.get_density() != m_bar.lens_density) {
             m_overlay.regenerate_film(m_bar.lens_density);
         }
+        #endif
 
         float move_speed = m_bar.cam_move_speed / 60.0f;
 
