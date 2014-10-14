@@ -16,7 +16,7 @@ varying vec3 total_occlusion;
 
 int compute_lod(vec4 light_pos, float light_radius)
 {
-    return 32;
+    return 20;
 }
 
 void main()
@@ -38,7 +38,7 @@ void main()
             vec4 pos = lights[lid].pos + vec4(sin(theta) * cos(phi),
                                               cos(theta),
                                               sin(theta) * sin(phi),
-                                              0.0) * (lights[lid].radius * 0.99f);
+                                              0.0) * (lights[lid].radius * 0.9);
 
             vec4 projected = viewproj * pos;
             projected.xy /= projected.w;

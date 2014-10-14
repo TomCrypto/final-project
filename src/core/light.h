@@ -19,17 +19,29 @@ enum light_type
 struct light
 {
     public:
-        light(const glm::vec4& pos,
+        light(const glm::vec4& position,
+              const glm::vec3& intensity,
+              const glm::vec3& attenuation,
               const float& radius,
-              const light_type& type)
-            : pos(pos), radius(radius), type(type)
+              const light_type& type,
+              bool ghosts)
+            : position(position),
+              intensity(intensity),
+              attenuation(attenuation),
+              radius(radius),
+              type(type),
+              ghosts(ghosts)
         {
 
         }
 
-        const glm::vec4& pos; // world coordinates
-        const float& radius; // in world space, approximate extent of light source
-        const light_type& type;
+        glm::vec4 position; // Position of light source (WORLD SPACE)
+        glm::vec3 intensity; // Total RGB intensity of light source
+        glm::vec3 attenuation; // Constant/linear/quadratic (xyz)
+
+        float radius; // World radius of light source sphere
+        light_type type; // Type of light (for lens flare)
+        bool ghosts; // Whether to draw ghosts or not
 };
 
 #endif

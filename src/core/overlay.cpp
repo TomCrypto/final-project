@@ -87,7 +87,7 @@ void overlay::render(const std::vector<light>& lights,
 
     for (int t = 0; t < std::min((int)lights.size(), 8); ++t) {
         m_shader.set("lights[" + std::to_string(t) + "].pos",
-                     lights[t].pos);
+                     lights[t].position);
     }
 
     glBegin(GL_QUADS);
