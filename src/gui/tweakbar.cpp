@@ -4,8 +4,27 @@
 
 #include <stdexcept>
 
+using namespace std::placeholders;
+
 namespace gui
 {
+    /* === Custom callbacks === */
+
+    TW_CALL void sun_theta_scb(const void *value, void *user_data)
+    {
+        atmos* Atmos = (atmos*)user_data;
+        Atmos->theta = *(float*)value;
+        Atmos->sunColor = skybox::calcSunColor(Atmos->theta);
+    }
+
+    TW_CALL void sun_theta_gcb(void *value, void *user_data)
+    {
+        atmos* Atmos = (atmos*)user_data;
+        *(float*)value = Atmos->theta;
+    }
+
+    /* === */
+
     // Use this for button callbacks, pass the bool
     static void TW_CALL btn_cb(void *user_data)
     {
@@ -39,10 +58,11 @@ namespace gui
 
 		Atmos.theta = 90.0f;
 		Atmos.phi = 90.0f;
-		Atmos.sunColor = skybox::calcSunColor(Atmos.theta);
+        sun_theta_scb(&Atmos.theta, &Atmos);
 
-        TwAddVarRW(m_bar,
-            "theta", TW_TYPE_FLOAT, &Atmos.theta,
+        TwAddVarCB(m_bar,
+            "theta", TW_TYPE_FLOAT,
+            sun_theta_scb, sun_theta_gcb, &Atmos,
             " label='theta' group='Atmospheric'"
             " min=0 max=90.2 step=0.05");
 
