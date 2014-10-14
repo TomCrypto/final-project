@@ -89,7 +89,7 @@ namespace gui
         lens_ghost_max_size = 0.16f;
         lens_ghost_brightness = 0.15f;
         lens_aperture = OCTAGON;
-        lens_aperture_f_number = 2.8f;
+        lens_aperture_f_number = 1.5f;
         lens_update_btn = true;
 
         TwAddVarRW(m_bar,
@@ -179,7 +179,7 @@ namespace gui
         TwAddVarRW(m_bar,
             "cam_move_speed", TW_TYPE_FLOAT, &cam_move_speed,
             " label='Speed' group='Navigation'"
-            " min=0.1 max=5 step=0.1"
+            " min=0.1 max=25 step=0.1"
             " help='Movement speed (WASD)'");
 
         TwAddVarRW(m_bar,
@@ -203,6 +203,6 @@ namespace gui
 
         TwDefine((m_name + " label='" + title + "'").c_str());
         TwDefine((m_name + " contained=true").c_str());
-        TwDefine((m_name + " size='220 360'").c_str());
+        TwDefine((m_name + " size='220 440'").c_str());
     }
 }
