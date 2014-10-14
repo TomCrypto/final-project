@@ -26,7 +26,6 @@ namespace gl
         texture2D(const glm::ivec2& dims, GLenum format);
         texture2D& operator=(const texture2D& other);
         texture2D(const texture2D& other);
-        texture2D();
         ~texture2D();
 
         // Resizes this texture (after this operation
