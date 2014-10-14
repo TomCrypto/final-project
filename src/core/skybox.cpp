@@ -29,6 +29,12 @@ glm::vec3 skybox::calcSunColor(float theta) {
 	return glm::vec3(fTauRx*fTauAx, fTauRy*fTauAy, fTauRz*fTauAz);
 }
 
+glm::vec3 calcSunDir(float theta, float phi) {
+	return glm::vec3(glm::sin(glm::radians(theta))*glm::cos(glm::radians(phi)),
+		glm::cos(glm::radians(theta)),
+		glm::sin(glm::radians(theta))*glm::sin(glm::radians(phi)));
+}
+
 void skybox::display(const camera& cam, atmos vars)
 {
     glViewport(0, 0, cam.dims().x, cam.dims().y);
@@ -96,10 +102,7 @@ void skybox::display(const camera& cam, atmos vars)
 	m_shader.set("gHG", HG);
 
 	//sunDir
-	glm::vec3 sunDir = glm::vec3(glm::sin(glm::radians(vars.theta))*glm::cos(glm::radians(vars.phi)),
-                                 glm::cos(glm::radians(vars.theta)),
-                                 glm::sin(glm::radians(vars.theta))*glm::sin(glm::radians(vars.phi)));
-	m_shader.set("sunDir",sunDir);
+	m_shader.set("sunDir",calcSunDir(vars.theta,vars.phi));
 	//calculate colour
 	m_shader.set("Esun", vars.sunColor);
 	/*

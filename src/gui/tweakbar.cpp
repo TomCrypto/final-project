@@ -51,7 +51,7 @@ namespace gui
 		Atmos.theta = 90.0f;
 		Atmos.phi = 90.0f;
 		Atmos.ray = 500.0f;
-		Atmos.mie = 10.0f;
+		Atmos.mie = 0.4f;
         sun_theta_scb(&Atmos.theta, &Atmos);
 
 		TwAddVarRW(m_bar,
@@ -61,7 +61,7 @@ namespace gui
 		TwAddVarRW(m_bar,
 			"Mie Multiplier", TW_TYPE_FLOAT, &Atmos.mie,
 			" label='mieMult' group='Atmospheric'"
-			" min=1 step=10");
+			" min=0.1 step=10");
 		
 		TwAddVarCB(m_bar,
 			"theta", TW_TYPE_FLOAT,

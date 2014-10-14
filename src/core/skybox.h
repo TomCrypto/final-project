@@ -17,6 +17,7 @@ class skybox
 public:
     skybox();
 	static glm::vec3 calcSunColor(float theta);
+	static glm::vec3 calcSunDir(float theta, float phi);
 	void display(const camera& cam, atmos vars);
 
 private:
