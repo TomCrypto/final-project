@@ -11,7 +11,7 @@ Ka 0 0 0
 Ke 0 0 0
 Ks 0.41 0.41 0.41
 Ns 128
-map_Kd ChippedMetal.tga
+map_Kd ChippedMetal.png
 Ni 1
 newmtl pasted__blinn2SG
 Kd 1 1 1
@@ -19,5 +19,5 @@ Ka 0 0 0
 Ke 0.13 0.13 0.13
 Ks 0 0 0
 Ns 128
-map_Kd Glass.tga
+map_Kd Glass.png
 Ni 1
