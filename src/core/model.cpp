@@ -218,7 +218,9 @@ void Model::display(const camera& camera, const std::vector<light>& lights, glm:
 		}
 		useMTL(var.first);
 		glCallList(var.second);
-		glDisable(GL_BLEND);
+		if (var.first != "" && materials[var.first].map_Kd != nullptr && !materials[var.first].map_Kd->is_opaque()) {
+			glDisable(GL_BLEND);
+		}
 		m_shader.unbind();
 	}
 
