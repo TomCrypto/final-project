@@ -25,10 +25,12 @@ enum channels
     R   = 1 << 0,
     G   = 1 << 1,
     B   = 1 << 2,
+    A   = 1 << 3,
     RG  = R | G,
     RB  = R | B,
     GB  = G | B,
     RGB = R | G | B,
+    RGBA = R | G | B | A
 };
 
 inline channels operator|(const channels& x, const channels& y)
