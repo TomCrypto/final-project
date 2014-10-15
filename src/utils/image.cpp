@@ -110,7 +110,7 @@ static bool bitmap_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, int w, int h)
                 dstPtr->red   = (float)palette[*srcPtr].rgbRed / 255.0f;
                 dstPtr->green = (float)palette[*srcPtr].rgbGreen / 255.0f;
                 dstPtr->blue  = (float)palette[*srcPtr].rgbBlue / 255.0f;
-                dstPtr->alpha = (float)palette[*srcPtr].rgbReserved / 255.0f;
+                dstPtr->alpha = 1.0f;
             }
 
             srcPtr += (bpp / 8);
@@ -179,6 +179,8 @@ image& image::operator=(const image &other)
         throw 0;
     }
 
+    m_opaque = other.m_opaque;
+
     return *this;
 }
 
@@ -209,6 +211,8 @@ image::image(const image &other)
         LOG(ERROR) << "Failed to clone image.";
         throw 0;
     }
+
+    m_opaque = other.m_opaque;
 }
 
 image::image(FIBITMAP *dib)
@@ -220,6 +224,7 @@ image::image(FIBITMAP *dib)
 image::image()
 {
     this->dib = nullptr;
+    m_opaque = true;
 }
 
 image::~image()
@@ -253,6 +258,7 @@ void image::load(const std::string& path)
 
     int w = FreeImage_GetWidth(loaded);
     int h = FreeImage_GetHeight(loaded);
+    m_opaque = !FreeImage_IsTransparent(loaded);
 
     FREE_IMAGE_TYPE fit = FreeImage_GetImageType(loaded);
     if (fit == FIT_RGBAF) this->dib = loaded;
@@ -576,6 +582,11 @@ int image::width() const
 int image::height() const
 {
     return FreeImage_GetHeight(this->dib);
+}
+
+bool image::is_opaque() const
+{
+    return m_opaque;
 }
 
 image utils::draw_circle(int radius, bool anti_alias, const glm::vec4& color)
