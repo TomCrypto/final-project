@@ -84,13 +84,13 @@ namespace gui
 
         m_skybox.display(m_camera,m_bar.Atmos);
 
-        //m_lighthouse.display(m_camera, lights);
-		//m_outbuilding.display(m_camera, lights);
-		//m_terrain.display(m_camera, lights);
-		//m_tree.display(m_camera, lights);
+        m_lighthouse.display(m_camera, lights);
+		m_outbuilding.display(m_camera, lights);
+		m_terrain.display(m_camera, lights);
+		m_tree.display(m_camera, lights);
 
 		//translate somehow
-		m_light.display(m_camera, lights);
+		m_light.display(m_camera, lights, glm::translate(glm::mat4(1.0f), glm::vec3(0,30,0)));
 
         #if !NO_LENS_FLARES
         const auto& occlusion = m_occlusion.query(
