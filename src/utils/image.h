@@ -1,3 +1,15 @@
+/* Purpose:
+ *
+ *  - encapsulates a FreeImage bitmap and basic image processing
+ *
+ * This class simply wraps a FreeImage FIBITMAP type and provides functions to
+ * do simple things like load/save from and to an (exr) file, resize, enlarge,
+ * normalize, etc.. the bitmap relatively efficiently. It also provides access
+ * to the raw scanline data for efficient pixel manipulation.
+ *
+ * The images are always loaded into an HDR, 128-bit floating-point format.
+*/
+
 #ifndef UTILS_IMAGE_H
 #define UTILS_IMAGE_H
 
