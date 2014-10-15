@@ -39,7 +39,7 @@ void aperture::load_aperture(const transmission_function& tf,
             path = "grazed_lens.png";
             break;
         case OCTAGON:
-            path = "octagon.png";
+            path = "smiley.png";
             break;
         case SIGGRAPH:
             path = "siggraph_noise.png";
