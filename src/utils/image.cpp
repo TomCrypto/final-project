@@ -103,15 +103,15 @@ static bool bitmap_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, int w, int h)
                 dstPtr->red   = (float)srcPtr[FI_RGBA_RED] / 255.0f;
                 dstPtr->green = (float)srcPtr[FI_RGBA_GREEN] / 255.0f;
                 dstPtr->blue  = (float)srcPtr[FI_RGBA_BLUE] / 255.0f;
+                dstPtr->alpha = (float)srcPtr[FI_RGBA_ALPHA] / 255.0f;
             }
             else
             {
                 dstPtr->red   = (float)palette[*srcPtr].rgbRed / 255.0f;
                 dstPtr->green = (float)palette[*srcPtr].rgbGreen / 255.0f;
                 dstPtr->blue  = (float)palette[*srcPtr].rgbBlue / 255.0f;
+                dstPtr->alpha = (float)palette[*srcPtr].rgbReserved / 255.0f;
             }
-
-            dstPtr->alpha = 0;
 
             srcPtr += (bpp / 8);
             dstPtr += 1;
@@ -136,7 +136,7 @@ static bool rgbf_to_rgbaf(FIBITMAP* src, FIBITMAP* dst, int w, int h)
             dstPtr->red   = srcPtr->red;
             dstPtr->green = srcPtr->green;
             dstPtr->blue  = srcPtr->blue;
-            dstPtr->alpha = 0;
+            dstPtr->alpha = 1.0f;
 
             ++srcPtr;
             ++dstPtr;
@@ -297,7 +297,7 @@ void image::add(const image& other, const channels& which)
     glm::vec4 mask((channels::R & which) ? 1.0f : 0.0f,
                    (channels::G & which) ? 1.0f : 0.0f,
                    (channels::B & which) ? 1.0f : 0.0f,
-                   0.0f);
+                   (channels::A & which) ? 1.0f : 0.0f);
 
     rop2n(*this, other, [mask](const glm::vec4& a, const glm::vec4& b){
         return a + b * mask;
@@ -309,7 +309,7 @@ void image::sub(const image& other, const channels& which)
     glm::vec4 mask((channels::R & which) ? 1.0f : 0.0f,
                    (channels::G & which) ? 1.0f : 0.0f,
                    (channels::B & which) ? 1.0f : 0.0f,
-                   0.0f);
+                   (channels::A & which) ? 1.0f : 0.0f);
 
     rop2n(*this, other, [mask](const glm::vec4& a, const glm::vec4& b){
         return a - b * mask;
@@ -321,7 +321,7 @@ void image::mul(const image& other, const channels& which)
     glm::vec4 t((channels::R & which) ? 1.0f : 0.0f,
                 (channels::G & which) ? 1.0f : 0.0f,
                 (channels::B & which) ? 1.0f : 0.0f,
-                0.0f);
+                (channels::A & which) ? 1.0f : 0.0f);
 
     rop2n(*this, other, [t](const glm::vec4& a, const glm::vec4& b){
         return (1.0f - t) * a + t * (a * b);
@@ -333,7 +333,7 @@ void image::fill(const glm::vec4& bkgd, const channels& which)
     glm::vec4 t((channels::R & which) ? 1.0f : 0.0f,
                 (channels::G & which) ? 1.0f : 0.0f,
                 (channels::B & which) ? 1.0f : 0.0f,
-                0.0f);
+                (channels::A & which) ? 1.0f : 0.0f);
 
     rop1n(*this, [bkgd, t](const glm::vec4& a){
         return (1.0f - t) * a + t * bkgd;
@@ -361,7 +361,6 @@ void image::negate(const channels& which,
             out.z = norm_max.z - a.z + norm_min.z;
         else
             out.z = a.z;
-
 
         return out;
     });
@@ -462,6 +461,7 @@ void image::normalize(bool local, const channels& which)
     inv_norm.x = (channels::R & which) ? 1.0f / measure.x : 1.0f;
     inv_norm.y = (channels::G & which) ? 1.0f / measure.y : 1.0f;
     inv_norm.z = (channels::B & which) ? 1.0f / measure.z : 1.0f;
+    inv_norm.w = (channels::A & which) ? 1.0f / measure.w : 1.0f;
 
     rop1n(*this, [inv_norm](const glm::vec4& a){
         return a * inv_norm;

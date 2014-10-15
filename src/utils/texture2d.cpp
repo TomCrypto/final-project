@@ -57,7 +57,7 @@ static std::vector<uint8_t> image_to_bytes(const image& img)
             buf[4 * (y * w + x) + 0] = saturate(ptr->x);
             buf[4 * (y * w + x) + 1] = saturate(ptr->y);
             buf[4 * (y * w + x) + 2] = saturate(ptr->z);
-            buf[4 * (y * w + x) + 3] = 0;
+            buf[4 * (y * w + x) + 3] = saturate(ptr->w);
 
             ++ptr;
         }

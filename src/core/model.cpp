@@ -169,7 +169,7 @@ void Model::readMTL(std::string filename) {
 			else if (t[0] == "map_Kd") {
 				size_t found = filename.find_last_of("/");
 				if (found == std::string::npos) materials[mtl].map_Kd = new gl::texture2D(t[1], GL_UNSIGNED_BYTE);
-				else materials[mtl].map_Kd = new gl::texture2D(filename.substr(0, found + 1) + t[1], GL_UNSIGNED_BYTE);				
+				else materials[mtl].map_Kd = new gl::texture2D(filename.substr(0, found + 1) + t[1], GL_UNSIGNED_BYTE);
 			}
 			else {
 				LOG(ERROR) << t[0];
