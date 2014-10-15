@@ -15,8 +15,7 @@ skybox::skybox()
 	gluQuadricNormals(quad, GLU_SMOOTH);
 }
 
-glm::vec3 skybox::calcSunColor(float theta) {
-	float T = 2.0f; //turbidity
+glm::vec3 skybox::calcSunColor(float theta, float T) {
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
 	float m = 1.0f / (glm::cos(glm::radians(theta)) + 0.15f * std::pow(93.885f - theta, -1.253f));
 	glm::vec3 lam = glm::vec3(0.65f, 0.57f, 0.475f); //red green & blue in um
@@ -59,8 +58,7 @@ void skybox::display(const camera& cam, atmos vars)
 	glm::vec3 rayleighTheta = (tmp/2) * (lambda*lambda*lambda*lambda);
 	m_shader.set("betaDashRay", rayleighTheta*vars.ray);
 
-	float T = 2.0f; //turbidity
-	float c = (0.6544*T - 0.6510)*1e-16; //concentration factor
+	float c = (0.6544*vars.turbidity - 0.6510)*1e-16; //concentration factor
 	tmp = 0.434*c*(2 * pi)*(2 * pi)*0.5f;
 	glm::vec3 mieTheta = tmp*lambda*lambda;
 	m_shader.set("betaDashMie", mieTheta*vars.mie);
@@ -131,7 +129,7 @@ void skybox::display(const camera& cam, atmos vars)
     m_sun.set("view", cam.view(false));
     m_sun.set("proj", cam.proj());
 
-    m_sun.set("sun_color", 10000.0f * calcSunColor(vars.theta));
+    m_sun.set("sun_color", 10000.0f * calcSunColor(vars.theta, vars.turbidity));
     m_sun.set("sun_pos", calcSunDir(vars.theta, vars.phi));
 
     float sun_radius = 0.02f;
