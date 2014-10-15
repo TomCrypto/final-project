@@ -188,8 +188,13 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 
 	for (auto var : drawLists)
 	{
+		if (var.first != "" && materials[var.first].map_Kd != nullptr) {
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		}
 		m_shader.bind();
-		if (var.first!="" && materials[var.first].map_Kd != nullptr) {
+		if (var.first != "" && materials[var.first].map_Kd != nullptr) {
 			//LOG(INFO) << "Texture at: " + var.first;
 			m_shader.set("textureSet", 42);
 			m_shader.set("tex", *materials[var.first].map_Kd, 0);
@@ -210,7 +215,7 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 	}
 
     glDisable(GL_DEPTH_TEST);
-
+	glDisable(GL_BLEND);
 	/*m_shader.bind();
 
 
