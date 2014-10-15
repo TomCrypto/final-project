@@ -53,7 +53,7 @@ void main()
     float ghost_blur = rand() * 0.45 + 0.25;
     vec3 ghost_color = (0.00005 + rand() * 0.0002)
                      * texture2D(spectrum, vec2(rand(), 0)).rgb;
-    float ghost_strength = 0.25 + rand() * 0.75;
+    float ghost_strength = 0.1 + rand() * 0.9;
 
 
     if (dist > ghost_blur) {
