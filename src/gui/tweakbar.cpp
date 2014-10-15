@@ -6,7 +6,7 @@ static void TW_CALL sun_theta_scb(const void *value, void *user_data)
 {
 	atmos* Atmos = (atmos*)user_data;
 	Atmos->theta = *(float*)value;
-	Atmos->sunColor = skybox::calcSunColor(Atmos->theta);
+	Atmos->sunColor = skybox::calcSunColor(Atmos->theta, Atmos->turbidity);
 }
 
 static void TW_CALL sun_theta_gcb(void *value, void *user_data)
@@ -53,6 +53,7 @@ namespace gui
 		Atmos.ray = 1500.0f;
 		Atmos.mie = 0.8f;
 		Atmos.extinction = 0.05f;
+		Atmos.turbidity = 2.0f;
         sun_theta_scb(&Atmos.theta, &Atmos);
 
 		TwAddVarRW(m_bar,
@@ -67,6 +68,10 @@ namespace gui
 			"Extinction", TW_TYPE_FLOAT, &Atmos.extinction,
 			" label='extinction' group='Atmospheric'"
 			" min=0 max=1 step=0.05");
+		TwAddVarRW(m_bar,
+			"Turbidity", TW_TYPE_FLOAT, &Atmos.turbidity,
+			" label='turbidity' group='Atmospheric'"
+			" min=2 step=0.01");
 
 		TwAddVarCB(m_bar,
 			"theta", TW_TYPE_FLOAT,

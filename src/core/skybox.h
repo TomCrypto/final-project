@@ -9,14 +9,14 @@
 
 struct atmos {
 	glm::vec3 sunColor;
-	float theta, phi, ray, mie, extinction; //sun
+	float theta, phi, ray, mie, extinction, turbidity; //sun
 };
 
 class skybox
 {
 public:
     skybox();
-	static glm::vec3 calcSunColor(float theta);
+	static glm::vec3 calcSunColor(float theta, float T);
 	static glm::vec3 calcSunDir(float theta, float phi);
 	void display(const camera& cam, atmos vars);
 
