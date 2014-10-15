@@ -37,7 +37,7 @@ void main()
 		}
 		vec3 diffuse = att*lights[i].intensity*kd*max(0.0,dot(N,lightDir));
 		vec3 spec = vec3(0);
-		if(dot(N,lightDir)>=0.0f) {
+		if(dot(N,lightDir)>=0.0f && shininess>0) {
 			vec3 V = normalize(world_pos - camera_pos);
 			spec = att*lights[i].intensity*ks*pow(max(0,dot(reflect(-lightDir,N),V)),shininess);
 		}
