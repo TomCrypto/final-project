@@ -1,3 +1,15 @@
+/* Purpose:
+ *
+ *  - wraps an OpenGL shader program (fragment + vertex shader)
+ *
+ * This class wraps a shader created with glCreateShader and allows to bind it
+ * to the OpenGL pipeline and upload uniforms/textures to it. This class keeps
+ * a variable cache for performance and also warns if nonexistent uniforms are
+ * uploaded to the shader (once).
+ *
+ * It also helpfully prints out the GLSL build log in case of build error.
+*/
+
 #ifndef UTILS_SHADER_H
 #define UTILS_SHADER_H
 
