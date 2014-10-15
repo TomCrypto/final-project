@@ -9,7 +9,7 @@
 
 struct atmos {
 	glm::vec3 sunColor;
-	float theta, phi, ray, mie, extinction, turbidity; //sun
+	float theta, phi, ray, mie, extinction, turbidity, sunBrightness; //sun
 };
 
 class skybox

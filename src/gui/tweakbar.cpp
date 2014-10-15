@@ -54,6 +54,7 @@ namespace gui
 		Atmos.mie = 0.8f;
 		Atmos.extinction = 0.05f;
 		Atmos.turbidity = 2.0f;
+		Atmos.sunBrightness = 10000.0f;
         sun_theta_scb(&Atmos.theta, &Atmos);
 
 		TwAddVarRW(m_bar,
