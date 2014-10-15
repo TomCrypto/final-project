@@ -188,10 +188,10 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 
 	for (auto var : drawLists)
 	{
-		if (var.first != "" && materials[var.first].map_Kd != nullptr && materials[var.first].map_Kd->isOpaque()) {
+		if (var.first != "" && materials[var.first].map_Kd != nullptr && !materials[var.first].map_Kd->is_opaque()) {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+			
 		}
 		m_shader.bind();
 		if (var.first != "" && materials[var.first].map_Kd != nullptr) {

@@ -45,9 +45,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\gui\window.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
@@ -95,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="..\src\utils\texture2d.cpp">
       <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +165,9 @@
     </None>
     <None Include="..\lib\bin\win32\freeglut.dll">
       <Filter>Dependencies</Filter>
+    </None>
+    <None Include="..\res\models\STLamp.mtl">
+      <Filter>Resource Files\Models</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -289,5 +292,16 @@
     <Image Include="..\res\apertures\siggraph_custom.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
+    <Image Include="..\res\models\ChippedMetal.png">
+      <Filter>Resource Files\Models</Filter>
+    </Image>
+    <Image Include="..\res\models\Glass.png">
+      <Filter>Resource Files\Models</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="..\res\models\STLamp.obj">
+      <Filter>Resource Files\Models</Filter>
+    </Object>
   </ItemGroup>
 </Project>
