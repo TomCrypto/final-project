@@ -180,7 +180,11 @@ void Model::readMTL(std::string filename) {
 }
 
 void Model::display(const camera& camera, const std::vector<light>& lights) {
-    glEnable(GL_DEPTH_TEST);
+	display(camera, lights, glm::mat4(1.0));
+}
+
+void Model::display(const camera& camera, const std::vector<light>& lights, glm::mat4 transform) {
+	glEnable(GL_DEPTH_TEST);
 
 	if (drawLists.empty()) {
 		CreateDrawingLists();
@@ -191,9 +195,10 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 		if (var.first != "" && materials[var.first].map_Kd != nullptr && !materials[var.first].map_Kd->is_opaque()) {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			
+
 		}
 		m_shader.bind();
+		m_shader.set("transform", transform);
 		if (var.first != "" && materials[var.first].map_Kd != nullptr) {
 			//LOG(INFO) << "Texture at: " + var.first;
 			m_shader.set("textureSet", 42);
@@ -201,8 +206,8 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 		}
 		else m_shader.set("textureSet", 0);
 		m_shader.set("view", camera.view());
-        m_shader.set("proj", camera.proj());
-        m_shader.set("camera_pos", camera.pos());
+		m_shader.set("proj", camera.proj());
+		m_shader.set("camera_pos", camera.pos());
 		m_shader.set("noOfLights", (int)lights.size());
 		for (size_t i = 0; i < lights.size(); i++) {
 			m_shader.set("lights[" + std::to_string(i) + "].pos", lights[i].position);
@@ -212,35 +217,10 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 		useMTL(var.first);
 		glCallList(var.second);
 		m_shader.unbind();
+		glDisable(GL_BLEND);
 	}
 
-    glDisable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
-	/*m_shader.bind();
-
-
-    m_shader.set("camera_pos", camera.pos());
-    m_shader.set("light_count", (int)lights.size());
-
-    for (size_t t = 0; t < lights.size(); ++t) {
-        m_shader.set("lights[" + std::to_string(t) + "].pos", lights[t].pos);
-        // m_shader.set("lights[" + std::to_string(t) + "].falloff", lights[t].falloff);
-        // m_shader.set("lights[" + std::to_string(t) + "].intensity", lights[t].intensity);
-    }
-
-    m_shader.set("ks", glm::vec3(0.9, 0.9, 0.9));
-    m_shader.set("kd", glm::vec3(0.4, 0.3, 0.2));
-    m_shader.set("ka", glm::vec3(0.1, 0.1, 0.1));
-    m_shader.set("shininess", 32.0f);
-
-	for (auto var : drawLists)
-	{
-        // set up material
-
-		glCallList(var.second);
-	}
-
-	m_shader.unbind(); */
+	glDisable(GL_DEPTH_TEST);
 }
 
 void Model::useMTL(std::string mtl) {
