@@ -23,7 +23,7 @@ void main()
 {
     vec3 sample = max(texture2D(render, uv).rgb, vec3(0.0));
 
-    // assume values > W map to white
+    // assume values > white_point map to white
 
     vec3 color = Uncharted2Tonemap(exposure * sample)
                / Uncharted2Tonemap(vec3(white_point));

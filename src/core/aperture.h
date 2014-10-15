@@ -9,6 +9,8 @@
 #include <map>
 
 #include "utils/fft_engine.h"
+#include "utils/texture2d.h"
+#include "utils/shader.h"
 #include "utils/image.h"
 
 #include "gui/framebuffer.h"
@@ -53,6 +55,7 @@ private:
 
     gl::shader m_shader;
     gl::shader m_ghost_shader;
+    gl::texture2D m_spectrum;
     fft_engine& m_fft;
     int m_flare_hash;
     float m_f_number;
