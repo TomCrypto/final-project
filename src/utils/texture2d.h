@@ -1,3 +1,12 @@
+/* Purpose:
+ *
+ *  - manages a GL_TEXTURE_2D OpenGL object (no mipmaps)
+ *
+ * This is a very simple wrapper around an OpenGL 2D texture, either allocated
+ * directly or from an image instance. It supports floating-point textures and
+ * 32-bit RGBA textures. It is noncopyable. Obviously.
+*/
+
 #ifndef UTILS_TEXTURE2D_H
 #define UTILS_TEXTURE2D_H
 
@@ -24,8 +33,6 @@ namespace gl
         texture2D(const std::string& path, GLenum format);
         texture2D(const image& img, GLenum format);
         texture2D(const glm::ivec2& dims, GLenum format);
-        texture2D& operator=(const texture2D& other);
-        texture2D(const texture2D& other);
         ~texture2D();
 
         // Resizes this texture (after this operation
@@ -41,7 +48,12 @@ namespace gl
         // Returns the texture ID of the texture
         GLuint operator()() const;
 
+        glm::ivec2 dims() const;
+
     private:
+        texture2D& operator=(const texture2D& other);
+        texture2D(const texture2D& other);
+
         glm::ivec2 m_dims;
         GLuint m_tex;
         GLenum m_fmt;
