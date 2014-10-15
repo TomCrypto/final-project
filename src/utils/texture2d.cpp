@@ -150,9 +150,7 @@ namespace gl
 
     texture2D::~texture2D()
     {
-        if (m_tex) {
-            glDeleteTextures(1, &m_tex);
-        }
+        glDeleteTextures(1, &m_tex);
     }
 
     void texture2D::resize(const glm::ivec2& dims)
@@ -160,9 +158,11 @@ namespace gl
         m_dims = dims;
 
         if (m_fmt == GL_UNSIGNED_BYTE) {
+            glDeleteTextures(1, &m_tex);
             m_tex = alloc_texture(m_dims, nullptr,
                                   GL_RGBA, GL_UNSIGNED_BYTE);
         } else if (m_fmt == GL_FLOAT) {
+            glDeleteTextures(1, &m_tex);
             m_tex = alloc_texture(m_dims, nullptr,
                                   GL_RGBA32F, GL_FLOAT);
         }
