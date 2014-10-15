@@ -1,7 +1,7 @@
 #version 120
 uniform vec3 camera_pos;
 
-uniform vec3 ks, kd, ka;
+uniform vec4 ks, kd, ka;
 uniform float shininess;
 
 varying vec3 world_pos;
@@ -19,18 +19,18 @@ uniform int noOfLights;
 uniform int textureSet;
 uniform sampler2D tex;
 
-const vec3 ambient = vec3(0.2, 0.2, 0.2);
+const vec4 ambient = vec4(0.2, 0.2, 0.2, 1);
 
 void main()
 {
     vec3 N = normalize(normal);
 
+	vec4 newKd = kd;
 	if(textureSet==42) {
-		gl_FragColor = vec4(texture2D(tex, uv).rgba);
-		return;
+		newKd = texture2D(tex, uv).rgba;
 	}
 
-	vec3 color = ambient*ka;
+	vec4 color = ambient*ka;
 	float att;
 	vec3 lightDir;
 	for(int i=0;i<noOfLights;i++) {
@@ -44,16 +44,17 @@ void main()
 			lightDir = normalize(posToLight);
 			att = 1.0f /(dot(lights[i].attenuation,vec3(1,distance,distance*distance)));
 		}
-		vec3 diffuse = att*lights[i].intensity*kd*max(0.0,dot(N,lightDir));
-		vec3 spec = vec3(0);
+		vec4 intensity = att*vec4(lights[i].intensity,1);
+		vec4 diffuse = intensity*newKd*max(0.0,dot(N,lightDir));
+		vec4 spec = vec4(0);
 		if(dot(N,lightDir)>=0.0f && shininess>0) {
 			vec3 V = normalize(world_pos - camera_pos);
-			spec = att*lights[i].intensity*ks*pow(max(0,dot(reflect(-lightDir,N),V)),shininess);
+			spec = intensity*ks*pow(max(0,dot(reflect(-lightDir,N),V)),shininess);
 		}
 		color = color + diffuse + spec;
 	}
 
-    gl_FragColor = vec4(color,1);
+    gl_FragColor = color;
 
 	// fog here
     //vec3 horizon_color = vec3(0, 0.15, 0.85);

@@ -244,9 +244,9 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 }
 
 void Model::useMTL(std::string mtl) {
-	m_shader.set("ka", materials[mtl].Ka);
-	m_shader.set("kd", materials[mtl].Kd);
-	m_shader.set("ks", materials[mtl].Ks);
+	m_shader.set("ka", glm::vec4(materials[mtl].Ka, 1));
+	m_shader.set("kd", glm::vec4(materials[mtl].Kd, 1));
+	m_shader.set("ks", glm::vec4(materials[mtl].Ks, 1));
 	m_shader.set("shininess", materials[mtl].Ns);
 }
 void Model::addToList(int v, int n, int u) {
