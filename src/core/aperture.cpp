@@ -4,9 +4,12 @@
 
 #include <cmath>
 
+static image get_spectrum_image();
+
 aperture::aperture(fft_engine& fft)
     : m_fft(fft), m_shader("aperture.vert", "aperture.frag"),
-      m_ghost_shader("ghost.vert", "ghost.frag")
+      m_ghost_shader("ghost.vert", "ghost.frag"),
+      m_spectrum(get_spectrum_image(), GL_FLOAT)
 {
 
 }
@@ -154,6 +157,17 @@ static glm::vec3 wavelength_rgb(float lambda)
     if (rgb.z > 1) rgb.z = 1;
 
     return rgb;
+}
+
+image get_spectrum_image()
+{
+    image img(glm::ivec2(80, 1));
+
+    for (size_t t = 0; t < 80; ++t) {
+        img[0][t] = glm::vec4(wavelength_rgb(380 + 5 * t), 1.0f);
+    }
+
+    return img;
 }
 
 image aperture::get_cfft(const image& psf)
@@ -312,10 +326,13 @@ void aperture::render_ghosts(const std::vector<light>& lights,
     m_ghost_shader.bind();
 
     m_ghost_shader.set("occlusion", occlusion, 0, GL_NEAREST, GL_NEAREST);
+    m_ghost_shader.set("spectrum", m_spectrum, 1);
     m_ghost_shader.set("max_lights", 8);
     m_ghost_shader.set("intensity", intensity);
     m_ghost_shader.set("f_number", m_f_number);
     m_ghost_shader.set("ghost_brightness", ghost_brightness);
+
+    glBegin(GL_QUADS);
 
     for (size_t t = 0; t < lights.size(); ++t) {
         if (!lights[t].ghosts)
@@ -340,31 +357,24 @@ void aperture::render_ghosts(const std::vector<light>& lights,
                 float p = exp(1 / std::pow(uniform(), 0.35f)) - exp(1.0f);
                 float sz = ghost_size * 3 * (0.2f + 0.8f * pow(uniform(), 5.0f));
 
-                m_ghost_shader.set("ghost_blur", uniform() * 0.45f + 0.25f);
-
-                m_ghost_shader.set("ghost_color",
-                    (0.00005f + uniform() * 0.0002f) *
-                    wavelength_rgb(uniform() * 300 + 400)
-                );
-
                 float aspect = camera.aspect_ratio();
 
                 auto pos = glm::mix((glm::vec2)projected, glm::vec2(0), p);
                 if (p < 1) sz *= glm::sqrt(p); // ghosts smaller near flare
 
-                glBegin(GL_QUADS);
-                glTexCoord3f(0.0f, 0.0f, (float)t);
+                glTexCoord4f(0.0f, 0.0f, (float)t, 101 * i + m_flare_hash);
                 glVertex2f(-sz + pos.x, -sz * aspect + pos.y);
-                glTexCoord3f(1.0f, 0.0f, (float)t);
+                glTexCoord4f(1.0f, 0.0f, (float)t, 101 * i + m_flare_hash);
                 glVertex2f(+sz + pos.x, -sz * aspect + pos.y);
-                glTexCoord3f(1.0f, 1.0f, (float)t);
+                glTexCoord4f(1.0f, 1.0f, (float)t, 101 * i + m_flare_hash);
                 glVertex2f(+sz + pos.x, +sz * aspect + pos.y);
-                glTexCoord3f(0.0f, 1.0f, (float)t);
+                glTexCoord4f(0.0f, 1.0f, (float)t, 101 * i + m_flare_hash);
                 glVertex2f(-sz + pos.x, +sz * aspect + pos.y);
-                glEnd();
             }
         }
     }
+
+    glEnd();
 
     m_ghost_shader.unbind();
 
