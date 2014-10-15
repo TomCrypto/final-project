@@ -68,20 +68,6 @@ static std::vector<uint8_t> image_to_bytes(const image& img)
 
 namespace gl
 {
-    texture2D& texture2D::operator=(const texture2D& other)
-    {
-        m_fmt = other.m_fmt;
-        m_tex = other.m_tex;
-        m_dims = other.m_dims;
-
-        return *this;
-    }
-
-    texture2D::texture2D(const texture2D& other)
-    {
-        *this = other;
-    }
-
     texture2D::texture2D(const std::string& path, GLenum format)
         : m_fmt(format), m_tex(0)
     {
@@ -178,5 +164,10 @@ namespace gl
     GLuint texture2D::operator()() const
     {
         return m_tex;
+    }
+
+    glm::ivec2 texture2D::dims() const
+    {
+        return m_dims;
     }
 }
