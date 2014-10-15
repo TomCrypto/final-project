@@ -115,8 +115,10 @@ public:
     glm::ivec2 dims() const;
     int width() const;
     int height() const;
+    bool is_opaque() const;
 private:
     FIBITMAP *dib;
+    bool m_opaque;
 };
 
 namespace utils

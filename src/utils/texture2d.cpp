@@ -66,23 +66,6 @@ static std::vector<uint8_t> image_to_bytes(const image& img)
     return buf;
 }
 
-static bool image_is_opaque(const image& img)
-{
-    for (int y = 0; y < img.dims().y; ++y) {
-        const glm::vec4* ptr = img[y];
-
-        for (int x = 0; x < img.dims().x; ++x) {
-            if ((ptr->w > 0) && (ptr->w < 1)) {
-                return false;
-            }
-
-            ++ptr;
-        }
-    }
-
-    return true;
-}
-
 namespace gl
 {
     texture2D::texture2D(const std::string& path, GLenum format)
@@ -105,7 +88,7 @@ namespace gl
             throw std::logic_error("");
         }
 
-        m_opaque = image_is_opaque(img);
+        m_opaque = img.is_opaque();
     }
 
     texture2D::texture2D(const image& img, GLenum format)
@@ -127,7 +110,7 @@ namespace gl
             throw std::logic_error("");
         }
 
-        m_opaque = image_is_opaque(img);
+        m_opaque = img.is_opaque();
     }
 
     texture2D::texture2D(const glm::ivec2& dims, GLenum format)
