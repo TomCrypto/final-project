@@ -50,11 +50,14 @@ namespace gl
 
         glm::ivec2 dims() const;
 
+        bool is_opaque() const;
+
     private:
         texture2D& operator=(const texture2D& other);
         texture2D(const texture2D& other);
 
         glm::ivec2 m_dims;
+        bool m_opaque;
         GLuint m_tex;
         GLenum m_fmt;
     };
