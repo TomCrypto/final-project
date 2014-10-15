@@ -37,7 +37,7 @@ static std::vector<glm::vec2> gen_points(size_t n, float min_dt) {
 /* Returns a randomly selected disk radius with good distribution. */
 static float disk_radius() {
     float u = (float)rand() / RAND_MAX;
-    return 0.005f + sqrt(u) * 0.065f;
+    return 0.002f + sqrt(u) * 0.035f;
 }
 
 overlay::overlay(int density)
@@ -50,7 +50,7 @@ void overlay::regenerate_film(int density) {
     m_film.clear();
 
     srand(42);
-    auto points = gen_points(density, 0.1f);
+    auto points = gen_points(density, 0.075f);
     srand(42);
 
     for (auto point : points) {
@@ -79,7 +79,6 @@ void overlay::render(const std::vector<light>& lights,
     m_shader.set("view_dir", glm::normalize(camera.dir()));
     m_shader.set("view_pos", camera.pos());
     m_shader.set("light_count", std::min((int)lights.size(), 8));
-    m_shader.set("inv_ratio", 1.0f / camera.aspect_ratio());
     m_shader.set("reflectivity", reflectivity);
 
     m_shader.set("occlusion", occlusion, 0, GL_NEAREST, GL_NEAREST);
@@ -90,6 +89,8 @@ void overlay::render(const std::vector<light>& lights,
                      lights[t].position);
     }
 
+    float aspect = camera.aspect_ratio();
+
     glBegin(GL_QUADS);
 
     for (size_t t = 0; t < m_film.size(); ++t) {
@@ -97,13 +98,13 @@ void overlay::render(const std::vector<light>& lights,
         float radius = m_film[t].second;
 
         glTexCoord2f(0, 1);
-        glVertex3f(pos.x * camera.aspect_ratio() - radius, pos.y + radius, 1);
+        glVertex3f(pos.x - radius, (pos.y + radius) * aspect, 1);
         glTexCoord2f(1, 1);
-        glVertex3f(pos.x * camera.aspect_ratio() + radius, pos.y + radius, 1);
+        glVertex3f(pos.x + radius, (pos.y + radius) * aspect, 1);
         glTexCoord2f(1, 0);
-        glVertex3f(pos.x * camera.aspect_ratio() + radius, pos.y - radius, 1);
+        glVertex3f(pos.x + radius, (pos.y - radius) * aspect, 1);
         glTexCoord2f(0, 0);
-        glVertex3f(pos.x * camera.aspect_ratio() - radius, pos.y - radius, 1);
+        glVertex3f(pos.x - radius, (pos.y - radius) * aspect, 1);
     }
 
     glEnd();

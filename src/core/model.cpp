@@ -153,6 +153,7 @@ void Model::readMTL(std::string filename) {
 			else if (t[0] == "newmtl") {
 				mtl = t[1];
 				materials[mtl];
+				materials[mtl].map_Kd = 0;
 			}
 			else if (t[0] == "illum") materials[mtl].illum = std::stoi(t[1]);
 			else if (t[0] == "Ka") materials[mtl].Ka = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
@@ -164,9 +165,9 @@ void Model::readMTL(std::string filename) {
 			else if (t[0] == "Ni") materials[mtl].Ni = std::stof(t[1]);
 			else if (t[0] == "d") materials[mtl].d = std::stof(t[1]);
 			else if (t[0] == "Tr") materials[mtl].Tr = std::stof(t[1]);
-			/*else if (t2[0] == "map_Kd") {
-				m.map_Kd = new gl::texture2D(t2[1], GL_UNSIGNED_BYTE);
-			}*/
+			else if (t[0] == "map_Kd") {
+				materials[mtl].map_Kd = new gl::texture2D(t[1], GL_UNSIGNED_BYTE);
+			}
 			else {
 				LOG(ERROR) << t[0];
 			}
