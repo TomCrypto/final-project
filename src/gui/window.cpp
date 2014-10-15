@@ -31,10 +31,11 @@ namespace gui
                  initial_camera_pos,
                  initial_camera_dir,
                  glm::radians(m_bar.cam_fov)),
-        m_lighthouse("models/STLamp.obj"),
-        //m_outbuilding("models/OutBuilding.obj"),
-        //m_terrain("models/Terrain.obj"),
-        //m_tree("models/Tree.obj"),
+				 m_lighthouse("models/Lighthouse.obj"),
+        m_outbuilding("models/OutBuilding.obj"),
+        m_terrain("models/Terrain.obj"),
+        m_tree("models/Tree.obj"),
+		m_light("models/STLamp.obj"),
         m_skybox(),
         #if !NO_LENS_FLARES
         m_overlay(m_bar.lens_density),
@@ -83,10 +84,13 @@ namespace gui
 
         m_skybox.display(m_camera,m_bar.Atmos);
 
-        m_lighthouse.display(m_camera, lights);
+        //m_lighthouse.display(m_camera, lights);
 		//m_outbuilding.display(m_camera, lights);
 		//m_terrain.display(m_camera, lights);
 		//m_tree.display(m_camera, lights);
+
+		//translate somehow
+		m_light.display(m_camera, lights);
 
         #if !NO_LENS_FLARES
         const auto& occlusion = m_occlusion.query(

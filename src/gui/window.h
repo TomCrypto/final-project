@@ -80,9 +80,10 @@ namespace gui
         camera m_camera;
 
         Model m_lighthouse;
-        //Model m_outbuilding;
-        //Model m_terrain;
-        //Model m_tree;
+        Model m_outbuilding;
+        Model m_terrain;
+        Model m_tree;
+		Model m_light;
 
         skybox m_skybox;
         #if !NO_LENS_FLARES
