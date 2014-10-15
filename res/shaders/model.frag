@@ -6,6 +6,7 @@ uniform float shininess;
 
 varying vec3 world_pos;
 varying vec3 normal;
+varying vec2 uv;
 
 struct lightSource {
 vec4 pos;
@@ -15,11 +16,19 @@ vec3 attenuation; // Constant/linear/quadratic (xyz)
 uniform lightSource[8] lights;
 uniform int noOfLights;
 
+uniform int textureSet;
+uniform sampler2D tex;
+
 const vec3 ambient = vec3(0.2, 0.2, 0.2);
 
 void main()
 {
     vec3 N = normalize(normal);
+
+	if(textureSet==42) {
+		gl_FragColor = vec4(texture2D(tex, uv).rgb,1);
+		return;
+	}
 
 	vec3 color = ambient*ka;
 	float att;

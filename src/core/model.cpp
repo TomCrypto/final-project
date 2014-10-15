@@ -154,6 +154,7 @@ void Model::readMTL(std::string filename) {
 				mtl = t[1];
 				materials[mtl];
 				materials[mtl].map_Kd = 0;
+				//printf("mtl = %s\n", mtl.c_str());
 			}
 			else if (t[0] == "illum") materials[mtl].illum = std::stoi(t[1]);
 			else if (t[0] == "Ka") materials[mtl].Ka = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
@@ -166,7 +167,9 @@ void Model::readMTL(std::string filename) {
 			else if (t[0] == "d") materials[mtl].d = std::stof(t[1]);
 			else if (t[0] == "Tr") materials[mtl].Tr = std::stof(t[1]);
 			else if (t[0] == "map_Kd") {
-				materials[mtl].map_Kd = new gl::texture2D(t[1], GL_UNSIGNED_BYTE);
+				size_t found = filename.find_last_of("/");
+				if (found == std::string::npos) materials[mtl].map_Kd = new gl::texture2D(t[1], GL_UNSIGNED_BYTE);
+				else materials[mtl].map_Kd = new gl::texture2D(filename.substr(0, found + 1) + t[1], GL_UNSIGNED_BYTE);				
 			}
 			else {
 				LOG(ERROR) << t[0];
@@ -186,6 +189,12 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 	for (auto var : drawLists)
 	{
 		m_shader.bind();
+		if (var.first!="" && materials[var.first].map_Kd != nullptr) {
+			//LOG(INFO) << "Texture at: " + var.first;
+			m_shader.set("textureSet", 42);
+			m_shader.set("tex", *materials[var.first].map_Kd, 0);
+		}
+		else m_shader.set("textureSet", 0);
 		m_shader.set("view", camera.view());
         m_shader.set("proj", camera.proj());
         m_shader.set("camera_pos", camera.pos());
