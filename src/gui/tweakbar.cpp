@@ -72,13 +72,13 @@ namespace gui
 		TwAddVarRW(m_bar,
 			"Turbidity", TW_TYPE_FLOAT, &Atmos.turbidity,
 			" label='turbidity' group='Atmospheric'"
-			" min=2 step=0.01");
+			" min=1.3 max=4 step=0.01");
 
 		TwAddVarCB(m_bar,
 			"theta", TW_TYPE_FLOAT,
 			sun_theta_scb, sun_theta_gcb, &Atmos,
 			" label='theta' group='Atmospheric'"
-			" min=0 max=89 step=0.05");
+			" min=0 max=87 step=0.05");
 
 		TwAddVarRW(m_bar,
 			"phi", TW_TYPE_FLOAT, &Atmos.phi,
