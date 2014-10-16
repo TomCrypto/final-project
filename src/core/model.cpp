@@ -207,7 +207,7 @@ void Model::readMTL(std::string filename) {
 	LOG(INFO) << "finished reading mtl file " << std::to_string(materials.size() - prev);
 }
 
-void Model::display(const camera& camera, const std::vector<light>& lights, glm::mat4 transform) {
+void Model::display(const camera& camera, const std::vector<light>& lights) {
 	glEnable(GL_DEPTH_TEST);
 
 	if (drawLists.empty()) {

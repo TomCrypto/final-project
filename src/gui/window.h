@@ -80,11 +80,7 @@ namespace gui
         main_bar m_bar;
         camera m_camera;
 
-        Model m_lighthouse;
-        Model m_outbuilding;
-        Model m_terrain;
-        Model m_tree;
-		Model m_light;
+		std::map<std::string, Model> models;
 
         skybox m_skybox;
         #if !NO_LENS_FLARES
