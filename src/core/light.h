@@ -55,7 +55,8 @@ class light_renderer
 public:
     light_renderer();
     ~light_renderer();
-    void display(const camera& camera, const std::vector<light>& lights);
+    void display(const camera& camera, const std::vector<light>& lights,
+                 const glm::mat4& transform = glm::mat4(1.0f));
 private:
     light_renderer& operator=(const light_renderer& other);
     light_renderer(const light_renderer& other);
