@@ -15,9 +15,7 @@
 
 static unsigned char saturate(float x)
 {
-    if (x < 0) return 0;
-    if (x > 1) return 255;
-    return (int)(x * 255);
+    return glm::clamp((int)(x * 255.0f), 0, 255);
 }
 
 static GLuint alloc_texture(const glm::ivec2& dims,
