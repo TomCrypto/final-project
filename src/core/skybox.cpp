@@ -96,7 +96,7 @@ void skybox::display(const camera& cam, atmos vars, const std::vector<light>& li
         m_sun.set("sun_color", light.intensity);
         m_sun.set("sun_pos", (glm::vec3)light.position);
 
-        gluSphere(quad, light.radius, 64, 64);
+        gluSphere(quad, light.radius, 16, 16);
     }
 
     m_sun.unbind();
