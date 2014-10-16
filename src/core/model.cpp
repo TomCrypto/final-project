@@ -147,26 +147,54 @@ void Model::readMTL(std::string filename) {
 	if (myfile.is_open())
 	{
 		std::string mtl;
+		bool l = false;
+
 		while (getline(myfile, line)) {
 			std::vector<std::string> t = split(line, ' ');
 			if (t.size() == 0 || t[0] == "#" || t[0] == "\n");
+			else if (t[0] == "newlight") {
+				if (!l) l = true;
+				lights.push_back(light(glm::vec4(0), glm::vec3(0), glm::vec3(0), 0.0f, LIGHT_SMALL, false));
+			}
+			else if (l && t[0] == "position") {
+				lights.back().position = glm::vec4(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]), 1.0f);
+			}
+			else if (l && t[0] == "intensity") {
+				lights.back().intensity = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			}
+			else if (l && t[0] == "attenuation") {
+				lights.back().attenuation = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			}
+			else if (l && t[0] == "radius") {
+				lights.back().radius = std::stof(t[1]);
+			}
+			else if (l && t[0] == "type") {
+				lights.back().type = (light_type) std::stoi(t[1]);
+			}
+			else if (l && t[0] == "ghosts") {
+				if (std::stoi(t[1]) == 1) lights.back().ghosts = true;
+			}
+			
 			else if (t[0] == "newmtl") {
 				mtl = t[1];
 				materials[mtl];
 				materials[mtl].map_Kd = 0;
+				if (l) {
+					l = false;
+				}
 				//printf("mtl = %s\n", mtl.c_str());
 			}
-			else if (t[0] == "illum") materials[mtl].illum = std::stoi(t[1]);
-			else if (t[0] == "Ka") materials[mtl].Ka = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			else if (t[0] == "Kd") materials[mtl].Kd = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			else if (t[0] == "Ks") materials[mtl].Ks = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			else if (t[0] == "Ke") materials[mtl].Ke = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			else if (t[0] == "Tf") materials[mtl].Tf = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			else if (t[0] == "Ns") materials[mtl].Ns = std::stof(t[1]);
-			else if (t[0] == "Ni") materials[mtl].Ni = std::stof(t[1]);
-			else if (t[0] == "d") materials[mtl].d = std::stof(t[1]);
-			else if (t[0] == "Tr") materials[mtl].Tr = std::stof(t[1]);
-			else if (t[0] == "map_Kd") {
+			else if (!l && t[0] == "illum") materials[mtl].illum = std::stoi(t[1]);
+			else if (!l && t[0] == "Ka") materials[mtl].Ka = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			else if (!l && t[0] == "Kd") materials[mtl].Kd = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			else if (!l && t[0] == "Ks") materials[mtl].Ks = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			else if (!l && t[0] == "Ke") materials[mtl].Ke = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			else if (!l && t[0] == "Tf") materials[mtl].Tf = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+			else if (!l && t[0] == "Ns") materials[mtl].Ns = std::stof(t[1]);
+			else if (!l && t[0] == "Ni") materials[mtl].Ni = std::stof(t[1]);
+			else if (!l && t[0] == "d") materials[mtl].d = std::stof(t[1]);
+			else if (!l && t[0] == "Tr") materials[mtl].Tr = std::stof(t[1]);
+			else if (!l && t[0] == "map_Kd") {
 				size_t found = filename.find_last_of("/");
 				if (found == std::string::npos) materials[mtl].map_Kd = new gl::texture2D(t[1], GL_UNSIGNED_BYTE);
 				else materials[mtl].map_Kd = new gl::texture2D(filename.substr(0, found + 1) + t[1], GL_UNSIGNED_BYTE);

@@ -61,6 +61,7 @@ private:
 	std::vector<glm::vec3> normals;
 	std::map < std::string, Group > groups;
 	std::map < std::string, Material > materials;
+	std::vector<light> lights;
 
 	gl::shader m_shader;
 
