@@ -10,9 +10,6 @@ skybox::skybox()
       m_sun("sun.vert", "sun.frag")
 {
     quad = gluNewQuadric();
-	gluQuadricDrawStyle(quad, GLU_FILL);
-	gluQuadricTexture(quad, TRUE);
-	gluQuadricNormals(quad, GLU_SMOOTH);
 }
 
 glm::vec3 skybox::calcSunColor(float theta, float T) {
@@ -70,57 +67,16 @@ void skybox::display(const camera& cam, atmos vars, const std::vector<light>& li
 	glm::vec3 betaRayMie = betaRay + betaMie;
 	glm::vec3 oneOverBetaRayMie = 1.0f / (betaRayMie);
 	m_shader.set("oneOverBetaRayMie", oneOverBetaRayMie);
-	/*LOG(ERROR) << glm::to_string(glm::vec3(lambda*lambda*lambda*lambda));
-	LOG(ERROR) << glm::to_string(rayleighTheta*glm::vec3(vars.ray));
-	LOG(ERROR) << glm::to_string(rayleighTheta*glm::vec3(50));
-	exit(1);*/
-	//total BetaR
-
-	/*std::cout << glm::to_string(rayleighMultipier) << "\n";
-	std::cout << glm::to_string(betaRayleigh) << "\n";
-	std::cout << glm::to_string(lambda) << "\n";
-	std::cout << glm::to_string(lambda*lambda) << "\n";
-	std::cout << glm::to_string(lambda*lambda*lambda*lambda) << "\n";
-	std::cout << glm::to_string(glm::vec3(1,2,3) * glm::vec3(6,7,8)) << "\n";*/
-	//exit(0);
-
-
-
-
-
-	//Rayleigh + Mie
-	//glm::vec3 betaRM = betaRayleigh+betaMie;
-	//glm::vec3 oneOverBetaRM = glm::vec3(1) / betaRM;
 
 	float g = 0.8f; //Henyey Greensteins's G value
 	glm::vec3 HG = glm::vec3((1 - g)*(1 - g), 1 + g*g, 2 * g);
 
-	//m_shader.set("betaRM", betaRM);
-	//m_shader.set("oneOverBetaRM", oneOverBetaRM);
 	m_shader.set("gHG", HG);
 
 	//sunDir
 	m_shader.set("sunDir",calcSunDir(vars.theta,vars.phi));
 	//calculate colour
 	m_shader.set("Esun", vars.sunColor);
-	/*
-
-	uniform float Esun;
-	uniform vec3 sunDir;
-	uniform vec3 eyePos;
-	uniform vec3 betaRay;
-	uniform vec3 betaMie;
-	uniform vec3 betaRM;
-	uniform vec3 oneOverBetaRM;
-	uniform vec3 gHG;
-
-	*/
-    /*m_shader.set("light_incl", vars.inclination);
-    m_shader.set("light_lat", vars.latitude);
-	m_shader.set("scatter_strength", vars.InMult);
-	m_shader.set("rayleigh_strength", vars.RayMult);
-	m_shader.set("mie_strength", vars.MieMult);*/
-
 
     gluSphere(quad, 100, 256, 256);
 
@@ -136,9 +92,6 @@ void skybox::display(const camera& cam, atmos vars, const std::vector<light>& li
         } else {
             glEnable(GL_DEPTH_TEST);
         }
-
-        //m_sun.set("sun_color", vars.sunBrightness * vars.sunColor);
-        //m_sun.set("sun_pos", calcSunDir(vars.theta, vars.phi));
 
         m_sun.set("sun_color", light.intensity);
         m_sun.set("sun_pos", (glm::vec3)light.position);
