@@ -3,6 +3,12 @@
 
 #include <glm/glm.hpp>
 
+#include <GL/glew.h>
+#include <GL/glu.h>
+
+#include "core/camera.h"
+#include "utils/shader.h"
+
 // meta-representation of a light source in the world
 // use this to communicate light sources between different
 // subsystems
@@ -42,6 +48,20 @@ struct light
         float radius; // World radius of light source sphere
         light_type type; // Type of light (for lens flare)
         bool ghosts; // Whether to draw ghosts or not
+};
+
+class light_renderer
+{
+public:
+    light_renderer();
+    ~light_renderer();
+    void display(const camera& camera, const std::vector<light>& lights);
+private:
+    light_renderer& operator=(const light_renderer& other);
+    light_renderer(const light_renderer& other);
+
+    gl::shader m_shader;
+    GLUquadric* m_quad;
 };
 
 #endif

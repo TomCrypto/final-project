@@ -42,7 +42,8 @@ namespace gui
         m_aperture(m_fft),
         m_occlusion(),
         #endif
-        m_framebuffer(m_dims)
+        m_framebuffer(m_dims),
+        m_light_renderer()
     {
         LOG(INFO) << "All components initialized.";
         LOG(TRACE) << "Window resolution is "
@@ -83,6 +84,8 @@ namespace gui
         m_framebuffer.clear(true);
 
         m_skybox.display(m_camera,m_bar.Atmos, lights);
+
+        m_light_renderer.display(m_camera, lights);
 
         m_lighthouse.display(m_camera, lights);
 		m_outbuilding.display(m_camera, lights);

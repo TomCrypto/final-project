@@ -20,6 +20,7 @@
 #include "gui/fps_counter.h"
 #include "gui/mouse_tracker.h"
 
+#include "core/light.h"
 #include "core/model.h"
 #include "core/camera.h"
 #include "core/skybox.h"
@@ -92,6 +93,8 @@ namespace gui
         occlusion m_occlusion;
         #endif
         framebuffer m_framebuffer;
+
+        light_renderer m_light_renderer;
     };
 }
 
