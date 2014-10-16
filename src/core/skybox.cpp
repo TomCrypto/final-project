@@ -91,26 +91,5 @@ void skybox::display(const camera& cam, atmos vars, const std::vector<light>& li
 
     gluSphere(quad, 100, 4, 4);
 
-    /*m_sun.bind();
-    m_sun.set("proj", cam.proj());
-
-    for (auto light : lights) {
-        bool fixed = (light.position.w == 0);
-        m_sun.set("view", cam.view(!fixed));
-
-        if (fixed) {
-            glDisable(GL_DEPTH_TEST);
-        } else {
-            glEnable(GL_DEPTH_TEST);
-        }
-
-        m_sun.set("sun_color", light.intensity);
-        m_sun.set("sun_pos", (glm::vec3)light.position);
-
-        gluSphere(quad, light.radius, 16, 16);
-    }
-
-    m_sun.unbind();*/
-
     glEnable(GL_DEPTH_TEST);
 }
