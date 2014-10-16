@@ -48,7 +48,7 @@ namespace gui
     {
         light_pos = glm::vec3(0, 23.38, 0);
         light_pos_2 = glm::vec3(0, 25.45, 0);
-		translateLight = glm::vec3(0, 20, 0);
+		translateLight = glm::vec3(0, 19.52, 0);
 
         TwAddVarRW(m_bar,
             "light_pos", TW_TYPE_DIR3F, &light_pos,
