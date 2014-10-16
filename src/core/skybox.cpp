@@ -13,6 +13,8 @@ skybox::skybox()
 }
 
 glm::vec3 skybox::calcSunColor(float timeofday, float T) {
+    timeofday = (timeofday - 6) / 12;
+
 	float theta = 87.0 - 45.0*glm::sin(timeofday*3.14159265358979323846f);
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
 	float m = 1.0f / (glm::cos(glm::radians(theta)) + 0.15f * std::pow(93.885f - theta, -1.253f));
@@ -27,6 +29,8 @@ glm::vec3 skybox::calcSunColor(float timeofday, float T) {
 }
 
 glm::vec3 skybox::calcSunDir(float timeofday) {
+    timeofday = (timeofday - 6) / 12;
+
 	float theta = 87.0 - 45.0*glm::sin(timeofday*3.14159265358979323846f);
 	float phi = 22.5 + timeofday*(157.5 - 22.5);
 	return glm::vec3(glm::sin(glm::radians(theta))*glm::cos(glm::radians(phi)),
