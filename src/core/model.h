@@ -42,7 +42,7 @@ public:
 	Model(std::string filename);
 	void display(const camera& camera, const std::vector<light>& lights);
 	void setTransform(glm::mat4 t) { transform = t; };
-	std::vector<light> lights;
+	std::vector<light> getLights();
 private:
 	void readMTL(std::string filename);
 	void useMTL(std::string mtl);
@@ -54,6 +54,7 @@ private:
 	int m_nNumUV;
 	int m_nNumNormal;
 	int m_nNumPolygon;
+	std::vector<light> lights;
 
 	int mode; // Which mode to display
 

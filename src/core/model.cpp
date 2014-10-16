@@ -206,7 +206,13 @@ void Model::readMTL(std::string filename) {
 	}
 	LOG(INFO) << "finished reading mtl file " << std::to_string(materials.size() - prev);
 }
-
+std::vector<light> Model::getLights() {
+	std::vector<light> tmp;
+	for (light l : lights) {
+		tmp.push_back(light(transform*l.position,l.intensity,l.attenuation,l.radius,l.type,l.ghosts));
+	}
+	return tmp;
+}
 void Model::display(const camera& camera, const std::vector<light>& lights) {
 	glEnable(GL_DEPTH_TEST);
 
