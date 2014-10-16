@@ -166,9 +166,6 @@
     <None Include="..\lib\bin\win32\freeglut.dll">
       <Filter>Dependencies</Filter>
     </None>
-    <None Include="..\res\models\STLamp.mtl">
-      <Filter>Resource Files\Models</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\res\shaders\fs_quad.vert">
@@ -248,6 +245,18 @@
     <Media Include="..\res\models\Trees.obj">
       <Filter>Resource Files\Models</Filter>
     </Media>
+    <Media Include="..\res\models\Glass.png">
+      <Filter>Resource Files\Models</Filter>
+    </Media>
+    <Media Include="..\res\models\ChippedMetal.jpg">
+      <Filter>Resource Files\Models</Filter>
+    </Media>
+    <Media Include="..\res\models\STLamp.obj">
+      <Filter>Resource Files\Models</Filter>
+    </Media>
+    <Media Include="..\res\models\STLamp.mtl">
+      <Filter>Resource Files\Models</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\res\apertures\exotic.png">
@@ -292,19 +301,5 @@
     <Image Include="..\res\apertures\siggraph_custom.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
-    <Image Include="..\res\models\ChippedMetal.png">
-      <Filter>Resource Files\Models</Filter>
-    </Image>
-    <Image Include="..\res\models\Glass.png">
-      <Filter>Resource Files\Models</Filter>
-    </Image>
-    <Image Include="..\res\models\ChippedMetal.jpg">
-      <Filter>Resource Files\Models</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="..\res\models\STLamp.obj">
-      <Filter>Resource Files\Models</Filter>
-    </Object>
   </ItemGroup>
 </Project>
