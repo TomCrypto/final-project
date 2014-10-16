@@ -72,6 +72,9 @@ namespace gui
         float cam_sensitivity;
         bool cam_locked;
         float cam_fov;
+
+        glm::vec3 light_pos;
+        glm::vec3 light_pos_2;
     };
 }
 

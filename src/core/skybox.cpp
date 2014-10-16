@@ -34,7 +34,7 @@ glm::vec3 skybox::calcSunDir(float theta, float phi) {
 		glm::sin(glm::radians(theta))*glm::sin(glm::radians(phi)));
 }
 
-void skybox::display(const camera& cam, atmos vars)
+void skybox::display(const camera& cam, atmos vars, const std::vector<light>& lights)
 {
     glViewport(0, 0, cam.dims().x, cam.dims().y);
 
@@ -122,22 +122,31 @@ void skybox::display(const camera& cam, atmos vars)
 	m_shader.set("mie_strength", vars.MieMult);*/
 
 
-	glPushMatrix();
     gluSphere(quad, 100, 256, 256);
 
     m_sun.bind();
-    m_sun.set("view", cam.view(false));
     m_sun.set("proj", cam.proj());
 
-	m_sun.set("sun_color", vars.sunBrightness * vars.sunColor);
-    m_sun.set("sun_pos", calcSunDir(vars.theta, vars.phi));
+    for (auto light : lights) {
+        bool fixed = (light.position.w == 0);
+        m_sun.set("view", cam.view(!fixed));
 
-    float sun_radius = 0.02f;
+        if (fixed) {
+            glDisable(GL_DEPTH_TEST);
+        } else {
+            glEnable(GL_DEPTH_TEST);
+        }
 
-    gluSphere(quad, sun_radius, 64, 64);
+        //m_sun.set("sun_color", vars.sunBrightness * vars.sunColor);
+        //m_sun.set("sun_pos", calcSunDir(vars.theta, vars.phi));
+
+        m_sun.set("sun_color", light.intensity);
+        m_sun.set("sun_pos", (glm::vec3)light.position);
+
+        gluSphere(quad, light.radius, 64, 64);
+    }
 
     m_sun.unbind();
-	glPopMatrix();
 
     glEnable(GL_DEPTH_TEST);
 }

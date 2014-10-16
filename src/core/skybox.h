@@ -6,6 +6,7 @@
 
 #include "utils/shader.h"
 #include "core/camera.h"
+#include "core/light.h"
 
 struct atmos {
 	glm::vec3 sunColor;
@@ -18,7 +19,7 @@ public:
     skybox();
 	static glm::vec3 calcSunColor(float theta, float T);
 	static glm::vec3 calcSunDir(float theta, float phi);
-	void display(const camera& cam, atmos vars);
+	void display(const camera& cam, atmos vars, const std::vector<light>& lights);
 
 private:
     gl::shader m_shader;
