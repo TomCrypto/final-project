@@ -91,7 +91,7 @@ namespace gui
 
 		//translate somehow
 
-        m_light.display(m_camera, lights, glm::translate(glm::mat4(1.0f), glm::vec3(0,20,0)));
+        m_light.display(m_camera, lights, glm::translate(glm::mat4(1.0f), m_bar.translateLight));
 
 
         #if !NO_LENS_FLARES

@@ -75,6 +75,8 @@ namespace gui
 
         glm::vec3 light_pos;
         glm::vec3 light_pos_2;
+
+		glm::vec3 translateLight;
     };
 }
 
