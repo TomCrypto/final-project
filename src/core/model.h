@@ -40,8 +40,7 @@ struct Group {
 class Model {
 public:
 	Model(std::string filename);
-	void display(const camera& camera, const std::vector<light>& lights);
-	void display(const camera& camera, const std::vector<light>& lights, glm::mat4 transform);
+	void display(const camera& camera, const std::vector<light>& lights, glm::mat4 transform = glm::mat4(1.0f));
 	std::vector<light> lights;
 private:
 	void readMTL(std::string filename);
