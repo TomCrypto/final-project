@@ -42,6 +42,7 @@ public:
 	Model(std::string filename);
 	void display(const camera& camera, const std::vector<light>& lights);
 	void display(const camera& camera, const std::vector<light>& lights, glm::mat4 transform);
+	std::vector<light> lights;
 private:
 	void readMTL(std::string filename);
 	void useMTL(std::string mtl);
