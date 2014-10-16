@@ -31,11 +31,14 @@ namespace gui
                  initial_camera_pos,
                  initial_camera_dir,
                  glm::radians(m_bar.cam_fov)),
-		models({std::unique_ptr<Model>(new Model("models/Lighthouse.obj")),
-		std::unique_ptr<Model>(new Model("models/OutBuilding.obj")),
-		std::unique_ptr<Model>(new Model("models/Terrain.obj")),
-		std::unique_ptr<Model>(new Model("models/Tree.obj")),
-		std::unique_ptr<Model>(new Model("models/STLamp.obj")) }),
+		models(
+        {
+            std::shared_ptr<Model>(new Model("models/Lighthouse.obj")),
+            std::shared_ptr<Model>(new Model("models/OutBuilding.obj")),
+            std::shared_ptr<Model>(new Model("models/Terrain.obj")),
+            std::shared_ptr<Model>(new Model("models/Tree.obj")),
+            std::shared_ptr<Model>(new Model("models/STLamp.obj"))
+        }),
         m_skybox(),
         #if !NO_LENS_FLARES
         m_overlay(m_bar.lens_density),
