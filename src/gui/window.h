@@ -11,6 +11,8 @@
 
 #include <glm/glm.hpp>
 
+#include <unordered_map>
+#include <memory>
 #include <string>
 #include <map>
 
@@ -80,7 +82,7 @@ namespace gui
         main_bar m_bar;
         camera m_camera;
 
-		std::map<std::string, Model> models;
+		std::vector<std::shared_ptr<Model>> models;
 
         skybox m_skybox;
         #if !NO_LENS_FLARES
