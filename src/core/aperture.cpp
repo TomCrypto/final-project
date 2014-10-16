@@ -130,6 +130,7 @@ static glm::vec3 curve[80] = {
     glm::vec3(0.0001,0.0000,0.0000), glm::vec3(0.0001,0.0000,0.0000)
 };
 
+/* Converts a visible wavelength to an RGB color. */
 static glm::vec3 wavelength_rgb(float lambda)
 {
     if (lambda <= 380)
@@ -139,24 +140,19 @@ static glm::vec3 wavelength_rgb(float lambda)
         return curve[79];
 
     int pos = (int)((lambda - 380) / 5);
-    float t = pos + 1 - (lambda - 380) / 5;
+    float t = (lambda - 380) / 5 - pos;
 
-    auto xyz = curve[pos] + (curve[pos + 1] - curve[pos]) * t;
+    auto xyz = glm::mix(curve[pos], curve[pos + 1], t);
 
-    glm::mat3 mat(2.3706743, -0.9000405, -0.4706338,
-                 -0.5138850,  1.4253036,  0.0885814,
-                  0.0052982, -0.0146949,  1.0093968);
+    glm::mat3 xyz_to_rgb(+2.3706743, -0.9000405, -0.4706338,
+                         -0.5138850, +1.4253036, +0.0885814,
+                         +0.0052982, -0.0146949, +1.0093968);
 
-    glm::vec3 rgb = mat * xyz;
+    glm::vec3 rgb = xyz_to_rgb * xyz;
 
-    if (rgb.x < 0) rgb.x = 0;
-    if (rgb.x > 1) rgb.x = 1;
-    if (rgb.y < 0) rgb.y = 0;
-    if (rgb.y > 1) rgb.y = 1;
-    if (rgb.z < 0) rgb.z = 0;
-    if (rgb.z > 1) rgb.z = 1;
-
-    return rgb;
+    return glm::vec3(glm::clamp(rgb.x, 0.0f, 1.0f),
+                     glm::clamp(rgb.y, 0.0f, 1.0f),
+                     glm::clamp(rgb.z, 0.0f, 1.0f));
 }
 
 image get_spectrum_image()
@@ -174,7 +170,7 @@ image aperture::get_cfft(const image& psf)
 {
     image out(psf.dims());
 
-    const int samples = 40; // 10nm step (400nm over 40 samples)
+    const int samples = 40; // 10nm step (300nm to 700nm over 40 samples)
 
     for (int t = 0; t < samples; ++t)
     {
@@ -202,14 +198,17 @@ image aperture::get_flare(const image& cfft, int radius)
     return m_fft.convolve_disk(cfft, radius);
 }
 
+/* What this function does is select the proper lens flare to pick according
+ * to the type of the light (e.g. LIGHT_SMALL = small convolved disk)
+ * and then calculates by how much to scale that texture so that the disk
+ * is drawn exactly on top of the actual light sphere on screen.
+*/
 std::pair<int, float> aperture::compensate(
     const camera& camera, const light& light)
 {
     int selected_radius = radii[(int)light.type];
 
     // compute best flare texture + compensation factor
-
-    // first compute the AVERAGE projected radius (on screen)
 
     float max_radius = 0.0;
     const int samples = 16;
@@ -266,7 +265,7 @@ void aperture::render_flare(const std::vector<light>& lights,
 
     for (size_t t = 0; t < lights.size(); ++t) {
         auto comp = compensate(camera, lights[t]);
-        float s = comp.second; // compensation
+        float s = comp.second; // size compensation
 			m_shader.set("flare", *m_flares[comp.first].get(), 0,
 				GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
         const float w0 = 2.0f;

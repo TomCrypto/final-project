@@ -6,10 +6,14 @@
 #include <cmath>
 
 skybox::skybox()
-    : m_shader("skybox.vert", "skybox.frag"),
-      m_sun("sun.vert", "sun.frag")
+    : m_shader("skybox.vert", "skybox.frag")
 {
     quad = gluNewQuadric();
+}
+
+skybox::~skybox()
+{
+    gluDeleteQuadric(quad);
 }
 
 glm::vec3 skybox::calcSunColor(float timeofday, float T) {
@@ -87,7 +91,7 @@ void skybox::display(const camera& cam, atmos vars, const std::vector<light>& li
 
     gluSphere(quad, 100, 4, 4);
 
-    m_sun.bind();
+    /*m_sun.bind();
     m_sun.set("proj", cam.proj());
 
     for (auto light : lights) {
@@ -106,7 +110,7 @@ void skybox::display(const camera& cam, atmos vars, const std::vector<light>& li
         gluSphere(quad, light.radius, 16, 16);
     }
 
-    m_sun.unbind();
+    m_sun.unbind();*/
 
     glEnable(GL_DEPTH_TEST);
 }
