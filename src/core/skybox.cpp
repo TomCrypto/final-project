@@ -12,7 +12,8 @@ skybox::skybox()
     quad = gluNewQuadric();
 }
 
-glm::vec3 skybox::calcSunColor(float theta, float T) {
+glm::vec3 skybox::calcSunColor(float timeofday, float T) {
+	float theta = 87.0 - 45.0*glm::sin(timeofday*3.14159265358979323846f);
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
 	float m = 1.0f / (glm::cos(glm::radians(theta)) + 0.15f * std::pow(93.885f - theta, -1.253f));
 	glm::vec3 lam = glm::vec3(0.65f, 0.57f, 0.475f); //red green & blue in um
@@ -25,7 +26,9 @@ glm::vec3 skybox::calcSunColor(float theta, float T) {
 	return glm::vec3(fTauRx*fTauAx, fTauRy*fTauAy, fTauRz*fTauAz);
 }
 
-glm::vec3 skybox::calcSunDir(float theta, float phi) {
+glm::vec3 skybox::calcSunDir(float timeofday) {
+	float theta = 87.0 - 45.0*glm::sin(timeofday*3.14159265358979323846f);
+	float phi = 22.5 + timeofday*(157.5 - 22.5);
 	return glm::vec3(glm::sin(glm::radians(theta))*glm::cos(glm::radians(phi)),
 		glm::cos(glm::radians(theta)),
 		glm::sin(glm::radians(theta))*glm::sin(glm::radians(phi)));
@@ -74,7 +77,7 @@ void skybox::display(const camera& cam, atmos vars, const std::vector<light>& li
 	m_shader.set("gHG", HG);
 
 	//sunDir
-	m_shader.set("sunDir",calcSunDir(vars.theta,vars.phi));
+	m_shader.set("sunDir",calcSunDir(vars.timeofday));
 	//calculate colour
 	m_shader.set("Esun", vars.sunColor);
 

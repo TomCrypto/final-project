@@ -2,17 +2,17 @@
 #include "gui/tweakbar.h"
 #include <stdexcept>
 
-static void TW_CALL sun_theta_scb(const void *value, void *user_data)
+static void TW_CALL sun_timeofday_scb(const void *value, void *user_data)
 {
 	atmos* Atmos = (atmos*)user_data;
-	Atmos->theta = *(float*)value;
-	Atmos->sunColor = skybox::calcSunColor(Atmos->theta, Atmos->turbidity);
+	Atmos->timeofday = *(float*)value;
+	Atmos->sunColor = skybox::calcSunColor(Atmos->timeofday, Atmos->turbidity);
 }
 
-static void TW_CALL sun_theta_gcb(void *value, void *user_data)
+static void TW_CALL sun_timeofday_gcb(void *value, void *user_data)
 {
 	atmos* Atmos = (atmos*)user_data;
-	*(float*)value = Atmos->theta;
+	*(float*)value = Atmos->timeofday;
 }
 
 namespace gui
@@ -59,14 +59,13 @@ namespace gui
 
 		/* === atmospheric options === */
 
-		Atmos.theta = 75.0f;
-		Atmos.phi = 90.0f;
+		Atmos.timeofday = 0.0f;
 		Atmos.ray = 1500.0f;
 		Atmos.mie = 0.8f;
 		Atmos.extinction = 0.05f;
 		Atmos.turbidity = 2.0f;
 		Atmos.sunBrightness = 10000.0f;
-        sun_theta_scb(&Atmos.theta, &Atmos);
+		sun_timeofday_scb(&Atmos.timeofday, &Atmos);
 
 		TwAddVarRW(m_bar,
 			"rayleigh_multiplier", TW_TYPE_FLOAT, &Atmos.ray,
@@ -92,15 +91,10 @@ namespace gui
             " min=1000 max=30000 step=10");
 
 		TwAddVarCB(m_bar,
-			"theta", TW_TYPE_FLOAT,
-			sun_theta_scb, sun_theta_gcb, &Atmos,
-			" label='theta' group='Atmospheric'"
-			" min=0 max=87 step=0.05");
-
-		TwAddVarRW(m_bar,
-			"phi", TW_TYPE_FLOAT, &Atmos.phi,
-			" label='phi' group='Atmospheric'"
-			" min=0 max=180 step=0.05");
+			"timeofday", TW_TYPE_FLOAT,
+			sun_timeofday_scb, sun_timeofday_gcb, &Atmos,
+			" label='Time Of Day' group='Atmospheric'"
+			" min=0 max=1 step=0.05");
 
 		TwAddVarRW(m_bar,
 			"color", TW_TYPE_COLOR3F, &Atmos.sunColor,
