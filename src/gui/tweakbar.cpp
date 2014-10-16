@@ -46,6 +46,17 @@ namespace gui
                        const std::string& title)
       : basic_bar(name)
     {
+        light_pos = glm::vec3(0, 23.38, 0);
+        light_pos_2 = glm::vec3(0, 25.45, 0);
+
+        TwAddVarRW(m_bar,
+            "light_pos", TW_TYPE_DIR3F, &light_pos,
+            " label='light_pos'");
+
+        TwAddVarRW(m_bar,
+            "light_pos_2", TW_TYPE_DIR3F, &light_pos_2,
+            " label='light_pos_2'");
+
 		/* === atmospheric options === */
 
 		Atmos.theta = 75.0f;
@@ -58,21 +69,27 @@ namespace gui
         sun_theta_scb(&Atmos.theta, &Atmos);
 
 		TwAddVarRW(m_bar,
-			"Rayleigh Multiplier", TW_TYPE_FLOAT, &Atmos.ray,
+			"rayleigh_multiplier", TW_TYPE_FLOAT, &Atmos.ray,
 			" label='rayMult' group='Atmospheric'"
 			" min=1 step=10");
 		TwAddVarRW(m_bar,
-			"Mie Multiplier", TW_TYPE_FLOAT, &Atmos.mie,
+			"mie_multiplier", TW_TYPE_FLOAT, &Atmos.mie,
 			" label='mieMult' group='Atmospheric'"
 			" min=0.1 step=0.05");
 		TwAddVarRW(m_bar,
-			"Extinction", TW_TYPE_FLOAT, &Atmos.extinction,
+			"extinction", TW_TYPE_FLOAT, &Atmos.extinction,
 			" label='extinction' group='Atmospheric'"
 			" min=0 max=1 step=0.05");
-		TwAddVarRW(m_bar,
-			"Turbidity", TW_TYPE_FLOAT, &Atmos.turbidity,
+
+        TwAddVarRW(m_bar,
+			"turbidity", TW_TYPE_FLOAT, &Atmos.turbidity,
 			" label='turbidity' group='Atmospheric'"
 			" min=1.3 max=4 step=0.01");
+
+        TwAddVarRW(m_bar,
+            "sunBrightness", TW_TYPE_FLOAT, &Atmos.sunBrightness,
+            " label='sunBrightness' group='Atmospheric'"
+            " min=1000 max=30000 step=10");
 
 		TwAddVarCB(m_bar,
 			"theta", TW_TYPE_FLOAT,

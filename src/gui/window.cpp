@@ -68,21 +68,21 @@ namespace gui
         /* TEMPORARY: recalculate sun light data here to pass to overlay.
          * later this could be done by e.g. asking m_skybox for it. */
 
-        float sun_radius = 0.02f; // experimentally determined - radius of sun as viewed by camera
-
         std::vector<light> lights;
         lights.push_back(light(glm::vec4(skybox::calcSunDir(m_bar.Atmos.theta, m_bar.Atmos.phi), 0.0f),
-                               m_bar.Atmos.sunColor,
-                               glm::vec3(1, 1, 1), sun_radius, LIGHT_NORMAL, true));
+                               m_bar.Atmos.sunBrightness * m_bar.Atmos.sunColor,
+                               glm::vec3(1, 1, 1), 0.02f, LIGHT_NORMAL, true));
 
-        //lights.push_back(light(glm::vec4(10, 0, 5, 1), glm::vec3(0), 0.5f));
+        lights.push_back(light(glm::vec4(m_bar.light_pos, 1), glm::vec3(10000, 8000, 6000), glm::vec3(1, 1, 1), 0.02f, LIGHT_SMALL, false));
+
+        lights.push_back(light(glm::vec4(m_bar.light_pos_2, 1), glm::vec3(5000, 4000, 3000), glm::vec3(1, 1, 1), 0.01f, LIGHT_TINY, false));
 
         // --- end of light precomputations ---
 
         m_framebuffer.bind();
         m_framebuffer.clear(true);
 
-        m_skybox.display(m_camera,m_bar.Atmos);
+        m_skybox.display(m_camera,m_bar.Atmos, lights);
 
         m_lighthouse.display(m_camera, lights);
 		m_outbuilding.display(m_camera, lights);

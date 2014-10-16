@@ -58,7 +58,7 @@ void main()
 		color = color + diffuse + spec;
 	}
 
-    gl_FragColor = vec4(color,alpha);
+    gl_FragColor = vec4(color*0.001,alpha);
 
 	// fog here
     //vec3 horizon_color = vec3(0, 0.15, 0.85);
