@@ -41,7 +41,7 @@ class Model {
 public:
 	Model(std::string filename);
 	void display(const camera& camera, const std::vector<light>& lights);
-	void setTransform(glm::mat4 t) { transform = t; };
+	void setTransform(const glm::mat4& t) { transform = t; };
 	std::vector<light> lights;
 private:
 	void readMTL(std::string filename);

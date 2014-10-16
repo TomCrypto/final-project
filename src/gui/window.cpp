@@ -31,11 +31,11 @@ namespace gui
                  initial_camera_pos,
                  initial_camera_dir,
                  glm::radians(m_bar.cam_fov)),
-		models({{"lighthouse", Model("models/Lighthouse.obj")},
-		{ "outbuilding", Model("models/OutBuilding.obj") },
-		{ "terrain", Model("models/Terrain.obj") },
-		{ "tree", Model("models/Tree.obj") },
-		{ "light", Model("models/STLamp.obj") }, }),
+		models({std::unique_ptr<Model>(new Model("models/Lighthouse.obj")),
+		std::unique_ptr<Model>(new Model("models/OutBuilding.obj")),
+		std::unique_ptr<Model>(new Model("models/Terrain.obj")),
+		std::unique_ptr<Model>(new Model("models/Tree.obj")),
+		std::unique_ptr<Model>(new Model("models/STLamp.obj")) }),
         m_skybox(),
         #if !NO_LENS_FLARES
         m_overlay(m_bar.lens_density),
@@ -69,7 +69,7 @@ namespace gui
         /* TEMPORARY: recalculate sun light data here to pass to overlay.
          * later this could be done by e.g. asking m_skybox for it. */
 		//translate lamp
-		models["light"].setTransform(glm::translate(glm::mat4(1.0f), m_bar.translateLight));
+		models.back().get()->setTransform(glm::translate(glm::mat4(1.0f), m_bar.translateLight));
 
         std::vector<light> lights;
         lights.push_back(skybox::calcLight(m_bar.Atmos));
@@ -87,8 +87,8 @@ namespace gui
 
         m_light_renderer.display(m_camera, lights);
 
-		for (auto m : models) {
-			m.second.display(m_camera, lights);
+		for (auto& m : models) {
+			m.get()->display(m_camera, lights);
 		}
 
 
