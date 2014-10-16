@@ -19,6 +19,7 @@ public:
     skybox();
 	static glm::vec3 calcSunColor(float timeofday, float T);
 	static glm::vec3 calcSunDir(float timeofday);
+	static light calcLight(atmos vars);
 	void display(const camera& cam, atmos vars, const std::vector<light>& lights);
 
 private:

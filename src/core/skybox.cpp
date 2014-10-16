@@ -12,8 +12,14 @@ skybox::skybox()
     quad = gluNewQuadric();
 }
 
+light skybox::calcLight(atmos vars) {
+	return light(glm::vec4(calcSunDir(vars.timeofday), 0.0f),
+		vars.sunBrightness * vars.sunColor,
+		glm::vec3(1), 0.02f, LIGHT_NORMAL, true);
+}
+
 glm::vec3 skybox::calcSunColor(float timeofday, float T) {
-    timeofday = (timeofday - 6) / 12;
+	timeofday = (timeofday - 6) / 12;
 
 	float theta = 87.0 - 45.0*glm::sin(timeofday*3.14159265358979323846f);
 	float fBeta = 0.04608365822050f * T - 0.04586025928522f;
