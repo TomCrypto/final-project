@@ -44,8 +44,6 @@ const gl::texture2D& occlusion::query(const std::vector<light>& lights,
                      lights[t].position);
         m_shader.set("lights[" + std::to_string(t) + "].radius",
                      lights[t].radius);
-        m_shader.set("lights[" + std::to_string(t) + "].intensity",
-                     lights[t].intensity);
         m_shader.set("lights[" + std::to_string(t) + "].partial_occlusion",
                      (int)((int)lights[t].type >= (int)LIGHT_NORMAL));
     }

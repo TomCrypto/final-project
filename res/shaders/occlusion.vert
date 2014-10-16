@@ -4,7 +4,6 @@ struct light
 {
     vec4 pos;
 	float radius;
-	vec3 intensity;
 	int partial_occlusion;
 };
 
@@ -58,18 +57,6 @@ void main()
         // About 50% of samples will be back-facing
         total_occlusion = total / (lod * lod * 2.0);
     } else {
-        /*vec4 projected = viewproj * lights[lid].pos;
-        projected.xy /= projected.w;
-
-        vec2 sample_pos = (projected.xy + 1.0) / 2.0;
-
-        if ((sample_pos.x >= 0) && (sample_pos.y >= 0)
-        && (sample_pos.x <= 1) && (sample_pos.y <= 1)) {
-            total_occlusion = max(vec3(0.0), texture2D(render, sample_pos).rgb - vec3(1e1));
-        } else {
-            total_occlusion = vec3(0.0);
-        }*/
-
         int lod = compute_lod(lights[lid].pos, lights[lid].radius);
 
         vec3 total = vec3(0.0);
