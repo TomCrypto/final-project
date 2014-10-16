@@ -78,7 +78,7 @@ void skybox::display(const camera& cam, atmos vars, const std::vector<light>& li
 	//calculate colour
 	m_shader.set("Esun", vars.sunColor);
 
-    gluSphere(quad, 100, 256, 256);
+    gluSphere(quad, 100, 4, 4);
 
     m_sun.bind();
     m_sun.set("proj", cam.proj());
