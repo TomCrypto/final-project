@@ -42,6 +42,7 @@ public:
 	Model(std::string filename);
 	void display(const camera& camera, const std::vector<light>& lights);
 	void display(const camera& camera, const std::vector<light>& lights, glm::mat4 transform);
+	std::vector<light> lights;
 private:
 	void readMTL(std::string filename);
 	void useMTL(std::string mtl);
@@ -61,7 +62,6 @@ private:
 	std::vector<glm::vec3> normals;
 	std::map < std::string, Group > groups;
 	std::map < std::string, Material > materials;
-	std::vector<light> lights;
 
 	gl::shader m_shader;
 
