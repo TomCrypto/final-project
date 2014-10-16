@@ -73,9 +73,9 @@ namespace gui
                                m_bar.Atmos.sunBrightness * m_bar.Atmos.sunColor,
                                glm::vec3(1, 1, 1), 0.02f, LIGHT_NORMAL, true));
 
-        lights.push_back(light(glm::vec4(m_bar.light_pos, 1), glm::vec3(10000, 8000, 6000), glm::vec3(1, 1, 1), 0.02f, LIGHT_SMALL, false));
+        lights.push_back(light(glm::vec4(m_bar.light_pos, 1), 10000.0f * glm::vec3(1, .572f, .160f), glm::vec3(0.1f, 0.5f, 0), 0.02f, LIGHT_SMALL, false));
 
-        lights.push_back(light(glm::vec4(m_bar.light_pos_2, 1), glm::vec3(5000, 4000, 3000), glm::vec3(1, 1, 1), 0.01f, LIGHT_TINY, false));
+        lights.push_back(light(glm::vec4(m_bar.light_pos_2, 1), 5000.0f * glm::vec3(1, .572f, .160f), glm::vec3(0.1f, 0.5f, 0), 0.01f, LIGHT_TINY, false));
 
         // --- end of light precomputations ---
 
