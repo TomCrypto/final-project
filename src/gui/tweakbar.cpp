@@ -59,9 +59,9 @@ namespace gui
 
 		/* === atmospheric options === */
 
-		Atmos.timeofday = 0.0f;
+		Atmos.timeofday = 9.0f;
 		Atmos.ray = 1500.0f;
-		Atmos.mie = 0.8f;
+		Atmos.mie = 1.2f;
 		Atmos.extinction = 0.05f;
 		Atmos.turbidity = 2.0f;
 		Atmos.sunBrightness = 10000.0f;
@@ -93,12 +93,13 @@ namespace gui
 		TwAddVarCB(m_bar,
 			"timeofday", TW_TYPE_FLOAT,
 			sun_timeofday_scb, sun_timeofday_gcb, &Atmos,
-			" label='Time Of Day' group='Atmospheric'"
-			" min=0 max=1 step=0.05");
+			" label='Time of Day' group='Atmospheric'"
+			" min=6 max=18 step=0.01");
 
 		TwAddVarRW(m_bar,
 			"color", TW_TYPE_COLOR3F, &Atmos.sunColor,
-			" label='Color' group='Atmospheric' colormode=hls");
+			" label='Color' group='Atmospheric'"
+            " colormode=hls");
 
         /* === lens options === */
 
