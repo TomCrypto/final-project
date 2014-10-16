@@ -10,15 +10,15 @@
 
 struct atmos {
 	glm::vec3 sunColor;
-	float theta, phi, ray, mie, extinction, turbidity, sunBrightness; //sun
+	float timeofday, ray, mie, extinction, turbidity, sunBrightness; //sun
 };
 
 class skybox
 {
 public:
     skybox();
-	static glm::vec3 calcSunColor(float theta, float T);
-	static glm::vec3 calcSunDir(float theta, float phi);
+	static glm::vec3 calcSunColor(float timeofday, float T);
+	static glm::vec3 calcSunDir(float timeofday);
 	void display(const camera& cam, atmos vars, const std::vector<light>& lights);
 
 private:

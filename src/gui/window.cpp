@@ -69,7 +69,7 @@ namespace gui
          * later this could be done by e.g. asking m_skybox for it. */
 
         std::vector<light> lights;
-        lights.push_back(light(glm::vec4(skybox::calcSunDir(m_bar.Atmos.theta, m_bar.Atmos.phi), 0.0f),
+        lights.push_back(light(glm::vec4(skybox::calcSunDir(m_bar.Atmos.timeofday), 0.0f),
                                m_bar.Atmos.sunBrightness * m_bar.Atmos.sunColor,
                                glm::vec3(1, 1, 1), 0.02f, LIGHT_NORMAL, true));
 
