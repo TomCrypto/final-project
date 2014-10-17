@@ -220,7 +220,7 @@ namespace gui
 
 	debug_bar::debug_bar(const std::string& name,
 		const std::string& title) : basic_bar(name) {
-		translateLight = glm::vec3(0, 19.52, 0);
+		translateLight = glm::vec3(11.01,18.7,23.72);
 		TwAddVarRW(m_bar,
 			"translateLight", TW_TYPE_DIR3F, &translateLight,
 			" label='translateLamp'");
