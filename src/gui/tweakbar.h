@@ -50,7 +50,7 @@ namespace gui
 
 		/* === atmospheric options === */
 
-		atmos Atmos;
+		atmosphere atmos_vars;
 
 		/* === lens options === */
 

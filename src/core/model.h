@@ -43,7 +43,7 @@ public:
 	Model(std::string filename);
 	void display(const camera& camera, const std::vector<light>& lights);
 	void setTransform(const glm::mat4& t) { transform = t; };
-	std::vector<light> getLights(const atmos& Atmos);
+	std::vector<light> getLights(const atmosphere& vars);
 private:
 	void readMTL(std::string filename);
 	void useMTL(std::string mtl);

@@ -6,10 +6,10 @@
 
 static image get_spectrum_image();
 
-aperture::aperture(fft_engine& fft)
-    : m_fft(fft), m_shader("aperture.vert", "aperture.frag"),
-      m_ghost_shader("ghost.vert", "ghost.frag"),
-      m_spectrum(get_spectrum_image(), GL_FLOAT)
+aperture::aperture(fft_engine& fft) : m_fft(fft),
+    m_flare_shader("aperture.vert", "aperture.frag"),
+    m_ghost_shader("ghost.vert", "ghost.frag"),
+    m_spectrum(get_spectrum_image(), GL_FLOAT)
 {
 
 }
@@ -41,6 +41,9 @@ static image trim(const image& img)
             ++ptr;
         }
     }
+
+    if (max_dist < 20)
+        return img;
 
     return img.subregion(img.dims().x / 2 - max_dist,
                          img.dims().y / 2 - max_dist,
@@ -282,21 +285,21 @@ void aperture::render_flare(const std::vector<light>& lights,
     glBlendFunc(GL_ONE, GL_ONE);
     glViewport(0, 0, camera.dims().x, camera.dims().y);
 
-    m_shader.bind();
+    m_flare_shader.bind();
 
     int last_flare = -1;
 
-    m_shader.set("occlusion", occlusion, 1, GL_NEAREST, GL_NEAREST);
-    m_shader.set("max_lights", 8);
-    m_shader.set("intensity", intensity);
-    m_shader.set("f_number", m_f_number);
+    m_flare_shader.set("occlusion", occlusion, 1, GL_NEAREST, GL_NEAREST);
+    m_flare_shader.set("max_lights", 8);
+    m_flare_shader.set("intensity", intensity);
+    m_flare_shader.set("f_number", m_f_number);
 
     for (size_t t = 0; t < lights.size(); ++t) {
         auto comp = compensate(camera, lights[t]);
         float s = comp.second; // size compensation
 
         if (comp.first != last_flare) {
-            m_shader.set("flare", *m_flares[comp.first].get(), 0,
+            m_flare_shader.set("flare", *m_flares[comp.first].get(), 0,
                 GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
             last_flare = comp.first;
         }
@@ -330,7 +333,7 @@ void aperture::render_flare(const std::vector<light>& lights,
         }
     }
 
-    m_shader.unbind();
+    m_flare_shader.unbind();
 
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
