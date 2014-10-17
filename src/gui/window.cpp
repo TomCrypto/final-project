@@ -41,11 +41,9 @@ namespace gui
             std::shared_ptr<Model>(new Model("models/STLamp.obj"))
         }),
         m_skybox(),
-        #if !NO_LENS_FLARES
         m_overlay(m_bar.lens_density),
         m_aperture(m_fft),
         m_occlusion(),
-        #endif
         m_framebuffer(m_dims),
         m_light_renderer()
     {
@@ -97,8 +95,6 @@ namespace gui
 			model.get()->display(m_camera, lights);
 		}
 
-
-        #if !NO_LENS_FLARES
         const auto& occlusion = m_occlusion.query(
             lights, m_framebuffer, m_camera
         );
@@ -116,7 +112,6 @@ namespace gui
             m_overlay.render(lights, occlusion, m_camera,
                              m_bar.lens_reflectivity);
         }
-        #endif
 
         // tonemap framebuffer to backbuffer and draw GUI
 

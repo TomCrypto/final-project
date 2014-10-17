@@ -28,6 +28,7 @@ Instructions
     for Windows double-clicking will work, for Linux please cd into the folder
     before executing the program, e.g. as follows:
 
+        $ make deps    # if dependencies are not installed
         $ make
         $ cd bin && ./Project
         $ cd ..
