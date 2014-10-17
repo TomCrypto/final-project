@@ -23,5 +23,5 @@ void main()
 
     float noise_threshold = 1e-7;
 
-	gl_FragColor = vec4(max(vec3(0.0), texture2D(flare, uv).rgb - noise_threshold) * get_occlusion(lid) * intensity * pow(f_number, -1.0), 1);
+	gl_FragColor = vec4(max(vec3(0.0), texture2D(flare, uv).rgb - noise_threshold) * get_occlusion(lid) * intensity / f_number, 1);
 }

@@ -19,7 +19,7 @@ skybox::~skybox()
 light skybox::calcLight(atmos vars) {
 	return light(glm::vec4(calcSunDir(vars.timeofday), 0.0f),
 		vars.sunBrightness * vars.sunColor,
-		glm::vec3(1), 0.02f, LIGHT_NORMAL, true);
+		glm::vec3(1, 0, 0), 0.02f, LIGHT_NORMAL, true);
 }
 
 glm::vec3 skybox::calcSunColor(float timeofday, float T) {

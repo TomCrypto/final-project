@@ -38,33 +38,33 @@ void main()
 	float att;
 	vec3 lightDir;
 	for(int i=0;i<noOfLights;i++) {
-		if(lights[i].pos.w == 0.0f) {
-			att = 1.0f;
-			lightDir = normalize(lights[i].pos.xyz);
-		}
-		else {
-			vec3 posToLight = lights[i].pos.xyz-world_pos;
-			float distance = length(posToLight);
-			lightDir = normalize(posToLight);
-			att = 1.0f /(dot(lights[i].attenuation,vec3(1,distance,distance*distance)));
-		}
+        lightDir = lights[i].pos.xyz - world_pos * lights[i].pos.w;
+        float distance = length(lightDir);
+        lightDir /= distance;
+
+        float att = 1.0 / dot(lights[i].attenuation, vec3(1, distance, distance*distance));
+
+        float NdotLDir = max(0.0, dot(N, lightDir));
 		vec3 intensity = att*lights[i].intensity;
-		vec3 diffuse = intensity*newKd*max(0.0,dot(N,lightDir));
+		vec3 diffuse = intensity*newKd*NdotLDir;
 		vec3 spec = vec3(0);
-		if(dot(N,lightDir)>=0.0f && shininess>0) {
+
+		if(shininess>0) {
 			vec3 V = normalize(world_pos - camera_pos);
 			spec = intensity*ks*pow(max(0,dot(reflect(-lightDir,N),V)),shininess);
 		}
+
 		color = color + diffuse + spec;
 	}
+	
+    color *= 0.001;
 
-    gl_FragColor = vec4(color*0.001,alpha);
+    vec3 horizon_color = vec3(0, 0.15, 0.85);
+    float fog_falloff = 20.0; // lose 50% intensity each X units travelled
+    float dist = length(world_pos - camera_pos);
+	if (dist > fog_falloff) {
+        color = mix(color, horizon_color, 1.0 - pow(2, - (dist - fog_falloff) / fog_falloff));
+    }
 
-	// fog here
-    //vec3 horizon_color = vec3(0, 0.15, 0.85);
-    //float fog_falloff = 40.0; // lose 50% intensity each X units travelled
-    //float dist = length(world_pos - camera_pos);
-	//if (dist > fog_falloff) {
-        //color = mix(color, horizon_color, 1.0 - pow(2, - (dist - fog_falloff) / fog_falloff));
-    //}
+    gl_FragColor = vec4(color, alpha);
 }
