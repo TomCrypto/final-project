@@ -74,9 +74,10 @@ namespace gui
 		models.back().get()->setTransform(glm::translate(glm::mat4(1.0f), d_bar.translateLight));
 
         std::vector<light> lights;
-        lights.push_back(skybox::calcLight(m_bar.Atmos));
+        lights.push_back(skybox::calcLight(m_bar.atmos_vars));
 		for (auto& m : models) {
-			for (light l : m.get()->getLights(m_bar.Atmos)) lights.push_back(l);
+			for (light l : m.get()->getLights(m_bar.atmos_vars))
+                lights.push_back(l);
 		}
 
         // --- end of light precomputations ---
@@ -84,7 +85,7 @@ namespace gui
         m_framebuffer.bind();
         m_framebuffer.clear(true);
 
-        m_skybox.display(m_camera,m_bar.Atmos);
+        m_skybox.display(m_camera,m_bar.atmos_vars);
 
         m_light_renderer.display(m_camera, lights);
 

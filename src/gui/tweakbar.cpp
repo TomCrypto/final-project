@@ -4,15 +4,15 @@
 
 static void TW_CALL sun_timeofday_scb(const void *value, void *user_data)
 {
-	atmos* Atmos = (atmos*)user_data;
-	Atmos->timeofday = *(float*)value;
-	Atmos->sunColor = skybox::calcSunColor(Atmos->timeofday, Atmos->turbidity);
+	atmosphere* vars = (atmosphere*)user_data;
+	vars->timeofday = *(float*)value;
+	vars->sunColor = skybox::calcSunColor(vars->timeofday, vars->turbidity);
 }
 
 static void TW_CALL sun_timeofday_gcb(void *value, void *user_data)
 {
-	atmos* Atmos = (atmos*)user_data;
-	*(float*)value = Atmos->timeofday;
+	atmosphere* vars = (atmosphere*)user_data;
+	*(float*)value = vars->timeofday;
 }
 
 namespace gui
@@ -48,46 +48,46 @@ namespace gui
 	{
 		/* === atmospheric options === */
 
-		Atmos.timeofday = 8.5f;
-		Atmos.ray = 3500.0f;
-		Atmos.mie = 2.3f;
-		Atmos.extinction = 0.05f;
-		Atmos.turbidity = 2.0f;
-		Atmos.sunBrightness = 10000.0f;
-		sun_timeofday_scb(&Atmos.timeofday, &Atmos);
+		atmos_vars.timeofday = 8.5f;
+		atmos_vars.ray = 3500.0f;
+		atmos_vars.mie = 2.3f;
+		atmos_vars.extinction = 0.05f;
+		atmos_vars.turbidity = 2.0f;
+		atmos_vars.sunBrightness = 10000.0f;
+		sun_timeofday_scb(&atmos_vars.timeofday, &atmos_vars);
 
 		TwAddVarRW(m_bar,
-			"rayleigh_multiplier", TW_TYPE_FLOAT, &Atmos.ray,
-			" label='rayMult' group='Atmospheric'"
+			"rayleigh_multiplier", TW_TYPE_FLOAT, &atmos_vars.ray,
+			" label='Rayleigh Multiplier' group='Atmospheric'"
 			" min=1 step=10");
 		TwAddVarRW(m_bar,
-			"mie_multiplier", TW_TYPE_FLOAT, &Atmos.mie,
-			" label='mieMult' group='Atmospheric'"
+			"mie_multiplier", TW_TYPE_FLOAT, &atmos_vars.mie,
+			" label='Mie Multiplier' group='Atmospheric'"
 			" min=0.1 step=0.05");
 		TwAddVarRW(m_bar,
-			"extinction", TW_TYPE_FLOAT, &Atmos.extinction,
-			" label='extinction' group='Atmospheric'"
-			" min=0 max=1 step=0.05");
+			"extinction", TW_TYPE_FLOAT, &atmos_vars.extinction,
+			" label='Extinction' group='Atmospheric'"
+			" min=0.01 max=1 step=0.01");
 
 		TwAddVarRW(m_bar,
-			"turbidity", TW_TYPE_FLOAT, &Atmos.turbidity,
-			" label='turbidity' group='Atmospheric'"
+			"turbidity", TW_TYPE_FLOAT, &atmos_vars.turbidity,
+			" label='Turbidity' group='Atmospheric'"
 			" min=1.3 max=4 step=0.01");
 
 		TwAddVarRW(m_bar,
-			"sunBrightness", TW_TYPE_FLOAT, &Atmos.sunBrightness,
-			" label='sunBrightness' group='Atmospheric'"
+			"sunBrightness", TW_TYPE_FLOAT, &atmos_vars.sunBrightness,
+			" label='Sun Brightness' group='Atmospheric'"
 			" min=1000 max=30000 step=10");
 
 		TwAddVarCB(m_bar,
 			"timeofday", TW_TYPE_FLOAT,
-			sun_timeofday_scb, sun_timeofday_gcb, &Atmos,
+			sun_timeofday_scb, sun_timeofday_gcb, &atmos_vars,
 			" label='Time of Day' group='Atmospheric'"
 			" min=6 max=18 step=0.01");
 
 		TwAddVarRW(m_bar,
-			"color", TW_TYPE_COLOR3F, &Atmos.sunColor,
-			" label='Color' group='Atmospheric'"
+			"sunColor", TW_TYPE_COLOR3F, &atmos_vars.sunColor,
+			" label='Sun Color' group='Atmospheric'"
 			" colormode=hls");
 
 		/* === lens options === */
@@ -183,7 +183,7 @@ namespace gui
 
 		/* === camera options === */
 
-		cam_move_speed = 3.5f;
+		cam_move_speed = 8.0f;
 		cam_sensitivity = 1.5f;
 		cam_fov = 60;
 		cam_locked = false;
@@ -215,7 +215,7 @@ namespace gui
 
 		TwDefine((m_name + " label='" + title + "'").c_str());
 		TwDefine((m_name + " contained=true").c_str());
-		TwDefine((m_name + " size='220 440'").c_str());
+		TwDefine((m_name + " size='220 450'").c_str());
 	}
 
 	debug_bar::debug_bar(const std::string& name,
@@ -223,7 +223,7 @@ namespace gui
 		translateLight = glm::vec3(11.01,18.7,23.72);
 		TwAddVarRW(m_bar,
 			"translateLight", TW_TYPE_DIR3F, &translateLight,
-			" label='translateLamp'");
+			" label='Lamp Position'");
 
 		/* === general bar settings === */
 

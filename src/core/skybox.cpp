@@ -16,7 +16,7 @@ skybox::~skybox()
     gluDeleteQuadric(quad);
 }
 
-light skybox::calcLight(atmos vars) {
+light skybox::calcLight(atmosphere vars) {
 	return light(glm::vec4(calcSunDir(vars.timeofday), 0.0f),
 		vars.sunBrightness * vars.sunColor,
 		glm::vec3(1, 0, 0), 0.02f, LIGHT_NORMAL, true);
@@ -48,7 +48,7 @@ glm::vec3 skybox::calcSunDir(float timeofday) {
 		glm::sin(glm::radians(theta))*glm::sin(glm::radians(phi)));
 }
 
-void skybox::display(const camera& cam, atmos vars)
+void skybox::display(const camera& cam, atmosphere vars)
 {
     glViewport(0, 0, cam.dims().x, cam.dims().y);
 

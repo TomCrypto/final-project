@@ -53,7 +53,7 @@ private:
 
     std::map<int, std::unique_ptr<gl::texture2D>> m_flares;
 
-    gl::shader m_shader;
+    gl::shader m_flare_shader;
     gl::shader m_ghost_shader;
     gl::texture2D m_spectrum;
     fft_engine& m_fft;

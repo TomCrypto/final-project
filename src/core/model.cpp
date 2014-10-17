@@ -206,10 +206,12 @@ void Model::readMTL(std::string filename) {
 	}
 	LOG(INFO) << "finished reading mtl file " << std::to_string(materials.size() - prev);
 }
-std::vector<light> Model::getLights(const atmos& Atmos) {
+std::vector<light> Model::getLights(const atmosphere& vars) {
 	std::vector<light> tmp;
 	for (light l : lights) {
-		tmp.push_back(light(transform*l.position,l.intensity * (1 - 0.9f * glm::sin((Atmos.timeofday - 6) / 12 * glm::pi<float>())),l.attenuation,l.radius,l.type,l.ghosts));
+		tmp.push_back(light(transform*l.position,
+                            l.intensity * (1 - 0.9f * glm::sin((vars.timeofday - 6) / 12 * glm::pi<float>())),
+                            l.attenuation,l.radius,l.type,l.ghosts));
 	}
 	return tmp;
 }
