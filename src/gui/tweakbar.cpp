@@ -43,8 +43,8 @@ namespace gui
 	}
 
 	main_bar::main_bar(const std::string& name,
-		const std::string& title)
-		: basic_bar(name)
+                       const std::string& title) :
+        basic_bar(name)
 	{
 		/* === atmospheric options === */
 

@@ -208,6 +208,8 @@ namespace gui
         if (!GLEW_VERSION_2_1) {
             LOG(ERROR) << "OpenGL version 2.1 not found, aborting.";
             throw std::runtime_error("");
+        } else if (!GLEW_VERSION_3_0) {
+            LOG(WARNING) << "OpenGL version 3.0 not found, may fail.";
         }
 
         LOG(INFO) << "OpenGL version string: "
