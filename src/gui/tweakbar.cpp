@@ -49,8 +49,8 @@ namespace gui
 		/* === atmospheric options === */
 
 		Atmos.timeofday = 8.5f;
-		Atmos.ray = 1500.0f;
-		Atmos.mie = 1.2f;
+		Atmos.ray = 3500.0f;
+		Atmos.mie = 2.3f;
 		Atmos.extinction = 0.05f;
 		Atmos.turbidity = 2.0f;
 		Atmos.sunBrightness = 10000.0f;
@@ -94,12 +94,12 @@ namespace gui
 
 		lens_exposure = 0.18f;
 		lens_overlay = true;
-		lens_reflectivity = 0.16f;
-		lens_density = 80;
+		lens_reflectivity = 0.05f;
+		lens_density = 130;
 		lens_flare_intensity = 15;
-		lens_ghost_count = 115;
-		lens_ghost_max_size = 0.16f;
-		lens_ghost_brightness = 0.15f;
+		lens_ghost_count = 125;
+		lens_ghost_max_size = 0.2f;
+		lens_ghost_brightness = 0.25f;
 		lens_aperture = OCTAGON;
 		lens_aperture_f_number = 1.5f;
 		lens_update_btn = true;
@@ -185,7 +185,7 @@ namespace gui
 
 		cam_move_speed = 3.5f;
 		cam_sensitivity = 1.5f;
-		cam_fov = 50;
+		cam_fov = 60;
 		cam_locked = false;
 
 		TwAddVarRW(m_bar,
