@@ -15,6 +15,7 @@
 #include "utils/shader.h"
 #include "core/camera.h"
 #include "core/light.h"
+#include "core/skybox.h"
 
 struct Triangle {
     glm::ivec3 v;
@@ -42,7 +43,7 @@ public:
 	Model(std::string filename);
 	void display(const camera& camera, const std::vector<light>& lights);
 	void setTransform(const glm::mat4& t) { transform = t; };
-	std::vector<light> getLights();
+	std::vector<light> getLights(const atmos& Atmos);
 private:
 	void readMTL(std::string filename);
 	void useMTL(std::string mtl);
