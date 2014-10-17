@@ -25,7 +25,7 @@ light skybox::calcLight(atmosphere vars) {
 glm::vec3 skybox::calcSunColor(float timeofday, float T) {
     timeofday = (timeofday - 6) / 12;
 
-    float theta = 87.0 - 45.0*glm::sin(timeofday*3.14159265358979323846f);
+    float theta = 87.0f - 45.0f*glm::sin(timeofday*3.14159265358979323846f);
     float fBeta = 0.04608365822050f * T - 0.04586025928522f;
     float m = 1.0f / (glm::cos(glm::radians(theta)) + 0.15f * std::pow(93.885f - theta, -1.253f));
     glm::vec3 lam = glm::vec3(0.65f, 0.57f, 0.475f); //red green & blue in um
@@ -41,8 +41,8 @@ glm::vec3 skybox::calcSunColor(float timeofday, float T) {
 glm::vec3 skybox::calcSunDir(float timeofday) {
     timeofday = (timeofday - 6) / 12;
 
-    float theta = 87.0 - 45.0*glm::sin(timeofday*3.14159265358979323846f);
-    float phi = 22.5 + timeofday*(157.5 - 22.5);
+    float theta = 87.0f - 45.0f*glm::sin(timeofday*3.14159265358979323846f);
+    float phi = 22.5f + timeofday*(157.5f - 22.5f);
     return glm::vec3(glm::sin(glm::radians(theta))*glm::cos(glm::radians(phi)),
         glm::cos(glm::radians(theta)),
         glm::sin(glm::radians(theta))*glm::sin(glm::radians(phi)));
@@ -63,7 +63,7 @@ void skybox::display(const camera& cam, atmosphere vars)
 
     float pi = 3.14159265358979323846f;
     float n = 1.0003f; //regractive index of air
-    float N = 2.545e25; //molecules per unit valume of air
+    float N = 2.545e25f; //molecules per unit valume of air
     float pn = 0.035f; //depolarization factor for air
     glm::vec3 lambda = glm::vec3(1 / 650e-9f, 1 / 570e-9f, 1 / 475e-9f); // red, green & blue. Note: 650e-9 m = 650nm.
 
@@ -72,8 +72,8 @@ void skybox::display(const camera& cam, atmosphere vars)
     glm::vec3 rayleighTheta = (tmp/2) * (lambda*lambda*lambda*lambda);
     m_shader.set("betaDashRay", rayleighTheta*vars.ray);
 
-    float c = (0.6544*vars.turbidity - 0.6510)*1e-16; //concentration factor
-    tmp = 0.434*c*(2 * pi)*(2 * pi)*0.5f;
+    float c = (0.6544f*vars.turbidity - 0.6510f)*1e-16f; //concentration factor
+    tmp = 0.434f*c*(2.0f * pi)*(2.0f * pi)*0.5f;
     glm::vec3 mieTheta = tmp*lambda*lambda;
     m_shader.set("betaDashMie", mieTheta*vars.mie);
 

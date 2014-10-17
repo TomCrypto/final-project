@@ -192,7 +192,7 @@ image get_spectrum_image()
     image img(glm::ivec2(80, 1));
 
     for (size_t t = 0; t < 80; ++t) {
-        img[0][t] = glm::vec4(wavelength_rgb(380 + 5 * t), 1.0f);
+        img[0][t] = glm::vec4(wavelength_rgb(380 + 5 * (float)t), 1.0f);
     }
 
     return img;
@@ -272,7 +272,7 @@ std::pair<int, float> aperture::compensate(
     // now that we've settled on a radius, check how large we need it to be
     return std::make_pair(
         selected_radius,
-        (2.0 * selected_radius / max_radius / (float)m_flares[selected_radius].get()->dims().x)
+        (2.0f * selected_radius / max_radius / (float)m_flares[selected_radius].get()->dims().x)
     );
 }
 
@@ -399,13 +399,13 @@ void aperture::render_ghosts(const std::vector<light>& lights,
                 auto pos = glm::mix((glm::vec2)projected, glm::vec2(0), p);
                 if (p < 1) sz *= glm::sqrt(p); // ghosts smaller near flare
 
-                glTexCoord4f(0.0f, 0.0f, (float)t, 101 * i + m_flare_hash);
+                glTexCoord4f(0.0f, 0.0f, (float)t, (float)(101 * i + m_flare_hash));
                 glVertex2f(-sz + pos.x, -sz * aspect + pos.y);
-                glTexCoord4f(1.0f, 0.0f, (float)t, 101 * i + m_flare_hash);
+				glTexCoord4f(1.0f, 0.0f, (float)t, (float)(101 * i + m_flare_hash));
                 glVertex2f(+sz + pos.x, -sz * aspect + pos.y);
-                glTexCoord4f(1.0f, 1.0f, (float)t, 101 * i + m_flare_hash);
+				glTexCoord4f(1.0f, 1.0f, (float)t, (float)(101 * i + m_flare_hash));
                 glVertex2f(+sz + pos.x, +sz * aspect + pos.y);
-                glTexCoord4f(0.0f, 1.0f, (float)t, 101 * i + m_flare_hash);
+				glTexCoord4f(0.0f, 1.0f, (float)t, (float)(101 * i + m_flare_hash));
                 glVertex2f(-sz + pos.x, +sz * aspect + pos.y);
             }
         }
