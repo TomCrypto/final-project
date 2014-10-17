@@ -83,7 +83,7 @@ namespace gui
         m_framebuffer.bind();
         m_framebuffer.clear(true);
 
-        m_skybox.display(m_camera,m_bar.Atmos, lights);
+        m_skybox.display(m_camera,m_bar.Atmos);
 
         m_light_renderer.display(m_camera, lights);
 
