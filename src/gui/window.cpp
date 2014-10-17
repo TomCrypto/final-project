@@ -9,8 +9,8 @@ using namespace std::placeholders;
 
 namespace gui
 {
-    const glm::vec3& initial_camera_pos = glm::vec3(0, 25, -5);
-    const glm::vec3& initial_camera_dir = glm::vec3(-0.2f, -0.1f, 0.9f);
+    const glm::vec3& initial_camera_pos = glm::vec3(-4.13,20.57,6.3);
+    const glm::vec3& initial_camera_dir = glm::vec3(0.37,0.33,0.87);
 
     window::window(const std::string& window_title, const glm::ivec2& dims) :
         m_cursor_locked(false), m_dims(dims), m_fps(60),
