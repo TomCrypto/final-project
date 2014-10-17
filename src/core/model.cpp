@@ -22,273 +22,273 @@ std::vector<std::string> split(const std::string &s, char delim) {
 }
 
 void Model::addGroup(std::string g) {
-	groups[g];
+    groups[g];
 }
 
 Model::Model(std::string filename)
     : m_shader("model.vert", "model.frag") {
-	std::string line;
-	std::ifstream myfile(filename);
-	int v1, v2, v3, n1, n2, n3, t1, t2, t3;
-	std::string g;
-	if (myfile.is_open())
-	{
-		while (getline(myfile, line))
-		{
-			//LOG(INFO) << line;
-			if (line.size()<=1 || line[0] == '#') continue;
-			std::vector<std::string> t = split(line, ' ');
-			if (t[0] == "v" && t.size() == 4) {
-				vertices.push_back(glm::vec3(std::stof(t[1]),
+    std::string line;
+    std::ifstream myfile(filename);
+    int v1, v2, v3, n1, n2, n3, t1, t2, t3;
+    std::string g;
+    if (myfile.is_open())
+    {
+        while (getline(myfile, line))
+        {
+            //LOG(INFO) << line;
+            if (line.size()<=1 || line[0] == '#') continue;
+            std::vector<std::string> t = split(line, ' ');
+            if (t[0] == "v" && t.size() == 4) {
+                vertices.push_back(glm::vec3(std::stof(t[1]),
                                              std::stof(t[2]),
                                              std::stof(t[3])));
-			}
-			else if (t[0] == "vt" && t.size() == 4) {
-				uv.push_back(glm::vec3(std::stof(t[1]),
+            }
+            else if (t[0] == "vt" && t.size() == 4) {
+                uv.push_back(glm::vec3(std::stof(t[1]),
                                        std::stof(t[2]),
                                        std::stof(t[3])));
-			}
-			else if (t[0] == "vt" && t.size() == 3) {
-				uv.push_back(glm::vec3(std::stof(t[1]),
+            }
+            else if (t[0] == "vt" && t.size() == 3) {
+                uv.push_back(glm::vec3(std::stof(t[1]),
                                        std::stof(t[2]),
                                        0));
-			}
-			else if (t[0] == "vn" && t.size() == 4) {
-				normals.push_back(glm::vec3(std::stof(t[1]),
+            }
+            else if (t[0] == "vn" && t.size() == 4) {
+                normals.push_back(glm::vec3(std::stof(t[1]),
                                             std::stof(t[2]),
                                             std::stof(t[3])));
-			}
-			else if (t[0] == "f") {
-				if (t.size() == 5) {
-					int v[4];
-					int n[4];
-					int u[4];
-					for (size_t i = 1; i < t.size(); i++) {
-						//LOG(INFO) << t[i];
-						v[i-1] = std::stoi(t[i].substr(0, t[i].find_first_of('/')),nullptr);
-						u[i - 1] = std::stoi(t[i].substr(t[i].find_first_of('/') + 1, t[i].find_last_of('/') - t[i].find_first_of('/') - 1));
-						n[i - 1] = std::stoi(t[i].substr(t[i].find_last_of('/') + 1, t[i].size() - t[i].find_last_of('/') - 1));
-					}
-					if (g.size() == 0) {
-						g = "default";
-						addGroup(g);
-					}
-					groups[g].triangles.push_back(Triangle(glm::ivec3(v[0] - 1, v[1] - 1, v[3] - 1),
+            }
+            else if (t[0] == "f") {
+                if (t.size() == 5) {
+                    int v[4];
+                    int n[4];
+                    int u[4];
+                    for (size_t i = 1; i < t.size(); i++) {
+                        //LOG(INFO) << t[i];
+                        v[i-1] = std::stoi(t[i].substr(0, t[i].find_first_of('/')),nullptr);
+                        u[i - 1] = std::stoi(t[i].substr(t[i].find_first_of('/') + 1, t[i].find_last_of('/') - t[i].find_first_of('/') - 1));
+                        n[i - 1] = std::stoi(t[i].substr(t[i].find_last_of('/') + 1, t[i].size() - t[i].find_last_of('/') - 1));
+                    }
+                    if (g.size() == 0) {
+                        g = "default";
+                        addGroup(g);
+                    }
+                    groups[g].triangles.push_back(Triangle(glm::ivec3(v[0] - 1, v[1] - 1, v[3] - 1),
                                                            glm::ivec3(n[0] - 1, n[1] - 1, n[3] - 1),
                                                            glm::ivec3(u[0] - 1, u[1] - 1, u[3] - 1)));
-					groups[g].triangles.push_back(Triangle(glm::ivec3(v[3] - 1, v[1] - 1, v[2] - 1),
+                    groups[g].triangles.push_back(Triangle(glm::ivec3(v[3] - 1, v[1] - 1, v[2] - 1),
                                                            glm::ivec3(n[3] - 1, n[1] - 1, n[2] - 1),
                                                            glm::ivec3(u[3] - 1, u[1] - 1, u[2] - 1)));
-				}
-				else if (t[0].size()) {
-					int scan = sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d", &v1, &t1, &n1, &v2, &t2, &n2, &v3, &t3, &n3);
-					if (scan < 9) {
-						scan = sscanf(line.c_str(), "f %d//%d %d//%d %d//%d", &v1, &n1, &v2, &n2, &v3, &n3);
-						if (scan < 6) {
-							scan = sscanf(line.c_str(), "f %d/%d %d/%d %d/%d", &v1, &t1, &v2, &t2, &v3, &t3);
-							if (scan < 6) {
-								LOG(ERROR) << "Failed to parse '" << line << "'.";
-								throw std::runtime_error("");
-							}
-						}
-					}
-					if (g.size() == 0) {
-						g = "default";
-						addGroup(g);
-					}
-					groups[g].triangles.push_back(Triangle(glm::ivec3(v1 - 1, v2 - 1, v3 - 1),
+                }
+                else if (t[0].size()) {
+                    int scan = sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d", &v1, &t1, &n1, &v2, &t2, &n2, &v3, &t3, &n3);
+                    if (scan < 9) {
+                        scan = sscanf(line.c_str(), "f %d//%d %d//%d %d//%d", &v1, &n1, &v2, &n2, &v3, &n3);
+                        if (scan < 6) {
+                            scan = sscanf(line.c_str(), "f %d/%d %d/%d %d/%d", &v1, &t1, &v2, &t2, &v3, &t3);
+                            if (scan < 6) {
+                                LOG(ERROR) << "Failed to parse '" << line << "'.";
+                                throw std::runtime_error("");
+                            }
+                        }
+                    }
+                    if (g.size() == 0) {
+                        g = "default";
+                        addGroup(g);
+                    }
+                    groups[g].triangles.push_back(Triangle(glm::ivec3(v1 - 1, v2 - 1, v3 - 1),
                                                            glm::ivec3(n1 - 1, n2 - 1, n3 - 1),
                                                            glm::ivec3(t1 - 1, t2 - 1, t3 - 1)));
-				}
-			}
-			else if (t[0] == "mtllib") {
-				size_t found = filename.find_last_of("/");
-				if (found == std::string::npos) readMTL(t[1]);
-				else {
-					readMTL(filename.substr(0, found + 1) + t[1]);
-				}
-			}
-			else if (t[0] == "usemtl") {
-				if (g.size() == 0) {
-					g = "default";
-					addGroup(g);
-				}
-				groups[g].materialIdx = t[1];
-				if (materials.find(t[1]) == materials.end()) {
-					LOG(ERROR) << "Missing material '" << t[1] << "'.";
-					throw std::runtime_error("");
-				}
-			}
-			else if (t[0] == "g") {
-				g = t[1];
-				addGroup(g);
-			}
-			else if (t[0] == "s") {
-				groups[g].s = t[1];
-			}
-			else {
-				LOG(ERROR) << "Failed to parse '" << line << "'.";
-				throw std::runtime_error("");
-			}
-		}
-		myfile.close();
-	}
-	LOG(INFO) << "Finished loading '" << filename << "'.";
-	LOG(TRACE) << vertices.size() << " vertices, "
-	           << uv.size() << " texcoords, "
-	           << normals.size() << " normals.";
+                }
+            }
+            else if (t[0] == "mtllib") {
+                size_t found = filename.find_last_of("/");
+                if (found == std::string::npos) readMTL(t[1]);
+                else {
+                    readMTL(filename.substr(0, found + 1) + t[1]);
+                }
+            }
+            else if (t[0] == "usemtl") {
+                if (g.size() == 0) {
+                    g = "default";
+                    addGroup(g);
+                }
+                groups[g].materialIdx = t[1];
+                if (materials.find(t[1]) == materials.end()) {
+                    LOG(ERROR) << "Missing material '" << t[1] << "'.";
+                    throw std::runtime_error("");
+                }
+            }
+            else if (t[0] == "g") {
+                g = t[1];
+                addGroup(g);
+            }
+            else if (t[0] == "s") {
+                groups[g].s = t[1];
+            }
+            else {
+                LOG(ERROR) << "Failed to parse '" << line << "'.";
+                throw std::runtime_error("");
+            }
+        }
+        myfile.close();
+    }
+    LOG(INFO) << "Finished loading '" << filename << "'.";
+    LOG(TRACE) << vertices.size() << " vertices, "
+               << uv.size() << " texcoords, "
+               << normals.size() << " normals.";
 }
 
 void Model::readMTL(std::string filename) {
-	std::string line;
-	std::ifstream myfile(filename);
-	int prev = materials.size();
-	//LOG(INFO) << "reading mtl file" << filename;
-	if (myfile.is_open())
-	{
-		std::string mtl;
-		bool l = false;
+    std::string line;
+    std::ifstream myfile(filename);
+    int prev = materials.size();
+    //LOG(INFO) << "reading mtl file" << filename;
+    if (myfile.is_open())
+    {
+        std::string mtl;
+        bool l = false;
 
-		while (getline(myfile, line)) {
-			std::vector<std::string> t = split(line, ' ');
-			if (t.size() == 0 || t[0] == "#" || t[0] == "\n");
-			else if (t[0] == "newlight") {
-				if (!l) l = true;
-				lights.push_back(light(glm::vec4(0), glm::vec3(0), glm::vec3(0), 0.0f, LIGHT_SMALL, false));
-			}
-			else if (l && t[0] == "position") {
-				lights.back().position = glm::vec4(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]), 1.0f);
-			}
-			else if (l && t[0] == "intensity") {
-				lights.back().intensity = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			}
-			else if (l && t[0] == "attenuation") {
-				lights.back().attenuation = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			}
-			else if (l && t[0] == "radius") {
-				lights.back().radius = std::stof(t[1]);
-			}
-			else if (l && t[0] == "type") {
-				lights.back().type = (light_type) std::stoi(t[1]);
-			}
-			else if (l && t[0] == "ghosts") {
-				if (std::stoi(t[1]) == 1) lights.back().ghosts = true;
-			}
+        while (getline(myfile, line)) {
+            std::vector<std::string> t = split(line, ' ');
+            if (t.size() == 0 || t[0] == "#" || t[0] == "\n");
+            else if (t[0] == "newlight") {
+                if (!l) l = true;
+                lights.push_back(light(glm::vec4(0), glm::vec3(0), glm::vec3(0), 0.0f, LIGHT_SMALL, false));
+            }
+            else if (l && t[0] == "position") {
+                lights.back().position = glm::vec4(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]), 1.0f);
+            }
+            else if (l && t[0] == "intensity") {
+                lights.back().intensity = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+            }
+            else if (l && t[0] == "attenuation") {
+                lights.back().attenuation = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+            }
+            else if (l && t[0] == "radius") {
+                lights.back().radius = std::stof(t[1]);
+            }
+            else if (l && t[0] == "type") {
+                lights.back().type = (light_type) std::stoi(t[1]);
+            }
+            else if (l && t[0] == "ghosts") {
+                if (std::stoi(t[1]) == 1) lights.back().ghosts = true;
+            }
 
-			else if (t[0] == "newmtl") {
-				mtl = t[1];
-				materials[mtl];
-				materials[mtl].map_Kd = 0;
-				if (l) {
-					l = false;
-				}
-				//printf("mtl = %s\n", mtl.c_str());
-			}
-			else if (!l && t[0] == "illum") materials[mtl].illum = std::stoi(t[1]);
-			else if (!l && t[0] == "Ka") materials[mtl].Ka = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			else if (!l && t[0] == "Kd") materials[mtl].Kd = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			else if (!l && t[0] == "Ks") materials[mtl].Ks = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			else if (!l && t[0] == "Ke") materials[mtl].Ke = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			else if (!l && t[0] == "Tf") materials[mtl].Tf = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
-			else if (!l && t[0] == "Ns") materials[mtl].Ns = std::stof(t[1]);
-			else if (!l && t[0] == "Ni") materials[mtl].Ni = std::stof(t[1]);
-			else if (!l && t[0] == "d") materials[mtl].d = std::stof(t[1]);
-			else if (!l && t[0] == "Tr") materials[mtl].Tr = std::stof(t[1]);
-			else if (!l && t[0] == "map_Kd") {
-				size_t found = filename.find_last_of("/");
-				if (found == std::string::npos) materials[mtl].map_Kd = new gl::texture2D(t[1], GL_UNSIGNED_BYTE);
-				else materials[mtl].map_Kd = new gl::texture2D(filename.substr(0, found + 1) + t[1], GL_UNSIGNED_BYTE);
-			}
-			else {
-				LOG(ERROR) << t[0];
-			}
-		}
-	}
-	//LOG(INFO) << "finished reading mtl file " << std::to_string(materials.size() - prev);
+            else if (t[0] == "newmtl") {
+                mtl = t[1];
+                materials[mtl];
+                materials[mtl].map_Kd = 0;
+                if (l) {
+                    l = false;
+                }
+                //printf("mtl = %s\n", mtl.c_str());
+            }
+            else if (!l && t[0] == "illum") materials[mtl].illum = std::stoi(t[1]);
+            else if (!l && t[0] == "Ka") materials[mtl].Ka = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+            else if (!l && t[0] == "Kd") materials[mtl].Kd = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+            else if (!l && t[0] == "Ks") materials[mtl].Ks = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+            else if (!l && t[0] == "Ke") materials[mtl].Ke = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+            else if (!l && t[0] == "Tf") materials[mtl].Tf = glm::vec3(std::stof(t[1]), std::stof(t[2]), std::stof(t[3]));
+            else if (!l && t[0] == "Ns") materials[mtl].Ns = std::stof(t[1]);
+            else if (!l && t[0] == "Ni") materials[mtl].Ni = std::stof(t[1]);
+            else if (!l && t[0] == "d") materials[mtl].d = std::stof(t[1]);
+            else if (!l && t[0] == "Tr") materials[mtl].Tr = std::stof(t[1]);
+            else if (!l && t[0] == "map_Kd") {
+                size_t found = filename.find_last_of("/");
+                if (found == std::string::npos) materials[mtl].map_Kd = new gl::texture2D(t[1], GL_UNSIGNED_BYTE);
+                else materials[mtl].map_Kd = new gl::texture2D(filename.substr(0, found + 1) + t[1], GL_UNSIGNED_BYTE);
+            }
+            else {
+                LOG(ERROR) << t[0];
+            }
+        }
+    }
+    //LOG(INFO) << "finished reading mtl file " << std::to_string(materials.size() - prev);
 }
 std::vector<light> Model::getLights(const atmosphere& vars) {
-	std::vector<light> tmp;
-	for (light l : lights) {
-		tmp.push_back(light(transform*l.position,
+    std::vector<light> tmp;
+    for (light l : lights) {
+        tmp.push_back(light(transform*l.position,
                             l.intensity * (1 - 0.9f * glm::sin((vars.timeofday - 6) / 12 * glm::pi<float>())),
                             l.attenuation,l.radius,l.type,l.ghosts));
-	}
-	return tmp;
+    }
+    return tmp;
 }
 void Model::display(const camera& camera, const std::vector<light>& lights) {
     glViewport(0, 0, camera.dims().x, camera.dims().y);
-	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
 
-	if (drawLists.empty()) {
-		CreateDrawingLists();
-	}
+    if (drawLists.empty()) {
+        CreateDrawingLists();
+    }
 
-	for (auto var : drawLists)
-	{
-		m_shader.bind();
-		if (var.first != "" && materials[var.first].map_Kd != nullptr) {
-			if (!materials[var.first].map_Kd->is_opaque()) {
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				m_shader.set("textureSet", 2);
-			}
-			else {
+    for (auto var : drawLists)
+    {
+        m_shader.bind();
+        if (var.first != "" && materials[var.first].map_Kd != nullptr) {
+            if (!materials[var.first].map_Kd->is_opaque()) {
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                m_shader.set("textureSet", 2);
+            }
+            else {
                 glDisable(GL_BLEND);
-				m_shader.set("textureSet", 1);
-			}
-			m_shader.set("tex", *materials[var.first].map_Kd, 0);
-		}
-		else m_shader.set("textureSet", 0);
-		m_shader.set("transform", transform);
+                m_shader.set("textureSet", 1);
+            }
+            m_shader.set("tex", *materials[var.first].map_Kd, 0);
+        }
+        else m_shader.set("textureSet", 0);
+        m_shader.set("transform", transform);
 
-		m_shader.set("view", camera.view());
-		m_shader.set("proj", camera.proj());
-		m_shader.set("camera_pos", camera.pos());
-		m_shader.set("noOfLights", (int)lights.size());
-		for (size_t i = 0; i < lights.size(); i++) {
-			m_shader.set("lights[" + std::to_string(i) + "].pos", lights[i].position);
-			m_shader.set("lights[" + std::to_string(i) + "].intensity", lights[i].intensity);
-			m_shader.set("lights[" + std::to_string(i) + "].attenuation", lights[i].attenuation);
-		}
-		useMTL(var.first);
-		glCallList(var.second);
-		m_shader.unbind();
-	}
+        m_shader.set("view", camera.view());
+        m_shader.set("proj", camera.proj());
+        m_shader.set("camera_pos", camera.pos());
+        m_shader.set("noOfLights", (int)lights.size());
+        for (size_t i = 0; i < lights.size(); i++) {
+            m_shader.set("lights[" + std::to_string(i) + "].pos", lights[i].position);
+            m_shader.set("lights[" + std::to_string(i) + "].intensity", lights[i].intensity);
+            m_shader.set("lights[" + std::to_string(i) + "].attenuation", lights[i].attenuation);
+        }
+        useMTL(var.first);
+        glCallList(var.second);
+        m_shader.unbind();
+    }
 
-	glDisable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
 }
 
 void Model::useMTL(std::string mtl) {
-	m_shader.set("ka", materials[mtl].Ka);
-	m_shader.set("kd", materials[mtl].Kd);
-	m_shader.set("ks", materials[mtl].Ks);
-	m_shader.set("shininess", materials[mtl].Ns);
+    m_shader.set("ka", materials[mtl].Ka);
+    m_shader.set("kd", materials[mtl].Kd);
+    m_shader.set("ks", materials[mtl].Ks);
+    m_shader.set("shininess", materials[mtl].Ns);
 }
 void Model::addToList(int v, int n, int u) {
-	if (uv.size()>0) glTexCoord2f(uv[u].x, uv[u].y);
-	glNormal3f(normals[n].x, normals[n].y, normals[n].z); //Add the normal
-	glVertex3f(vertices[v].x, vertices[v].y, vertices[v].z); //Add the vertex
+    if (uv.size()>0) glTexCoord2f(uv[u].x, uv[u].y);
+    glNormal3f(normals[n].x, normals[n].y, normals[n].z); //Add the normal
+    glVertex3f(vertices[v].x, vertices[v].y, vertices[v].z); //Add the vertex
 }
 void Model::CreateDrawingLists() {
-	if (!drawLists.empty()) {
-		for (std::pair<std::string,int> var : drawLists)
-		{
-			glDeleteLists(var.second, 1);
-		}
-		drawLists.clear();
-	}
+    if (!drawLists.empty()) {
+        for (std::pair<std::string,int> var : drawLists)
+        {
+            glDeleteLists(var.second, 1);
+        }
+        drawLists.clear();
+    }
 
-	for (auto& g : groups) {
-		int l = glGenLists(1);
-		glNewList(l, GL_COMPILE);
-		glBegin(GL_TRIANGLES);
-		for (Triangle t : g.second.triangles) {
-			addToList(t.v[0], t.n[0], t.t[0]);
-			addToList(t.v[1], t.n[1], t.t[1]);
-			addToList(t.v[2], t.n[2], t.t[2]);
-		}
-		glEnd();
-		glEndList();
-		drawLists.push_back(std::pair<std::string, int>(g.second.materialIdx, l));
-	}
+    for (auto& g : groups) {
+        int l = glGenLists(1);
+        glNewList(l, GL_COMPILE);
+        glBegin(GL_TRIANGLES);
+        for (Triangle t : g.second.triangles) {
+            addToList(t.v[0], t.n[0], t.t[0]);
+            addToList(t.v[1], t.n[1], t.t[1]);
+            addToList(t.v[2], t.n[2], t.t[2]);
+        }
+        glEnd();
+        glEndList();
+        drawLists.push_back(std::pair<std::string, int>(g.second.materialIdx, l));
+    }
 }
