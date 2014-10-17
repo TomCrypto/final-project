@@ -74,10 +74,10 @@ namespace gui
         // Stuff that needs OpenGL functionality
 
         main_bar m_bar;
-		debug_bar m_dbar;
+        debug_bar m_dbar;
         camera m_camera;
 
-		std::vector<std::shared_ptr<Model>> m_models;
+        std::vector<std::shared_ptr<Model>> m_models;
 
         skybox m_skybox;
         overlay m_overlay;

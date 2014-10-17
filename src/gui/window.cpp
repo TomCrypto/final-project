@@ -26,13 +26,13 @@ namespace gui
                   std::bind(&window::on_resize,     this, _1),
                   std::bind(&window::on_display,    this),
                   std::bind(&window::on_update,     this)),
-		m_bar("main", "Configuration"),
-		m_dbar("debug", "Debug"),
+        m_bar("main", "Configuration"),
+        m_dbar("debug", "Debug"),
         m_camera(m_dims,
                  initial_camera_pos,
                  initial_camera_dir,
                  glm::radians(m_bar.cam_fov)),
-		m_models(
+        m_models(
         {
             std::shared_ptr<Model>(new Model("models/Lighthouse.obj")),
             std::shared_ptr<Model>(new Model("models/OutBuilding.obj")),
@@ -52,7 +52,7 @@ namespace gui
                    << m_dims.x << " by "
                    << m_dims.y << " pixels.";
 
-		on_update();
+        on_update();
     }
 
     void window::run()
@@ -68,21 +68,21 @@ namespace gui
 
     void window::on_display()
     {
-		//translate lamp (debug bar)
+        //translate lamp (debug bar)
 
-		m_models.back().get()->setTransform(glm::translate(glm::mat4(1.0f),
+        m_models.back().get()->setTransform(glm::translate(glm::mat4(1.0f),
                                             m_dbar.translateLight));
 
         // compute lights
 
         std::vector<light> lights;
         lights.push_back(skybox::calcLight(m_bar.atmos_vars));
-		for (auto& model : m_models) {
-			for (light l : model.get()->getLights(m_bar.atmos_vars))
+        for (auto& model : m_models) {
+            for (light l : model.get()->getLights(m_bar.atmos_vars))
                 lights.push_back(l);
-		}
+        }
 
-		// clear framebuffer and render everything
+        // clear framebuffer and render everything
 
         m_framebuffer.bind();
         m_framebuffer.clear(true);
@@ -91,9 +91,9 @@ namespace gui
 
         m_light_renderer.display(m_camera, lights);
 
-		for (auto& model : m_models) {
-			model.get()->display(m_camera, lights);
-		}
+        for (auto& model : m_models) {
+            model.get()->display(m_camera, lights);
+        }
 
         const auto& occlusion = m_occlusion.query(
             lights, m_framebuffer, m_camera

@@ -42,46 +42,46 @@ namespace gui
 
     // The main configuration bar for the program, just add more
     // members and create/initialize them in the constructor
-	class main_bar : public basic_bar
-	{
-	public:
-		main_bar(const std::string& name,
-			const std::string& title);
+    class main_bar : public basic_bar
+    {
+    public:
+        main_bar(const std::string& name,
+            const std::string& title);
 
-		/* === atmospheric options === */
+        /* === atmospheric options === */
 
-		atmosphere atmos_vars;
+        atmosphere atmos_vars;
 
-		/* === lens options === */
+        /* === lens options === */
 
-		float lens_exposure;
-		int lens_density;
-		float lens_reflectivity;
-		bool lens_overlay;
-		float lens_flare_intensity;
-		int lens_ghost_count;
-		float lens_ghost_max_size;
-		float lens_ghost_brightness;
-		transmission_function lens_aperture;
-		float lens_aperture_f_number;
-		bool lens_update_btn;
+        float lens_exposure;
+        int lens_density;
+        float lens_reflectivity;
+        bool lens_overlay;
+        float lens_flare_intensity;
+        int lens_ghost_count;
+        float lens_ghost_max_size;
+        float lens_ghost_brightness;
+        transmission_function lens_aperture;
+        float lens_aperture_f_number;
+        bool lens_update_btn;
 
-		/* === camera options === */
+        /* === camera options === */
 
-		float cam_move_speed;
-		float cam_sensitivity;
-		bool cam_locked;
-		float cam_fov;
-	};
+        float cam_move_speed;
+        float cam_sensitivity;
+        bool cam_locked;
+        float cam_fov;
+    };
 
-	class debug_bar : public basic_bar
-	{
-	public:
-		debug_bar(const std::string& name,
-			const std::string& title);
+    class debug_bar : public basic_bar
+    {
+    public:
+        debug_bar(const std::string& name,
+            const std::string& title);
 
-		glm::vec3 translateLight;
-	};
+        glm::vec3 translateLight;
+    };
 }
 
 #endif

@@ -28,47 +28,47 @@ struct Triangle {
         : v(v), n(n), t(t) { }
 };
 struct Material {
-	glm::vec3 Ka, Kd, Ks, Ke, Tf;
-	int illum;
-	float Ni, Ns, d, Tr;
-	gl::texture2D *map_Kd;
+    glm::vec3 Ka, Kd, Ks, Ke, Tf;
+    int illum;
+    float Ni, Ns, d, Tr;
+    gl::texture2D *map_Kd;
 };
 struct Group {
-	std::vector<Triangle> triangles;
-	std::string materialIdx, s;
+    std::vector<Triangle> triangles;
+    std::string materialIdx, s;
 };
 
 class Model {
 public:
-	Model(std::string filename);
-	void display(const camera& camera, const std::vector<light>& lights);
-	void setTransform(const glm::mat4& t) { transform = t; };
-	std::vector<light> getLights(const atmosphere& vars);
+    Model(std::string filename);
+    void display(const camera& camera, const std::vector<light>& lights);
+    void setTransform(const glm::mat4& t) { transform = t; };
+    std::vector<light> getLights(const atmosphere& vars);
 private:
-	void readMTL(std::string filename);
-	void useMTL(std::string mtl);
-	void CreateDrawingLists();
-	void addToList(int v, int n, int u);
-	void addGroup(std::string g);
+    void readMTL(std::string filename);
+    void useMTL(std::string mtl);
+    void CreateDrawingLists();
+    void addToList(int v, int n, int u);
+    void addGroup(std::string g);
 
-	int m_nNumPoint;
-	int m_nNumUV;
-	int m_nNumNormal;
-	int m_nNumPolygon;
-	std::vector<light> lights;
+    int m_nNumPoint;
+    int m_nNumUV;
+    int m_nNumNormal;
+    int m_nNumPolygon;
+    std::vector<light> lights;
 
-	int mode; // Which mode to display
+    int mode; // Which mode to display
 
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> uv;
-	std::vector<glm::vec3> normals;
-	std::map < std::string, Group > groups;
-	std::map < std::string, Material > materials;
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> uv;
+    std::vector<glm::vec3> normals;
+    std::map < std::string, Group > groups;
+    std::map < std::string, Material > materials;
 
-	gl::shader m_shader;
+    gl::shader m_shader;
 
-	std::vector<std::pair<std::string,int>> drawLists;
-	glm::mat4 transform = glm::mat4(1.0f);
+    std::vector<std::pair<std::string,int>> drawLists;
+    glm::mat4 transform = glm::mat4(1.0f);
 };
 
 #endif

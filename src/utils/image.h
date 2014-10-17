@@ -101,11 +101,11 @@ public:
 
     //<< Accesses the scanline pointer for a given row
     glm::vec4* operator[](int y);
-	const glm::vec4* operator[](int y) const;
+    const glm::vec4* operator[](int y) const;
 
     //<< Accesses the pixel at a given point
     glm::vec4& operator()(int x, int y);
-	const glm::vec4& operator()(int x, int y) const;
+    const glm::vec4& operator()(int x, int y) const;
 
     //<<Returns a raw pointer to the bitmap data
     const glm::vec4* data() const;
