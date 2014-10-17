@@ -10,11 +10,9 @@
 #define GUI_WINDOW_H
 
 #include <glm/glm.hpp>
-
-#include <unordered_map>
+#include <vector>
 #include <memory>
 #include <string>
-#include <map>
 
 #include "gui/context.h"
 #include "gui/tweakbar.h"
@@ -31,7 +29,7 @@
 #include "core/occlusion.h"
 
 #if _WIN32
-#define NO_LENS_FLARES 1
+#define NO_LENS_FLARES 0
 #endif
 
 namespace gui
@@ -80,6 +78,7 @@ namespace gui
         // Stuff that needs OpenGL functionality
 
         main_bar m_bar;
+		debug_bar d_bar;
         camera m_camera;
 
 		std::vector<std::shared_ptr<Model>> models;

@@ -26,7 +26,8 @@ namespace gui
                   std::bind(&window::on_resize,     this, _1),
                   std::bind(&window::on_display,    this),
                   std::bind(&window::on_update,     this)),
-        m_bar("main", "Configuration"),
+		m_bar("main", "Configuration"),
+		d_bar("debug", "Debug"),
         m_camera(m_dims,
                  initial_camera_pos,
                  initial_camera_dir,
@@ -70,7 +71,7 @@ namespace gui
     void window::on_display()
     {
 		//translate lamp
-		models.back().get()->setTransform(glm::translate(glm::mat4(1.0f), m_bar.translateLight));
+		models.back().get()->setTransform(glm::translate(glm::mat4(1.0f), d_bar.translateLight));
 
         std::vector<light> lights;
         lights.push_back(skybox::calcLight(m_bar.Atmos));

@@ -13,7 +13,7 @@ vec4 pos;
 vec3 intensity;
 vec3 attenuation; // Constant/linear/quadratic (xyz)
 };
-uniform lightSource[16] lights;
+uniform lightSource[8] lights;
 uniform int noOfLights;
 
 uniform int textureSet;
