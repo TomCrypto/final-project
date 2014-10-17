@@ -15,7 +15,7 @@ aperture::aperture(fft_engine& fft)
 }
 
 // Five different disk radii for every light type
-static const int radii[] = { 2, 4, 10, 28, 75 };
+static const int radii[] = { 2, 4, 10 /*, 28, 75 */ };
 
 // This seems to be the sweet spot of frequency
 // sampling resolution versus spectral leakage
