@@ -351,6 +351,9 @@
     <Image Include="..\res\apertures\octagon2.png" />
     <Image Include="..\res\apertures\octagon3.png" />
     <Image Include="..\res\apertures\octagon4.png" />
+    <Image Include="..\res\apertures\pentagon-diff.png" />
+    <Image Include="..\res\apertures\pentagon-divide.png" />
+    <Image Include="..\res\apertures\pentagon-merge.png" />
     <Image Include="..\res\apertures\pentagon.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
