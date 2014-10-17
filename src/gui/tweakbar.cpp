@@ -101,7 +101,7 @@ namespace gui
 		lens_ghost_max_size = 0.2f;
 		lens_ghost_brightness = 0.25f;
 		lens_aperture = OCTAGON;
-		lens_aperture_f_number = 2.5f;
+		lens_aperture_f_number = 1.5f;
 		lens_update_btn = true;
 
 		TwAddVarRW(m_bar,
