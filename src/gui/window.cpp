@@ -36,7 +36,7 @@ namespace gui
             std::shared_ptr<Model>(new Model("models/Lighthouse.obj")),
             std::shared_ptr<Model>(new Model("models/OutBuilding.obj")),
             std::shared_ptr<Model>(new Model("models/Terrain.obj")),
-            std::shared_ptr<Model>(new Model("models/Tree.obj")),
+            std::shared_ptr<Model>(new Model("models/Trees.obj")),
             std::shared_ptr<Model>(new Model("models/STLamp.obj"))
         }),
         m_skybox(),
