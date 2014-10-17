@@ -48,7 +48,7 @@ glm::vec3 skybox::calcSunDir(float timeofday) {
 		glm::sin(glm::radians(theta))*glm::sin(glm::radians(phi)));
 }
 
-void skybox::display(const camera& cam, atmos vars, const std::vector<light>& lights)
+void skybox::display(const camera& cam, atmos vars)
 {
     glViewport(0, 0, cam.dims().x, cam.dims().y);
 

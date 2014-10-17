@@ -174,7 +174,7 @@ void Model::readMTL(std::string filename) {
 			else if (l && t[0] == "ghosts") {
 				if (std::stoi(t[1]) == 1) lights.back().ghosts = true;
 			}
-			
+
 			else if (t[0] == "newmtl") {
 				mtl = t[1];
 				materials[mtl];
@@ -214,6 +214,7 @@ std::vector<light> Model::getLights() {
 	return tmp;
 }
 void Model::display(const camera& camera, const std::vector<light>& lights) {
+    glViewport(0, 0, camera.dims().x, camera.dims().y);
 	glEnable(GL_DEPTH_TEST);
 
 	if (drawLists.empty()) {
@@ -236,7 +237,7 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 		}
 		else m_shader.set("textureSet", 0);
 		m_shader.set("transform", transform);
-		
+
 		m_shader.set("view", camera.view());
 		m_shader.set("proj", camera.proj());
 		m_shader.set("camera_pos", camera.pos());
