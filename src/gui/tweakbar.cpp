@@ -77,7 +77,7 @@ namespace gui
 		TwAddVarRW(m_bar,
 			"sunBrightness", TW_TYPE_FLOAT, &atmos_vars.sunBrightness,
 			" label='Sun Brightness' group='Atmospheric'"
-			" min=1000 max=30000 step=10");
+			" min=500 max=30000 step=10");
 
 		TwAddVarCB(m_bar,
 			"timeofday", TW_TYPE_FLOAT,
@@ -230,6 +230,6 @@ namespace gui
 		TwDefine((m_name + " label='" + title + "'").c_str());
 		TwDefine((m_name + " contained=true").c_str());
 		TwDefine((m_name + " iconified=true").c_str());
-		TwDefine((m_name + " size='220 440'").c_str());
+		TwDefine((m_name + " size='220 300'").c_str());
 	}
 }
