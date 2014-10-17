@@ -95,13 +95,13 @@ namespace gui
 		lens_exposure = 0.18f;
 		lens_overlay = true;
 		lens_reflectivity = 0.05f;
-		lens_density = 130;
+		lens_density = 150;
 		lens_flare_intensity = 15;
 		lens_ghost_count = 125;
 		lens_ghost_max_size = 0.2f;
 		lens_ghost_brightness = 0.25f;
 		lens_aperture = OCTAGON;
-		lens_aperture_f_number = 1.5f;
+		lens_aperture_f_number = 2.5f;
 		lens_update_btn = true;
 
 		TwAddVarRW(m_bar,

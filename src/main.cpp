@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     gui::initialize(argc, argv);
 
     try {
-        gui::window window("COMP 308 - Final Project", glm::ivec2(1280, 780));
+        gui::window window("COMP 308 - Final Project", glm::ivec2(1280, 720));
         window.run(); /* Will return when the window is closed by the user. */
     } catch (...) {
         LOG(ERROR) << "Aborting.";
