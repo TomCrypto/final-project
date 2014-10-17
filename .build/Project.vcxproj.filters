@@ -322,5 +322,14 @@
     <Image Include="..\res\apertures\pentagon-merge.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
+    <Image Include="..\res\apertures\custom2.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\custom3.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\custom4.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
