@@ -304,5 +304,14 @@
     <Image Include="..\res\apertures\siggraph_custom.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
+    <Image Include="..\res\apertures\octagon4.png">
+      <Filter>Resource Files\Models</Filter>
+    </Image>
+    <Image Include="..\res\apertures\octagon2.png">
+      <Filter>Resource Files\Models</Filter>
+    </Image>
+    <Image Include="..\res\apertures\octagon3.png">
+      <Filter>Resource Files\Models</Filter>
+    </Image>
   </ItemGroup>
 </Project>
