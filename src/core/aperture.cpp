@@ -258,6 +258,8 @@ void aperture::render_flare(const std::vector<light>& lights,
 
     m_shader.bind();
 
+    int last_flare = -1;
+
     m_shader.set("occlusion", occlusion, 1, GL_NEAREST, GL_NEAREST);
     m_shader.set("max_lights", 8);
     m_shader.set("intensity", intensity);
@@ -266,8 +268,13 @@ void aperture::render_flare(const std::vector<light>& lights,
     for (size_t t = 0; t < lights.size(); ++t) {
         auto comp = compensate(camera, lights[t]);
         float s = comp.second; // size compensation
-			m_shader.set("flare", *m_flares[comp.first].get(), 0,
-				GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+
+        if (comp.first != last_flare) {
+            m_shader.set("flare", *m_flares[comp.first].get(), 0,
+                GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+            last_flare = comp.first;
+        }
+
         const float w0 = 2.0f;
 
         auto cam_to_light = (glm::vec3)lights[t].position

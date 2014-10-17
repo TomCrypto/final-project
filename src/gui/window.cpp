@@ -69,8 +69,6 @@ namespace gui
 
     void window::on_display()
     {
-        /* TEMPORARY: recalculate sun light data here to pass to overlay.
-         * later this could be done by e.g. asking m_skybox for it. */
 		//translate lamp
 		models.back().get()->setTransform(glm::translate(glm::mat4(1.0f), m_bar.translateLight));
 
@@ -79,9 +77,6 @@ namespace gui
 		for (auto& m : models) {
 			for (light l : m.get()->getLights()) lights.push_back(l);
 		}
-        lights.push_back(light(glm::vec4(m_bar.light_pos, 1), 10000.0f * glm::vec3(1, .572f, .160f), glm::vec3(0.1f, 0.5f, 0), 0.02f, LIGHT_SMALL, false));
-
-        lights.push_back(light(glm::vec4(m_bar.light_pos_2, 1), 5000.0f * glm::vec3(1, .572f, .160f), glm::vec3(0.1f, 0.5f, 0), 0.01f, LIGHT_TINY, false));
 
         // --- end of light precomputations ---
 

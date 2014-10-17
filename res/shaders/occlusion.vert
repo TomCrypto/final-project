@@ -17,7 +17,7 @@ varying vec3 total_occlusion;
 
 int compute_lod(vec4 light_pos, float light_radius)
 {
-    return 20;
+    return 10;
 }
 
 void main()
