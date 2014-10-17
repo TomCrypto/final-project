@@ -21,6 +21,32 @@ static const int radii[] = { 2, 4, 10, 28, 75 };
 // sampling resolution versus spectral leakage
 static const int quality = 1024;
 
+static image trim(const image& img)
+{
+    int max_dist = 0;
+
+    for (int y = 0; y < img.dims().y; ++y) {
+        const glm::vec4* ptr = img[y];
+
+        for (int x = 0; x < img.dims().x; ++x) {
+            int dist = std::max(std::abs(x - img.dims().x / 2),
+                                std::abs(y - img.dims().y / 2));
+
+            if ((ptr->x > 5 * 1e-7f)
+             || (ptr->y > 5 * 1e-7f)
+             || (ptr->z > 5 * 1e-7f)) {
+                max_dist = std::max(max_dist, dist);
+            }
+
+            ++ptr;
+        }
+    }
+
+    return img.subregion(img.dims().x / 2 - max_dist,
+                         img.dims().y / 2 - max_dist,
+                         2 * max_dist, 2 * max_dist);
+}
+
 void aperture::load_aperture(const transmission_function& tf,
                              float f_number)
 {
@@ -195,7 +221,7 @@ image aperture::get_cfft(const image& psf)
 
 image aperture::get_flare(const image& cfft, int radius)
 {
-    return m_fft.convolve_disk(cfft, radius);
+    return trim(m_fft.convolve_disk(cfft, radius));
 }
 
 /* What this function does is select the proper lens flare to pick according
@@ -241,7 +267,7 @@ std::pair<int, float> aperture::compensate(
     // now that we've settled on a radius, check how large we need it to be
     return std::make_pair(
         selected_radius,
-        (2.0 * selected_radius / (float)quality) / max_radius
+        (2.0 * selected_radius / max_radius / (float)m_flares[selected_radius].get()->dims().x)
     );
 }
 

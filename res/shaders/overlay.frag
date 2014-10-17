@@ -107,8 +107,11 @@ void main()
         for (int t = 0; t < light_count; ++t) {
             vec3 light_pos = lights[t].pos.xyz - view_pos * lights[t].pos.w;
 
+            float light_dist = length(light_pos);
+            light_pos /= light_dist;
+
             // amount of radiation falling on the film (Lambert's cosine law)
-            vec3 irradiance = vec3(max(0.0, dot(normalize(light_pos), view_dir)));
+            vec3 irradiance = vec3(max(0.0, dot(light_pos, view_dir)));
 
             // project light position onto the screen (with perspective divide)
             vec4 clip_space_pos = viewproj * lights[t].pos;
@@ -119,10 +122,10 @@ void main()
             irradiance *= pow(dist, 10.0 + 20.0 * (1.0 - reflectivity));
 
             // and of course taking into account light falloff
-            irradiance /= pow(length(light_pos), 2);
+            irradiance /= pow(light_dist, 2);
 
-			// and finally weighted by occlusion
-			irradiance *= get_occlusion(t);
+            // and finally weighted by occlusion
+            irradiance *= get_occlusion(t);
 
             // integrate radiance over lights
             radiance += irradiance;
