@@ -56,11 +56,11 @@ void main()
 
 		color = color + diffuse + spec;
 	}
-	
+
     color *= 0.001;
 
     vec3 horizon_color = vec3(0, 0.15, 0.85);
-    float fog_falloff = 20.0; // lose 50% intensity each X units travelled
+    float fog_falloff = 30.0; // lose 50% intensity each X units travelled
     float dist = length(world_pos - camera_pos);
 	if (dist > fog_falloff) {
         color = mix(color, horizon_color, 1.0 - pow(2, - (dist - fog_falloff) / fog_falloff));

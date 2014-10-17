@@ -231,6 +231,7 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 				m_shader.set("textureSet", 2);
 			}
 			else {
+                glDisable(GL_BLEND);
 				m_shader.set("textureSet", 1);
 			}
 			m_shader.set("tex", *materials[var.first].map_Kd, 0);
@@ -249,9 +250,6 @@ void Model::display(const camera& camera, const std::vector<light>& lights) {
 		}
 		useMTL(var.first);
 		glCallList(var.second);
-		if (var.first != "" && materials[var.first].map_Kd != nullptr && !materials[var.first].map_Kd->is_opaque()) {
-			glDisable(GL_BLEND);
-		}
 		m_shader.unbind();
 	}
 

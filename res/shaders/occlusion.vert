@@ -26,9 +26,9 @@ void main()
 
 	int lid = int(gl_Vertex.z);
 
-	if (lights[lid].partial_occlusion == 1) {
-        int lod = compute_lod(lights[lid].pos, lights[lid].radius);
+	int lod = compute_lod(lights[lid].pos, lights[lid].radius);
 
+	if (lights[lid].partial_occlusion == 1) {
         vec3 total = vec3(0.0);
 
         for (int y = 0; y < lod; ++y) {
@@ -38,9 +38,9 @@ void main()
                 float phi = x / float(lod) * 3.14159265 * 2.0;
 
                 vec4 pos = lights[lid].pos + vec4(sin(theta) * cos(phi),
-                                                cos(theta),
-                                                sin(theta) * sin(phi),
-                                                0.0) * (lights[lid].radius * 0.9);
+                                                  cos(theta),
+                                                  sin(theta) * sin(phi),
+                                                  0.0) * (lights[lid].radius * 0.98);
 
                 vec4 projected = viewproj * pos;
                 projected.xy /= projected.w;
@@ -48,7 +48,7 @@ void main()
                 vec2 sample_pos = (projected.xy + 1.0) / 2.0;
 
                 if ((sample_pos.x >= 0) && (sample_pos.y >= 0)
-                && (sample_pos.x <= 1) && (sample_pos.y <= 1)) {
+                 && (sample_pos.x <= 1) && (sample_pos.y <= 1)) {
                     total += max(vec3(0.0), texture2D(render, sample_pos).rgb - vec3(1e1));
                 }
             }
@@ -57,8 +57,6 @@ void main()
         // About 50% of samples will be back-facing
         total_occlusion = total / (lod * lod * 2.0);
     } else {
-        int lod = compute_lod(lights[lid].pos, lights[lid].radius);
-
         vec3 total = vec3(0.0);
 
         for (int y = 0; y < lod; ++y) {
@@ -68,9 +66,9 @@ void main()
                 float phi = x / float(lod) * 3.14159265 * 2.0;
 
                 vec4 pos = lights[lid].pos + vec4(sin(theta) * cos(phi),
-                                                cos(theta),
-                                                sin(theta) * sin(phi),
-                                                0.0) * (lights[lid].radius * 0.9);
+                                                  cos(theta),
+                                                  sin(theta) * sin(phi),
+                                                  0.0) * (lights[lid].radius * 0.98);
 
                 vec4 projected = viewproj * pos;
                 projected.xy /= projected.w;
@@ -78,7 +76,7 @@ void main()
                 vec2 sample_pos = (projected.xy + 1.0) / 2.0;
 
                 if ((sample_pos.x >= 0) && (sample_pos.y >= 0)
-                && (sample_pos.x <= 1) && (sample_pos.y <= 1)) {
+                 && (sample_pos.x <= 1) && (sample_pos.y <= 1)) {
                     total = max(total, texture2D(render, sample_pos).rgb - vec3(1e1));
                 }
             }
