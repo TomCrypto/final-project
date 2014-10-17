@@ -70,9 +70,12 @@ namespace gui
 
     void window::on_display()
     {
-		//translate lamp
+		//translate lamp (debug bar)
+
 		m_models.back().get()->setTransform(glm::translate(glm::mat4(1.0f),
                                             m_dbar.translateLight));
+
+        // compute lights
 
         std::vector<light> lights;
         lights.push_back(skybox::calcLight(m_bar.atmos_vars));
@@ -81,7 +84,7 @@ namespace gui
                 lights.push_back(l);
 		}
 
-        // --- end of light precomputations ---
+		// clear framebuffer and render everything
 
         m_framebuffer.bind();
         m_framebuffer.clear(true);
@@ -114,6 +117,8 @@ namespace gui
                              m_bar.lens_reflectivity);
         }
         #endif
+
+        // tonemap framebuffer to backbuffer and draw GUI
 
         m_framebuffer.render(m_bar.lens_exposure);
 
