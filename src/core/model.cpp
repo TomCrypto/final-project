@@ -115,7 +115,7 @@ Model::Model(std::string filename)
 				}
 				groups[g].materialIdx = t[1];
 				if (materials.find(t[1]) == materials.end()) {
-					LOG(ERROR) << "missing material " << t[1];
+					LOG(ERROR) << "Missing material '" << t[1] << "'.";
 					throw std::runtime_error("");
 				}
 			}
@@ -143,7 +143,7 @@ void Model::readMTL(std::string filename) {
 	std::string line;
 	std::ifstream myfile(filename);
 	int prev = materials.size();
-	LOG(INFO) << "reading mtl file" << filename;
+	//LOG(INFO) << "reading mtl file" << filename;
 	if (myfile.is_open())
 	{
 		std::string mtl;
@@ -204,7 +204,7 @@ void Model::readMTL(std::string filename) {
 			}
 		}
 	}
-	LOG(INFO) << "finished reading mtl file " << std::to_string(materials.size() - prev);
+	//LOG(INFO) << "finished reading mtl file " << std::to_string(materials.size() - prev);
 }
 std::vector<light> Model::getLights(const atmosphere& vars) {
 	std::vector<light> tmp;
