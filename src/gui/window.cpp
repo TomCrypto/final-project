@@ -76,7 +76,7 @@ namespace gui
         std::vector<light> lights;
         lights.push_back(skybox::calcLight(m_bar.Atmos));
 		for (auto& m : models) {
-			for (light l : m.get()->getLights()) lights.push_back(l);
+			for (light l : m.get()->getLights(m_bar.Atmos)) lights.push_back(l);
 		}
 
         // --- end of light precomputations ---
