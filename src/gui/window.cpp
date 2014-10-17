@@ -27,7 +27,7 @@ namespace gui
                   std::bind(&window::on_display,    this),
                   std::bind(&window::on_update,     this)),
 		m_bar("main", "Configuration"),
-		d_bar("debug", "Configuration"),
+		d_bar("debug", "Debug"),
         m_camera(m_dims,
                  initial_camera_pos,
                  initial_camera_dir,
