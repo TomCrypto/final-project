@@ -304,14 +304,23 @@
     <Image Include="..\res\apertures\siggraph_custom.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
-    <Image Include="..\res\apertures\octagon4.png">
-      <Filter>Resource Files\Models</Filter>
-    </Image>
     <Image Include="..\res\apertures\octagon2.png">
-      <Filter>Resource Files\Models</Filter>
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\octagon4.png">
+      <Filter>Resource Files\Apertures</Filter>
     </Image>
     <Image Include="..\res\apertures\octagon3.png">
-      <Filter>Resource Files\Models</Filter>
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\pentagon-diff.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\pentagon-divide.png">
+      <Filter>Resource Files\Apertures</Filter>
+    </Image>
+    <Image Include="..\res\apertures\pentagon-merge.png">
+      <Filter>Resource Files\Apertures</Filter>
     </Image>
   </ItemGroup>
 </Project>
