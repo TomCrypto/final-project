@@ -39,10 +39,6 @@ Instructions
     escape key will close the project - and the various program parameters are
     available for modification in the graphical user interface (tweak bar).
 
-    A Youtube clip demonstrating the project functionality can be found at:
-
-        https://www.youtube.com/watch?=TODO
-
 Folder Contents
 ---------------
 
