@@ -88,6 +88,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\core\aperture.cpp" />
+    <ClCompile Include="..\src\core\light.cpp" />
     <ClCompile Include="..\src\core\occlusion.cpp" />
     <ClCompile Include="..\src\core\overlay.cpp" />
     <ClCompile Include="..\src\core\camera.cpp" />
