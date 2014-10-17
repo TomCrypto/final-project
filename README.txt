@@ -15,7 +15,7 @@ transforms (an important part of the lens flare pipeline) and AntTweakBar, for
 the simple GUI widget used to interact with our program.
 
 The code is written in standard C++11 and should run on Visual Studio 2012 and
-later, g++, clang++, and the Intel C++ compiler on Linux. OpenGL 2.1 required.
+later, g++, clang++, and the Intel C++ compiler on Linux. OpenGL 3.0 required.
 
 Instructions
 ------------
@@ -37,6 +37,10 @@ Instructions
     key makes the camera go downwards, space makes it go upwards - hitting the
     escape key will close the project - and the various program parameters are
     available for modification in the graphical user interface (tweak bar).
+
+    A Youtube clip demonstrating the project functionality can be found at:
+
+        https://www.youtube.com/watch?=TODO
 
 Folder Contents
 ---------------
