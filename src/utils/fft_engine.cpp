@@ -138,11 +138,7 @@ fft_engine::fft_engine(const glm::ivec2& max_dims)
       m_tmp_buf(buf_alloc(max_dims), buf_free),
       m_max_dims(make_smooth(max_dims))
 {
-    LOG(TRACE) << "Requested maximum Fourier transform dimensions "
-               << max_dims.x << " by " << max_dims.y
-               << ", using "
-               << m_max_dims.x << " by " << m_max_dims.y
-               << ".";
+    
 }
 
 image fft_engine::psf(const image& input, const glm::ivec2& _dims)
@@ -226,9 +222,9 @@ image fft_engine::convolve_disk(const image& _input, int radius)
     }
 
     convolved.normalize(true);
-    
+
     int dx = (convolved.dims().x - _input.dims().x) / 2;
     int dy = (convolved.dims().y - _input.dims().y) / 2;
-    
+
     return convolved.subregion(dx, dy, _input.dims().x, _input.dims().y);
 }

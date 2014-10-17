@@ -212,7 +212,6 @@ image aperture::get_cfft(const image& psf)
         auto ps_resized = psf.resize(glm::ivec2(newX, newY),
                                      FILTER_BILINEAR);
         auto color = wavelength_rgb(lambda);
-        ps_resized.normalize(false);
         ps_resized.colorize(color);
         ps_resized = ps_resized.enlarge(psf.dims());
 
