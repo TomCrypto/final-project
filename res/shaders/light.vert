@@ -1,5 +1,7 @@
 #version 120
 
+// simply draws a sphere with the given light color
+
 uniform mat4 proj;
 uniform mat4 view;
 uniform vec3 cam_pos;

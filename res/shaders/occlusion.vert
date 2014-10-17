@@ -1,5 +1,9 @@
 #version 120
 
+// computes occlusion of a light source by sampling from the framebuffer, with
+// two levels of detaill possible (either an average for large lights, or a
+// "maximum" operation for small ones to reduce flickering)
+
 struct light
 {
     vec4 pos;

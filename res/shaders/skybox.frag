@@ -1,5 +1,7 @@
 #version 120
 
+// computes atmospheric scattering at a given point in the sky
+
 varying vec3 pos;
 
 uniform float extinction;

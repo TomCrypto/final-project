@@ -1,5 +1,9 @@
 #version 120
 
+// applies the Uncharted 2 filmic tonemapping formula to the framebuffer
+// to produce RGB values in the range [0, 1] for display into the
+// backbuffer - see http://filmicgames.com/archives/75
+
 uniform sampler2D render;
 uniform float exposure;
 

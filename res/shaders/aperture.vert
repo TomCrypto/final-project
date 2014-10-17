@@ -1,5 +1,8 @@
 #version 120
 
+// light_f will contain the index of the light currently being rendered with
+// lens flare
+
 varying vec2 uv;
 varying float light_f;
 

@@ -1,5 +1,7 @@
 #version 120
 
+// passthrough of the vertex shader output to the render target
+
 varying vec3 total_occlusion;
 
 void main()

@@ -1,4 +1,7 @@
 #version 120
+
+// draws the terrain and other models, with diffuse/specular/multiple lights
+
 uniform vec3 camera_pos;
 
 uniform vec3 ks, kd, ka;

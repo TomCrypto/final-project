@@ -73,6 +73,9 @@ float snoise(vec2 v)
 
 /* ============= END NOISE SHADER ============= */
 
+// draws the overlay, as a series of little circles emulating dirt and other
+// imperfections on the camera lens. Uses value noise to look better
+
 struct light
 {
     vec4 pos;

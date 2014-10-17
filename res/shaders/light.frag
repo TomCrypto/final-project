@@ -1,5 +1,7 @@
 #version 120
 
+// simply draws a sphere with the given light color
+
 uniform vec3 light_color;
 
 void main()
