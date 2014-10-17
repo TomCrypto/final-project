@@ -17,9 +17,9 @@ enum light_type
 {
     LIGHT_TINY,
     LIGHT_SMALL,
-    LIGHT_NORMAL,
+    LIGHT_NORMAL/*,
     LIGHT_LARGE,
-    LIGHT_HUGE
+    LIGHT_HUGE*/
 };
 
 struct light
