@@ -1,5 +1,8 @@
 #version 120
 
+// Draws a ghost as a slightly blurry screen-space circle.
+// To help draw call batching, has its own rand() implementation
+
 uniform sampler2D occlusion;
 uniform sampler2D spectrum;
 

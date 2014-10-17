@@ -1,5 +1,8 @@
 #version 120
 
+// light_f: index of the light the ghosts belong to
+// ghost_f: index of the ghost for this light source
+
 varying vec2 uv;
 varying float light_f;
 varying float ghost_f;

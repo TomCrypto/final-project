@@ -1,5 +1,8 @@
 #version 120
 
+// renders a lens flare texture into a screen-space quad with occlusion
+// information (meant to be used with additive blending)
+
 uniform int max_lights;
 
 uniform sampler2D flare;

@@ -1,5 +1,7 @@
 #version 120
 
+// see overlay.frag
+
 varying vec2 frag_pos;
 varying vec2 uv;
 

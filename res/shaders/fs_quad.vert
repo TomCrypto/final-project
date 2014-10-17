@@ -1,6 +1,6 @@
-/* Generic vertex shader for fullscreen quads */
-
 #version 120
+
+// Generic vertex shader for fullscreen quads
 
 attribute vec2 pos; // from (-1, -1) to (1, 1)
 varying vec2 uv; // from (0, 0) to (1, 1)
