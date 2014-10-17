@@ -28,10 +28,6 @@
 #include "core/aperture.h"
 #include "core/occlusion.h"
 
-#if _WIN32
-#define NO_LENS_FLARES 0
-#endif
-
 namespace gui
 {
     class window
@@ -84,11 +80,9 @@ namespace gui
 		std::vector<std::shared_ptr<Model>> m_models;
 
         skybox m_skybox;
-        #if !NO_LENS_FLARES
         overlay m_overlay;
         aperture m_aperture;
         occlusion m_occlusion;
-        #endif
         framebuffer m_framebuffer;
 
         light_renderer m_light_renderer;
