@@ -48,7 +48,7 @@ namespace gui
 	{
 		/* === atmospheric options === */
 
-		Atmos.timeofday = 9.0f;
+		Atmos.timeofday = 8.5f;
 		Atmos.ray = 1500.0f;
 		Atmos.mie = 1.2f;
 		Atmos.extinction = 0.05f;
