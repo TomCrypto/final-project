@@ -65,13 +65,16 @@ void aperture::load_aperture(const transmission_function& tf,
             path = "fingerprints.png";
             break;
         case GRAZED:
-            path = "grazed_lens.png";
+            path = "grazed.png";
             break;
-        case OCTAGON:
-            path = "octagon.png";
+        case GRAZED_CUT:
+            path = "grazed_cut.png";
             break;
-        case SIGGRAPH:
-            path = "siggraph_noise.png";
+        case HUMAN_EYE:
+            path = "human_eye.png";
+            break;
+        case CUSTOM:
+            path = "custom.png";
             break;
         default:
             LOG(ERROR) << "Bad aperture passed!";

@@ -22,8 +22,9 @@ enum transmission_function
     PENTAGON        = 0,
     FINGERPRINTS    = 1,
     GRAZED          = 2,
-    OCTAGON         = 3,
-    SIGGRAPH        = 4,
+    GRAZED_CUT      = 3,
+    HUMAN_EYE       = 4,
+    CUSTOM          = 5
 };
 
 class aperture
