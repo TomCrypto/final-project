@@ -100,7 +100,7 @@ namespace gui
         lens_ghost_count = 125;
         lens_ghost_max_size = 0.2f;
         lens_ghost_brightness = 0.25f;
-        lens_aperture = OCTAGON;
+        lens_aperture = GRAZED;
         lens_aperture_f_number = 1.5f;
         lens_update_btn = true;
 
@@ -165,10 +165,11 @@ namespace gui
             "lens_aperture", apertureType, &lens_aperture,
             " label='Aperture' group='Lens'"
             " enum='0 {Pentagonal aperture},"
-            "1 {Dirty lens},"
-            "2 {Lens with scratch},"
-            "3 {Octagonal aperture},"
-            "4 {Custom aperture}'"
+            "1 {Lens with fingerprints},"
+            "2 {Grazed lens},"
+            "3 {Scratched lens},"
+            "4 {Human eye},"
+            "5 {Custom aperture}'"
             " help='Lens flare aperture to use'");
 
         TwAddVarRW(m_bar,
