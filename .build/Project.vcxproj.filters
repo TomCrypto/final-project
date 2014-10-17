@@ -262,25 +262,7 @@
     </Media>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\res\apertures\exotic.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\eye.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\eye_glaring.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\eye_open.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\eye_shut.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\eyebrows.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\eyebrows2.png">
+    <Image Include="..\res\apertures\custom.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
     <Image Include="..\res\apertures\fingerprints.png">
@@ -292,43 +274,10 @@
     <Image Include="..\res\apertures\grazed_cut.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
-    <Image Include="..\res\apertures\octagon.png">
+    <Image Include="..\res\apertures\human_eye.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
     <Image Include="..\res\apertures\pentagon.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\siggraph.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\siggraph_custom.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\octagon2.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\octagon4.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\octagon3.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\pentagon-diff.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\pentagon-divide.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\pentagon-merge.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\custom2.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\custom3.png">
-      <Filter>Resource Files\Apertures</Filter>
-    </Image>
-    <Image Include="..\res\apertures\custom4.png">
       <Filter>Resource Files\Apertures</Filter>
     </Image>
   </ItemGroup>
