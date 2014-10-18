@@ -20,7 +20,7 @@ void main()
 		float dotP = dot(normalize(pos),normalize(sunDir));
 
 		vec3 ray = betaDashRay*(1+dotP*dotP);
-		float hg = gHG.x/pow(gHG.y-gHG.z*dotP,1.5);
+		float hg = (gHG.x/pow(gHG.y-gHG.z*dotP,1.5))/(4*3.14159265359);
 		vec3 mie = betaDashMie * hg;
 
 		vec3 inscattering = (ray + mie)*oneOverBetaRayMie*Esun;
