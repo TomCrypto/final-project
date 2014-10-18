@@ -33,6 +33,9 @@ Instructions
         $ cd bin && ./Project
         $ cd ..
 
+    IMPORTANT: if GLEW fails to build, just ignore the error and run make. The
+    university computers should already have it installed by default anyway.
+
     To navigate the demo, drag the cursor using the left mouse button or right
     click then move the mouse around, and use WASD to move the camera. The 'c'
     key makes the camera go downwards, space makes it go upwards - hitting the
