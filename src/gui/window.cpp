@@ -135,7 +135,6 @@ namespace gui
 
     void window::on_update()
     {
-        #if !NO_LENS_FLARES
         if (m_bar.lens_update_btn) {
             m_bar.lens_update_btn = false;
 
@@ -146,7 +145,6 @@ namespace gui
         if (m_overlay.get_density() != m_bar.lens_density) {
             m_overlay.regenerate_film(m_bar.lens_density);
         }
-        #endif
 
         float move_speed = m_bar.cam_move_speed / 60.0f;
 
