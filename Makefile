@@ -6,9 +6,6 @@ RESDIR           = res
 OBJDIR           = .build/obj
 TARGET           = $(BINDIR)/$(OUTPUT)
 
-LDPATH_EXTRA     = -L/usr/pkg/lib -Wl,-R/usr/pkg/lib
-INCLUDE_EXTRA    = -I/usr/pkg/include
-
 HEADERS          = $(shell find $(SRCDIR) -name '*.h' -or -name '*.hpp')
 SRCDIRS          = $(shell find $(SRCDIR) -mindepth 1 -type d)
 CXX_SRC          = $(shell find $(SRCDIR) -name '*.cpp')
@@ -20,8 +17,8 @@ CXX_OBJ          = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(CXX_SRC))
 C_OBJ            = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(C_SRC))
 RES              = $(patsubst $(RESDIR)/%,$(BINDIR)/%,$(RESOURCES))
 
-LDPATH           = -L$(LIBDIR)/bin/linux $(LDPATH_EXTRA)
-INCLUDE          = -I$(LIBDIR)/include -I$(SRCDIR) $(INCLUDE_EXTRA)
+LDPATH           = -L$(LIBDIR)/bin/linux
+INCLUDE          = -I$(LIBDIR)/include -I$(SRCDIR)
 CFLAGS           = -O3 -march=native -Wall -Wextra -pedantic -std=c99
 CFLAGS          += -Wno-unused-parameter -Wno-unused-variable
 CXXFLAGS         = -O3 -march=native -Wall -Wextra -pedantic -std=c++11
