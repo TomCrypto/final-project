@@ -26,7 +26,7 @@ void Model::addGroup(std::string g) {
 }
 
 Model::Model(std::string filename)
-    : m_shader("model.vert", "model.frag") {
+    : m_shader("model.vert", "model.frag"), transform(glm::mat4(1.0f)) {
     std::string line;
     std::ifstream myfile(filename);
     int v1, v2, v3, n1, n2, n3, t1, t2, t3;

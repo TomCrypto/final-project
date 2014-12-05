@@ -68,7 +68,7 @@ private:
     gl::shader m_shader;
 
     std::vector<std::pair<std::string,int>> drawLists;
-    glm::mat4 transform = glm::mat4(1.0f);
+    glm::mat4 transform;
 };
 
 #endif

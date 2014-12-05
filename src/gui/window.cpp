@@ -32,14 +32,6 @@ namespace gui
                  initial_camera_pos,
                  initial_camera_dir,
                  glm::radians(m_bar.cam_fov)),
-        m_models(
-        {
-            std::shared_ptr<Model>(new Model("models/Lighthouse.obj")),
-            std::shared_ptr<Model>(new Model("models/OutBuilding.obj")),
-            std::shared_ptr<Model>(new Model("models/Terrain.obj")),
-            std::shared_ptr<Model>(new Model("models/Trees.obj")),
-            std::shared_ptr<Model>(new Model("models/STLamp.obj"))
-        }),
         m_skybox(),
         m_overlay(m_bar.lens_density),
         m_aperture(m_fft),
@@ -47,6 +39,12 @@ namespace gui
         m_framebuffer(m_dims),
         m_light_renderer()
     {
+        m_models.push_back(std::shared_ptr<Model>(new Model("models/Lighthouse.obj")));
+        m_models.push_back(std::shared_ptr<Model>(new Model("models/OutBuilding.obj")));
+        m_models.push_back(std::shared_ptr<Model>(new Model("models/Terrain.obj")));
+        m_models.push_back(std::shared_ptr<Model>(new Model("models/Trees.obj")));
+        m_models.push_back(std::shared_ptr<Model>(new Model("models/STLamp.obj")));
+
         LOG(INFO) << "All components initialized.";
         LOG(TRACE) << "Window resolution is "
                    << m_dims.x << " by "
